@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "خدماتي",
+    "slug": "khadamati",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "khadamati",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ffgg35646.khadamati"
+    },
+    "android": {
+      "package": "com.ffgg35646.khadamati",
+      "adaptiveIcon": {
+        "backgroundColor": "#F4F6F8"
+      }
+    },
+    "web": {
+      "output": "static"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
