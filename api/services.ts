@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { getDb } from "./_lib/db";
-import { requireAdmin } from "./_lib/auth";
+import { requireAdmin, getSession } from "./_lib/auth";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
@@ -8,7 +8,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const services = db.collection("services");
 
     if (req.method === "GET") {
-      const items = await services.find({ active: { $ne: false } }).sort({ group: 1, order: 1, title: 1 }).toArray();
+      const filter = getSession(req) ? {} : { active: { $ne: false } };
+      const items = await services.find(filter).sort({ group: 1, order: 1, title: 1 }).toArray();
       return res.status(200).json({ services: items.map(({ _id, ...item }) => item) });
     }
 
