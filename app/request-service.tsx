@@ -1,18 +1,38 @@
 import { useState } from "react";
 import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
-import { allServices } from "../data/services";
+import { useServices } from "../hooks/useServices";
+import { apiRequest } from "../lib/api";
 import { SiteFooter, SiteHeader } from "../components/SiteShell";
 
 export default function RequestServiceScreen() {
   const params = useLocalSearchParams<{ service?: string }>();
-  const selected = allServices.find(item => item.id === params.service);
+  const { services } = useServices();
+  const selected = services.find(item => item.id === params.service);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [notes, setNotes] = useState("");
   const [serviceName, setServiceName] = useState(selected?.title ?? "");
-  const submit = () => Alert.alert("نموذج معاينة", "واجهة الطلب جاهزة للتصميم. حفظ الطلب وإرساله للأدمن يتطلب ربط قاعدة البيانات وخدمة Backend.");
+  const [busy, setBusy] = useState(false);
+  const [feedback, setFeedback] = useState("");
+  const submit = async () => {
+    if (!name.trim() || !phone.trim() || !address.trim() || !serviceName.trim()) {
+      setFeedback("من فضلك أكمل الاسم ورقم الهاتف والعنوان والخدمة.");
+      return;
+    }
+    setBusy(true);
+    setFeedback("");
+    try {
+      await apiRequest("/api/requests", { method: "POST", body: JSON.stringify({ name, phone, address, service: serviceName, notes }) });
+      setFeedback("تم إرسال طلبك بنجاح، وسيتم التواصل معك قريبًا.");
+      setName(""); setPhone(""); setAddress(""); setNotes("");
+    } catch (error) {
+      setFeedback(error instanceof Error ? error.message : "تعذر إرسال الطلب الآن.");
+    } finally {
+      setBusy(false);
+    }
+  };
   return (
     <View style={styles.page}>
       <SiteHeader />
@@ -31,8 +51,8 @@ export default function RequestServiceScreen() {
             <TextInput value={address} onChangeText={setAddress} placeholder="المدينة والمنطقة والعنوان" style={styles.input} />
             <Text style={styles.label}>تفاصيل إضافية</Text>
             <TextInput value={notes} onChangeText={setNotes} placeholder="اكتب تفاصيل تساعدنا على فهم طلبك..." style={[styles.input, styles.notes]} multiline />
-            <Pressable onPress={submit} style={styles.submit}><Text style={styles.submitText}>إرسال الطلب</Text></Pressable>
-            <Text style={styles.notice}>الإرسال الفعلي سيُفعّل بعد ربط قاعدة البيانات ولوحة متابعة الطلبات.</Text>
+            <Pressable onPress={submit} disabled={busy} style={[styles.submit, busy && { opacity: 0.6 }]}><Text style={styles.submitText}>{busy ? "جارٍ الإرسال..." : "إرسال الطلب"}</Text></Pressable>
+            {!!feedback && <Text style={{ color: feedback.startsWith("تم") ? "#087D63" : "#B42318", textAlign: "center", marginTop: 12, fontSize: 12, fontWeight: "700" }}>{feedback}</Text>}
           </View>
           <Pressable onPress={() => router.push("/services" as never)} style={styles.browse}><Text style={styles.browseText}>لم تحدد الخدمة بعد؟ تصفح الأقسام ←</Text></Pressable>
         </View>
