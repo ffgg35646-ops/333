@@ -11,7 +11,7 @@ export function useServices() {
     let active = true;
     apiRequest<{ services: ServiceItem[] }>("/api/services")
       .then(result => {
-        if (active && Array.isArray(result.services) && result.services.length) setServices(result.services);
+        if (active && Array.isArray(result.services)) setServices(result.services);
       })
       .catch(() => {
         // Keep the bundled catalog available if the API is not configured yet.
