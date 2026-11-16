@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { apiRequest, setAdminToken } from "../lib/api";
 import { Alert, ImageBackground, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { router } from "expo-router";
 
@@ -7,8 +8,28 @@ export default function AdminLoginScreen() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = () => {
-    Alert.alert("تسجيل الدخول غير مفعّل بعد", "هذه شاشة التصميم والمعاينة. يلزم ربط نظام مصادقة آمن وقاعدة بيانات قبل تفعيل حسابات الإدارة.");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleLogin = async () => {
+    if (!email.trim() || !password) {
+      setError("أدخل البريد الإلكتروني وكلمة المرور.");
+      return;
+    }
+    setBusy(true);
+    setError("");
+    try {
+      const result = await apiRequest<{ token: string }>("/api/admin/login", {
+        method: "POST",
+        body: JSON.stringify({ email, password })
+      });
+      await setAdminToken(result.token);
+      router.replace("/admin" as never);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "تعذر تسجيل الدخول.");
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
@@ -41,10 +62,9 @@ export default function AdminLoginScreen() {
               <TextInput value={password} onChangeText={setPassword} placeholder="أدخل كلمة المرور" placeholderTextColor="#A4B0B4" secureTextEntry={!showPassword} style={styles.passwordInput} />
               <Pressable onPress={() => setShowPassword(value => !value)}><Text style={styles.showPassword}>{showPassword ? "إخفاء" : "إظهار"}</Text></Pressable>
             </View>
-            <Pressable onPress={handleLogin} style={styles.submit}><Text style={styles.submitText}>تسجيل الدخول</Text></Pressable>
-            <Text style={styles.notice}>الدخول الفعلي سيُفعّل بعد إعداد المصادقة وربط قاعدة البيانات.</Text>
-            <View style={styles.previewDivider}><View style={styles.line} /><Text style={styles.or}>للمعاينة فقط</Text><View style={styles.line} /></View>
-            <Pressable onPress={() => router.push("/admin" as never)} style={styles.preview}><Text style={styles.previewText}>معاينة لوحة التحكم ←</Text></Pressable>
+            <Pressable onPress={handleLogin} disabled={busy} style={[styles.submit, busy && { opacity: 0.65 }]}><Text style={styles.submitText}>{busy ? "جارٍ التحقق..." : "تسجيل الدخول"}</Text></Pressable>
+            {!!error && <Text style={{ color: "#B42318", fontSize: 12, marginTop: 12, textAlign: "center" }}>{error}</Text>}
+            <Text style={styles.notice}>الدخول محمي بحساب الإدارة المسجل في قاعدة البيانات.</Text>
           </View>
         </View>
       </View>
