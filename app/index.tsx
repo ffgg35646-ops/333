@@ -2,7 +2,7 @@ import { Image, ImageBackground, Pressable, ScrollView, StyleSheet, Text, View, 
 import { router } from "expo-router";
 import { useServices } from "../hooks/useServices";
 import { useSiteSettings } from "../hooks/useSiteSettings";
-import type { ServiceItem } from "../data/services";
+import { serviceCategories, type ServiceItem } from "../data/services";
 import { SiteFooter, SiteHeader } from "../components/SiteShell";
 
 function ServiceCard({ item, compact = false }: { item: ServiceItem; compact?: boolean }) {
@@ -24,7 +24,8 @@ function ServiceCard({ item, compact = false }: { item: ServiceItem; compact?: b
 
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
-  const { mainServices, featuredServices } = useServices();
+  const { mainServices } = useServices();
+  const categorySections = serviceCategories.map(category => ({ ...category, items: mainServices.filter(item => item.active !== false && item.categoryId === category.id) })).filter(category => category.items.length > 0);
   const settings = useSiteSettings();
   const compact = width < 700;
   const cardWidth = width > 1040 ? "23.5%" : width > 700 ? "31.5%" : "47.5%";
@@ -44,9 +45,9 @@ export default function HomeScreen() {
                 <Pressable onPress={() => router.push("/request-service" as never)} style={styles.secondaryButton}><Text style={styles.secondaryButtonText}>اطلب خدمة الآن</Text></Pressable>
               </View>
               <View style={styles.heroStats}>
-                <View><Text style={styles.statNumber}>{featuredServices.length}</Text><Text style={styles.statLabel}>خدمة رئيسية</Text></View>
+                <View><Text style={styles.statNumber}>{serviceCategories.length}</Text><Text style={styles.statLabel}>أقسام رئيسية</Text></View>
                 <View style={styles.statDivider} />
-                <View><Text style={styles.statNumber}>14</Text><Text style={styles.statLabel}>خدمة مميزة</Text></View>
+                <View><Text style={styles.statNumber}>{mainServices.length}</Text><Text style={styles.statLabel}>خدمة متنوعة</Text></View>
                 <View style={styles.statDivider} />
                 <View><Text style={styles.statNumber}>3</Text><Text style={styles.statLabel}>منصات في تجربة واحدة</Text></View>
               </View>
@@ -60,27 +61,17 @@ export default function HomeScreen() {
           <View style={styles.trustItem}><Text style={styles.trustIcon}>♡</Text><Text style={styles.trustText}>تجربة سهلة وواضحة</Text></View>
         </View>
 
-        <View style={styles.section}>
-          <View style={styles.sectionHeading}>
-            <View><Text style={styles.sectionKicker}>OUR MAIN SERVICES</Text><Text style={styles.sectionTitle}>{settings.mainSectionTitle}</Text><Text style={styles.sectionSubtitle}>{settings.mainSectionDescription}</Text></View>
-            <Pressable onPress={() => router.push("/services" as never)} style={styles.textLink}><Text style={styles.textLinkText}>عرض كل الخدمات ←</Text></Pressable>
-          </View>
-          <View style={styles.cardsGrid}>
-            {mainServices.map(item => <View key={item.id} style={{ width: cardWidth }}><ServiceCard item={item} /></View>)}
-          </View>
-        </View>
-
-        <View style={styles.featuredSection}>
-          <View style={styles.section}>
+        {categorySections.map(category => (
+          <View key={category.id} style={styles.section}>
             <View style={styles.sectionHeading}>
-              <View><Text style={styles.sectionKicker}>SPECIAL SERVICES</Text><Text style={styles.sectionTitle}>{settings.featuredSectionTitle}</Text><Text style={styles.sectionSubtitle}>{settings.featuredSectionDescription}</Text></View>
-              <Pressable onPress={() => router.push("/services" as never)} style={styles.textLink}><Text style={styles.textLinkText}>اكتشف المزيد ←</Text></Pressable>
+              <View><Text style={styles.sectionKicker}>{category.english}</Text><Text style={styles.sectionTitle}>{category.title}</Text><Text style={styles.sectionSubtitle}>{category.items.length} خدمة متاحة داخل القسم</Text></View>
+              <Pressable onPress={() => router.push("/services" as never)} style={styles.textLink}><Text style={styles.textLinkText}>عرض كل الخدمات ←</Text></Pressable>
             </View>
             <View style={styles.cardsGrid}>
-              {featuredServices.map(item => <View key={item.id} style={{ width: cardWidth }}><ServiceCard item={item} compact /></View>)}
+              {category.items.slice(0, 4).map(item => <View key={item.id} style={{ width: cardWidth }}><ServiceCard item={item} /></View>)}
             </View>
           </View>
-        </View>
+        ))}
 
         <View style={styles.ctaWrap}>
           <View style={[styles.cta, compact && styles.ctaCompact]}>
