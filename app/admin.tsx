@@ -45,7 +45,7 @@ export default function AdminScreen() {
   const [search, setSearch] = useState("");
   const visibleItems = useMemo(() => items.filter(item => (filter === "all" || item.group === filter) && (item.title.includes(search) || item.english.toLowerCase().includes(search.toLowerCase()))), [items, filter, search]);
 
-  const openNew = (group: ServiceGroup) => setDraft({ id: "new-" + Date.now(), title: "", english: "", shortDescription: "", details: "", image: "", group, icon: "✦" });
+  const openNew = (group: ServiceGroup) => setDraft({ id: "new-" + Date.now(), title: "", english: "", shortDescription: "", details: "", image: "", group, icon: "✦", active: true, order: items.length });
   const updateDraft = <K extends keyof ServiceItem,>(key: K, value: ServiceItem[K]) => setDraft(current => current ? { ...current, [key]: value } : current);
   const saveDraft = async () => {
     if (!draft || !draft.title.trim()) return;
@@ -239,6 +239,10 @@ export default function AdminScreen() {
               <TextInput value={draft?.details ?? ""} onChangeText={value => updateDraft("details", value)} placeholder="اكتب تفاصيل الخدمة..." style={[styles.field, styles.multiline]} multiline />
               <Text style={styles.fieldLabel}>رابط الصورة</Text>
               <TextInput value={draft?.image ?? ""} onChangeText={value => updateDraft("image", value)} placeholder="https://..." autoCapitalize="none" style={[styles.field, { textAlign: "left" }]} />
+              <Text style={styles.fieldLabel}>رمز الخدمة</Text>
+              <TextInput value={draft?.icon ?? "✦"} onChangeText={value => updateDraft("icon", value)} placeholder="مثال: ⚡" style={styles.field} />
+              <Text style={styles.fieldLabel}>ترتيب الظهور</Text>
+              <TextInput value={String(draft?.order ?? 0)} onChangeText={value => updateDraft("order", Number(value) || 0)} keyboardType="numeric" style={styles.field} />
               <Text style={styles.fieldLabel}>نوع القسم</Text>
               <View style={styles.groupChoices}>
                 <Pressable onPress={() => updateDraft("group", "main")} style={[styles.groupChoice, draft?.group === "main" && styles.groupChoiceActive]}><Text style={[styles.groupChoiceText, draft?.group === "main" && styles.groupChoiceTextActive]}>خدمة رئيسية</Text></Pressable>
