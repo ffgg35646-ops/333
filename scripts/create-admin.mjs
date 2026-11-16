@@ -15,12 +15,12 @@ try {
   await client.connect();
   const db = client.db(MONGODB_DB);
   await db.collection("admins").createIndex({ email: 1 }, { unique: true });
-  await db.collection("admins").updateOne(
+  const result = await db.collection("admins").updateOne(
     { email },
-    { $set: { email, name: ADMIN_NAME, passwordSalt: salt, passwordHash, role: "admin", active: true, updatedAt: new Date() }, $setOnInsert: { createdAt: new Date() } },
+    { $setOnInsert: { email, name: ADMIN_NAME, passwordSalt: salt, passwordHash, role: "admin", active: true, createdAt: new Date(), updatedAt: new Date() } },
     { upsert: true }
   );
-  console.log(`Admin account ready: ${email}`);
+  console.log(result.upsertedCount ? `Admin account created: ${email}` : `Admin account already exists; password unchanged: ${email}`);
 } finally {
   await client.close();
 }
