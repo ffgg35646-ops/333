@@ -112,7 +112,7 @@ export default function RequestServiceScreen() {
 }
 
 const styles = StyleSheet.create({
-  page: { flex: 1, backgroundColor: "#F6F8F7" },
+  page: { flex: 1, backgroundColor: "#F7F9FF" },
   scrollContent: { flexGrow: 1 },
   brandRow: { width: "100%", maxWidth: 900, alignSelf: "center", paddingHorizontal: 20, paddingTop: 30, paddingBottom: 20, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 },
   logoCircle: { width: 86, height: 86, borderRadius: 43, backgroundColor: "#087D73", alignItems: "center", justifyContent: "center", borderWidth: 3, borderColor: "#D5EAE4" },
@@ -122,18 +122,18 @@ const styles = StyleSheet.create({
   authorityMark: { color: "#234D50", fontSize: 18, fontWeight: "900" },
   authorityCaption: { color: "#526B6A", fontSize: 8, fontWeight: "800", textAlign: "center" },
   formHeading: { flex: 1, alignItems: "center" },
-  kicker: { color: "#07877B", fontSize: 10, fontWeight: "900", letterSpacing: 2 },
-  title: { color: "#102A34", fontSize: 29, fontWeight: "900", marginTop: 5 },
+  kicker: { color: "#0738C8", fontSize: 10, fontWeight: "900", letterSpacing: 2 },
+  title: { color: "#10245F", fontSize: 29, fontWeight: "900", marginTop: 5 },
   subtitle: { color: "#667B7E", fontSize: 12, marginTop: 6, textAlign: "center" },
   formWrap: { width: "100%", maxWidth: 650, alignSelf: "center", paddingHorizontal: 20, paddingBottom: 22 },
-  formCard: { backgroundColor: "#FFFFFF", borderRadius: 19, padding: 24, borderWidth: 1, borderColor: "#E5ECE8" },
-  formTitle: { color: "#102A34", fontSize: 18, fontWeight: "900", textAlign: "right", marginBottom: 8 },
+  formCard: { backgroundColor: "#FFFFFF", borderRadius: 19, padding: 24, borderWidth: 1, borderColor: "#E1E8F8" },
+  formTitle: { color: "#10245F", fontSize: 18, fontWeight: "900", textAlign: "right", marginBottom: 8 },
   label: { color: "#415A60", fontSize: 12, fontWeight: "800", marginTop: 14, marginBottom: 7, textAlign: "right" },
-  input: { borderWidth: 1, borderColor: "#E3EBE7", backgroundColor: "#F8FAF9", borderRadius: 10, minHeight: 49, paddingHorizontal: 13, color: "#19383F", fontSize: 13 },
+  input: { borderWidth: 1, borderColor: "#E1E8F8", backgroundColor: "#F7F9FF", borderRadius: 10, minHeight: 49, paddingHorizontal: 13, color: "#19383F", fontSize: 13 },
   dropdownTrigger: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   dropdownValue: { color: "#19383F", fontSize: 13, flex: 1, textAlign: "right" },
   dropdownPlaceholder: { color: "#8A9B98" },
-  dropdownArrow: { color: "#07877B", fontSize: 23, fontWeight: "900", marginLeft: 8 },
+  dropdownArrow: { color: "#0738C8", fontSize: 23, fontWeight: "900", marginLeft: 8 },
   dropdownList: { marginTop: 6, borderWidth: 1, borderColor: "#DCE8E2", borderRadius: 11, backgroundColor: "#FFFFFF", overflow: "hidden" },
   dropdownScroll: { maxHeight: 220 },
   dropdownOption: { minHeight: 45, paddingHorizontal: 13, flexDirection: "row", alignItems: "center", justifyContent: "space-between", borderBottomWidth: 1, borderBottomColor: "#EEF2F0" },
@@ -142,10 +142,10 @@ const styles = StyleSheet.create({
   dropdownOptionTextSelected: { color: "#087D73", fontWeight: "900" },
   dropdownOptionIcon: { fontSize: 16, marginLeft: 10 },
   dropdownEmpty: { color: "#7B8D89", padding: 14, textAlign: "center", fontSize: 12 },
-  submit: { backgroundColor: "#07877B", borderRadius: 11, minHeight: 50, alignItems: "center", justifyContent: "center", marginTop: 24 },
+  submit: { backgroundColor: "#FFC52F", borderRadius: 11, minHeight: 50, alignItems: "center", justifyContent: "center", marginTop: 24 },
   submitText: { color: "#FFFFFF", fontWeight: "900", fontSize: 14 },
   error: { color: "#B42318", textAlign: "center", marginTop: 12, fontSize: 12, fontWeight: "700" },
   welcome: { color: "#365B58", fontSize: 14, fontWeight: "800", textAlign: "center", marginTop: 20 },
   browse: { alignSelf: "center", padding: 16 },
-  browseText: { color: "#07877B", fontSize: 12, fontWeight: "900" }
+  browseText: { color: "#0738C8", fontSize: 12, fontWeight: "900" }
 });
