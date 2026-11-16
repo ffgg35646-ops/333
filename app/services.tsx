@@ -1,6 +1,6 @@
 import { Image, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import { router } from "expo-router";
-import { mainServices, featuredServices } from "../data/services";
+import { useServices } from "../hooks/useServices";
 import type { ServiceItem } from "../data/services";
 import { SiteFooter, SiteHeader } from "../components/SiteShell";
 
@@ -20,6 +20,7 @@ function ServiceTile({ item, width }: { item: ServiceItem; width: string }) {
 
 export default function ServicesScreen() {
   const { width } = useWindowDimensions();
+  const { mainServices, featuredServices } = useServices();
   const tileWidth = width > 1050 ? "23.5%" : width > 700 ? "31.5%" : "47.5%";
   return (
     <View style={styles.page}>
