@@ -1,6 +1,6 @@
 import { Image, ImageBackground, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import { router } from "expo-router";
-import { mainServices, featuredServices } from "../data/services";
+import { useServices } from "../hooks/useServices";
 import type { ServiceItem } from "../data/services";
 import { SiteFooter, SiteHeader } from "../components/SiteShell";
 
@@ -23,6 +23,7 @@ function ServiceCard({ item, compact = false }: { item: ServiceItem; compact?: b
 
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
+  const { mainServices, featuredServices } = useServices();
   const compact = width < 700;
   const cardWidth = width > 1040 ? "23.5%" : width > 700 ? "31.5%" : "47.5%";
   return (
