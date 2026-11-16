@@ -1,11 +1,12 @@
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { allServices } from "../data/services";
+import { useServices } from "../hooks/useServices";
 import { SiteFooter, SiteHeader } from "../components/SiteShell";
 
 export default function ServiceDetailsScreen() {
   const params = useLocalSearchParams<{ id?: string }>();
-  const service = allServices.find(item => item.id === params.id);
+  const { services } = useServices();
+  const service = services.find(item => item.id === params.id);
   return (
     <View style={styles.page}>
       <SiteHeader active="services" />
