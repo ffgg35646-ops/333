@@ -48,3 +48,35 @@ npx expo start
 ## البناء
 
 يستخدم المشروع ملفات EAS في `eas.json`. بناء Android وiOS يتطلب إعداد حساب Expo وبيانات التوقيع اللازمة. لم يتم ربط المشروع باستضافة Vercel، ولا توجد عملية نشر تلقائي مضافة من هذه التعديلات.
+
+## ربط MongoDB ولوحة الإدارة
+
+تمت إضافة Backend يعمل كـ Vercel Functions، وقاعدة البيانات الافتراضية اسمها `khadamati` داخل نفس MongoDB Atlas Cluster. بيانات الاتصال تبقى في متغيرات الخادم ولا توضع داخل تطبيق الهاتف أو ملفات الواجهة.
+
+### متغيرات البيئة في Vercel
+
+- `MONGODB_URI`: رابط اتصال MongoDB بصلاحية قراءة وكتابة قاعدة `khadamati`.
+- `MONGODB_DB`: استخدم `khadamati`.
+- `ADMIN_SESSION_SECRET`: سر عشوائي لا يقل عن 32 حرفًا.
+- `EXPO_PUBLIC_API_BASE_URL`: رابط النطاق المنشور للـ API عند بناء Android وiOS. اتركه فارغًا للويب إذا كان الـ API والواجهة على نفس النطاق.
+
+### تجهيز بيانات البداية محليًا
+
+```bash
+npm install
+npm run seed:services
+ADMIN_EMAIL=admin@khadamati.app ADMIN_PASSWORD='ضع-كلمة-مرور-قوية-هنا' npm run admin:create
+```
+
+يضيف `seed:services` الأقسام الـ 28 الحالية إلى `khadamati.services` دون استبدال بيانات موجودة. وينشئ `admin:create` حساب الإدارة في `khadamati.admins` مع تخزين كلمة المرور بصيغة مشتقة باستخدام scrypt، وليس كنص صريح.
+
+### مسارات API
+
+- `GET /api/services`: قراءة الأقسام المنشورة.
+- `POST /api/services`: إضافة قسم (يتطلب جلسة أدمن).
+- `PUT /api/services/:id`: تعديل قسم (يتطلب جلسة أدمن).
+- `DELETE /api/services/:id`: حذف قسم (يتطلب جلسة أدمن).
+- `POST /api/admin/login`: تسجيل دخول الأدمن.
+- `GET /api/admin/me`: التحقق من جلسة الأدمن.
+
+لا تضع `MONGODB_URI` أو `ADMIN_SESSION_SECRET` في متغيرات `EXPO_PUBLIC_*` أو داخل GitHub.
