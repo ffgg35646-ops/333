@@ -26,7 +26,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const token = createSession(admin as any);
-    res.setHeader("Set-Cookie", `khadamati_admin=${token}; HttpOnly; Secure; SameSite=None; Path=/; Max-Age=43200`);
     return res.status(200).json({ token, admin: { email: admin.email, name: admin.name || "مدير المنصة" } });
   } catch (error) {
     console.error("admin login failed", error);
