@@ -80,3 +80,15 @@ ADMIN_EMAIL=admin@khadamati.app ADMIN_PASSWORD='ضع-كلمة-مرور-قوية-
 - `GET /api/admin/me`: التحقق من جلسة الأدمن.
 
 لا تضع `MONGODB_URI` أو `ADMIN_SESSION_SECRET` في متغيرات `EXPO_PUBLIC_*` أو داخل GitHub.
+
+### إنشاء حساب الأدمن من GitHub بدون إعداد محلي
+
+1. من المستودع افتح **Settings → Secrets and variables → Actions**.
+2. أضف Secrets التالية:
+   - `MONGODB_URI`: رابط اتصال MongoDB الخاص بقاعدة البيانات.
+   - `ADMIN_EMAIL`: البريد الذي ستستخدمه للدخول إلى لوحة الإدارة.
+   - `ADMIN_PASSWORD`: كلمة مرور قوية لا تقل عن 12 حرفًا.
+3. افتح **Actions → Initialize Khadamati database and admin → Run workflow**.
+4. في إعدادات Vercel أضف `MONGODB_URI` و`MONGODB_DB=khadamati` و`ADMIN_SESSION_SECRET` (سر عشوائي لا يقل عن 32 حرفًا) قبل النشر.
+
+الـ workflow يدوي فقط، ولا ينشر إلى Vercel ولا يغيّر إعدادات النشر. إعادة تشغيله لا تستبدل كلمة مرور حساب الأدمن الموجود.
