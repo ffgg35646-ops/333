@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Image, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View, useWindowDimensions } from "react-native";
 import { router } from "expo-router";
 import { apiRequest, clearAdminToken } from "../lib/api";
+import { defaultSiteSettings, type SiteSettings } from "../hooks/useSiteSettings";
 import { allServices } from "../data/services";
 import type { ServiceGroup, ServiceItem } from "../data/services";
 
@@ -15,6 +16,8 @@ export default function AdminScreen() {
   const [loading, setLoading] = useState(true);
   const [apiError, setApiError] = useState("");
   const [requests, setRequests] = useState<AdminRequest[]>([]);
+  const [settingsDraft, setSettingsDraft] = useState<SiteSettings>(defaultSiteSettings);
+  const [settingsSaving, setSettingsSaving] = useState(false);
 
   useEffect(() => {
     let alive = true;
@@ -25,6 +28,8 @@ export default function AdminScreen() {
         if (alive && result.services) setItems(result.services);
         const requestResult = await apiRequest<{ requests: AdminRequest[] }>("/api/requests", {}, true);
         if (alive) setRequests(requestResult.requests || []);
+        const settingsResult = await apiRequest<{ settings: SiteSettings }>("/api/settings");
+        if (alive && settingsResult.settings) setSettingsDraft({ ...defaultSiteSettings, ...settingsResult.settings });
       } catch (error) {
         await clearAdminToken();
         if (alive) router.replace("/admin-login" as never);
@@ -67,6 +72,16 @@ export default function AdminScreen() {
     } catch (error) {
       setApiError(error instanceof Error ? error.message : "تعذر حذف الخدمة.");
     }
+  };
+  const saveSettings = async () => {
+    setSettingsSaving(true);
+    setApiError("");
+    try {
+      const result = await apiRequest<{ settings: SiteSettings }>("/api/settings", { method: "PUT", body: JSON.stringify(settingsDraft) }, true);
+      setSettingsDraft({ ...defaultSiteSettings, ...result.settings });
+    } catch (error) {
+      setApiError(error instanceof Error ? error.message : "تعذر حفظ الإعدادات.");
+    } finally { setSettingsSaving(false); }
   };
   const updateRequestStatus = async (id: string, status: string) => {
     try {
@@ -188,7 +203,22 @@ export default function AdminScreen() {
               </View>
             )}
             {tab === "settings" && (
-              <View style={styles.settingsCard}><Text style={styles.sectionTitle}>إعدادات المنصة</Text><Text style={styles.settingsText}>سيتم توصيل إعدادات الحسابات والصلاحيات والتواصل بقاعدة البيانات في مرحلة إعداد Backend.</Text><View style={styles.comingTag}><Text style={styles.comingText}>واجهة أولية جاهزة للتوسّع</Text></View></View>
+              <View style={styles.settingsCard}>
+                <Text style={styles.sectionTitle}>إعدادات المنصة والمحتوى</Text>
+                <Text style={styles.settingsText}>عدّل النصوص والأقسام وبيانات التواصل التي تظهر للعملاء في الموقع.</Text>
+                {([
+                  ["siteName","اسم المنصة"],["siteDescription","وصف المنصة"],["heroTitle","عنوان الواجهة الرئيسية"],["heroSubtitle","وصف الواجهة الرئيسية"],
+                  ["mainSectionTitle","اسم قسم الخدمات الرئيسية"],["mainSectionDescription","وصف قسم الخدمات الرئيسية"],
+                  ["featuredSectionTitle","اسم قسم الخدمات المميزة"],["featuredSectionDescription","وصف قسم الخدمات المميزة"],
+                  ["contactPhone","رقم التواصل"],["whatsappNumber","رقم واتساب"],["contactEmail","البريد الإلكتروني"],["aboutText","نبذة من نحن"]
+                ] as [keyof SiteSettings,string][]).map(([key,label]) => (
+                  <View key={key} style={{ marginTop: 13 }}>
+                    <Text style={styles.fieldLabel}>{label}</Text>
+                    <TextInput value={settingsDraft[key]} onChangeText={value => setSettingsDraft(current => ({ ...current, [key]: value }))} multiline={["siteDescription","heroSubtitle","mainSectionDescription","featuredSectionDescription","aboutText"].includes(key)} style={[styles.field, ["siteDescription","heroSubtitle","mainSectionDescription","featuredSectionDescription","aboutText"].includes(key) && styles.multiline]} />
+                  </View>
+                ))}
+                <Pressable onPress={saveSettings} disabled={settingsSaving} style={[styles.saveButton,{alignSelf:"flex-start",marginTop:20,opacity:settingsSaving?0.6:1}]}><Text style={styles.saveButtonText}>{settingsSaving ? "جارٍ الحفظ..." : "حفظ إعدادات الموقع"}</Text></Pressable>
+              </View>
             )}
           </ScrollView>
         </View>
