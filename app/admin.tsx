@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Image, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View, useWindowDimensions } from "react-native";
 import { router } from "expo-router";
+import { apiRequest, clearAdminToken } from "../lib/api";
 import { allServices } from "../data/services";
 import type { ServiceGroup, ServiceItem } from "../data/services";
 
@@ -10,6 +11,25 @@ export default function AdminScreen() {
   const { width } = useWindowDimensions();
   const compact = width < 860;
   const [items, setItems] = useState<ServiceItem[]>(allServices);
+  const [loading, setLoading] = useState(true);
+  const [apiError, setApiError] = useState("");
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        await apiRequest("/api/admin/me", {}, true);
+        const result = await apiRequest<{ services: ServiceItem[] }>("/api/services");
+        if (alive && result.services) setItems(result.services);
+      } catch (error) {
+        await clearAdminToken();
+        if (alive) router.replace("/admin-login" as never);
+      } finally {
+        if (alive) setLoading(false);
+      }
+    })();
+    return () => { alive = false; };
+  }, []);
   const [tab, setTab] = useState<Tab>("services");
   const [filter, setFilter] = useState<"all" | ServiceGroup>("all");
   const [draft, setDraft] = useState<ServiceItem | null>(null);
@@ -18,12 +38,36 @@ export default function AdminScreen() {
 
   const openNew = (group: ServiceGroup) => setDraft({ id: "new-" + Date.now(), title: "", english: "", shortDescription: "", details: "", image: "", group, icon: "✦" });
   const updateDraft = <K extends keyof ServiceItem,>(key: K, value: ServiceItem[K]) => setDraft(current => current ? { ...current, [key]: value } : current);
-  const saveDraft = () => {
+  const saveDraft = async () => {
     if (!draft || !draft.title.trim()) return;
-    setItems(current => current.some(item => item.id === draft.id) ? current.map(item => item.id === draft.id ? draft : item) : [draft, ...current]);
-    setDraft(null);
+    setApiError("");
+    try {
+      const exists = items.some(item => item.id === draft.id);
+      if (exists) {
+        await apiRequest(`/api/services/${encodeURIComponent(draft.id)}`, { method: "PUT", body: JSON.stringify(draft) }, true);
+        setItems(current => current.map(item => item.id === draft.id ? draft : item));
+      } else {
+        await apiRequest("/api/services", { method: "POST", body: JSON.stringify(draft) }, true);
+        setItems(current => [draft, ...current]);
+      }
+      setDraft(null);
+    } catch (error) {
+      setApiError(error instanceof Error ? error.message : "تعذر حفظ الخدمة.");
+    }
   };
-  const removeItem = (id: string) => setItems(current => current.filter(item => item.id !== id));
+  const removeItem = async (id: string) => {
+    setApiError("");
+    try {
+      await apiRequest(`/api/services/${encodeURIComponent(id)}`, { method: "DELETE" }, true);
+      setItems(current => current.filter(item => item.id !== id));
+    } catch (error) {
+      setApiError(error instanceof Error ? error.message : "تعذر حذف الخدمة.");
+    }
+  };
+  const logout = async () => {
+    await clearAdminToken();
+    router.replace("/admin-login" as never);
+  };
 
   const MenuButton = ({ value, label, icon }: { value: Tab; label: string; icon: string }) => (
     <Pressable onPress={() => setTab(value)} style={[styles.menuButton, tab === value && styles.menuButtonActive]}>
@@ -50,7 +94,7 @@ export default function AdminScreen() {
           <View style={styles.sidebarBottom}>
             <View style={styles.adminAvatar}><Text style={styles.avatarText}>A</Text></View>
             <View style={{ flex: 1 }}><Text style={styles.adminName}>مدير المنصة</Text><Text style={styles.adminRole}>معاينة لوحة الإدارة</Text></View>
-            <Pressable onPress={() => router.push("/admin-login" as never)}><Text style={styles.logout}>↪</Text></Pressable>
+            <Pressable onPress={logout}><Text style={styles.logout}>↪</Text></Pressable>
           </View>
         </View>
 
@@ -58,7 +102,7 @@ export default function AdminScreen() {
           <View style={styles.topbar}>
             <View><Text style={styles.pageKicker}>KHADAMATI / ADMIN</Text><Text style={styles.pageTitle}>{tab === "services" ? "إدارة الخدمات" : tab === "requests" ? "طلبات الخدمة" : "إعدادات المنصة"}</Text></View>
             <View style={styles.topActions}>
-              <View style={styles.previewBadge}><View style={styles.previewDot} /><Text style={styles.previewBadgeText}>وضع المعاينة</Text></View>
+              <View style={styles.previewBadge}><View style={styles.previewDot} /><Text style={styles.previewBadgeText}>متصل بقاعدة البيانات</Text></View>
               <Pressable onPress={() => router.push("/" as never)} style={styles.siteButton}><Text style={styles.siteButtonText}>عرض الموقع ↗</Text></Pressable>
             </View>
           </View>
