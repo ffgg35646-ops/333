@@ -2,12 +2,12 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import type { VercelRequest } from "@vercel/node";
 
 const secret = process.env.ADMIN_SESSION_SECRET;
-if (!secret || secret.length < 32) throw new Error("ADMIN_SESSION_SECRET must be at least 32 characters");
 
 type Session = { sub: string; email: string; role: "admin"; exp: number };
 
 function signature(value: string) {
-  return createHmac("sha256", secret!).update(value).digest("base64url");
+  if (!secret || secret.length < 32) throw new Error("ADMIN_SESSION_SECRET must be at least 32 characters");
+  return createHmac("sha256", secret).update(value).digest("base64url");
 }
 
 export function createSession(admin: { _id: { toString(): string }; email: string }) {
