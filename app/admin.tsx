@@ -217,7 +217,7 @@ export default function AdminScreen() {
                     <TextInput value={settingsDraft[key]} onChangeText={value => setSettingsDraft(current => ({ ...current, [key]: value }))} multiline={["siteDescription","heroSubtitle","mainSectionDescription","featuredSectionDescription","aboutText"].includes(key)} style={[styles.field, ["siteDescription","heroSubtitle","mainSectionDescription","featuredSectionDescription","aboutText"].includes(key) && styles.multiline]} />
                   </View>
                 ))}
-                <Pressable onPress={saveSettings} disabled={settingsSaving} style={[styles.saveButton,{alignSelf:"flex-start",marginTop:20,opacity:settingsSaving?0.6:1}]}><Text style={styles.saveButtonText}>{settingsSaving ? "جارٍ الحفظ..." : "حفظ إعدادات الموقع"}</Text></Pressable>
+                <Pressable onPress={saveSettings} disabled={settingsSaving} style={[styles.saveButton,{alignSelf:"flex-start",marginTop:20,opacity:settingsSaving?0.6:1}]}><Text style={styles.saveText}>{settingsSaving ? "جارٍ الحفظ..." : "حفظ إعدادات الموقع"}</Text></Pressable>
               </View>
             )}
           </ScrollView>
