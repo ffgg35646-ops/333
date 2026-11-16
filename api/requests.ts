@@ -10,10 +10,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const phone = String(req.body?.phone || "").trim();
       const address = String(req.body?.address || "").trim();
       const service = String(req.body?.service || "").trim();
+      const compoundName = String(req.body?.compoundName || "").trim();
+      const propertyNumber = String(req.body?.propertyNumber || "").trim();
+      const propertyName = String(req.body?.propertyName || "").trim();
       const notes = String(req.body?.notes || "").trim();
       if (!name || !phone || !address || !service) return res.status(400).json({ error: "الاسم ورقم الهاتف والعنوان والخدمة مطلوبة." });
-      if (name.length > 120 || phone.length > 40 || address.length > 500 || service.length > 160 || notes.length > 3000) return res.status(400).json({ error: "بعض البيانات أطول من الحد المسموح." });
-      const doc = { name, phone, address, service, notes, status: "new", createdAt: new Date(), updatedAt: new Date() };
+      if (name.length > 120 || phone.length > 40 || address.length > 500 || service.length > 160 || compoundName.length > 160 || propertyNumber.length > 40 || propertyName.length > 160 || notes.length > 3000) return res.status(400).json({ error: "بعض البيانات أطول من الحد المسموح." });
+      const doc = { name, phone, address, compoundName, propertyNumber, propertyName, service, notes, status: "new", createdAt: new Date(), updatedAt: new Date() };
       const result = await requests.insertOne(doc);
       return res.status(201).json({ request: { id: result.insertedId.toString(), ...doc } });
     }
