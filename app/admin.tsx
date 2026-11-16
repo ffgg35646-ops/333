@@ -166,7 +166,7 @@ export default function AdminScreen() {
                     <View key={item.id} style={styles.serviceCard}>
                       <Image source={{ uri: item.image || "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800&q=80" }} style={styles.serviceImage} />
                       <View style={styles.serviceCardBody}>
-                        <View style={styles.serviceCardHead}><Text style={styles.serviceName}>{item.icon} {item.title}</Text><Text style={styles.groupTag}>{item.group === "main" ? "رئيسية" : "مميزة"}</Text></View>
+                        <View style={styles.serviceCardHead}><Text style={styles.serviceName}>{item.icon} {item.title}</Text><Text style={styles.groupTag}>{item.categoryTitle || (item.group === "main" ? "رئيسية" : "مميزة")}</Text></View>
                         <Text style={styles.serviceEnglish}>{item.english}</Text>
                         <Text style={styles.serviceDescription} numberOfLines={2}>{item.shortDescription}</Text>
                         <View style={styles.cardActions}>
@@ -237,6 +237,12 @@ export default function AdminScreen() {
               <TextInput value={draft?.shortDescription ?? ""} onChangeText={value => updateDraft("shortDescription", value)} placeholder="وصف يظهر في بطاقة الخدمة" style={[styles.field, styles.multiline]} multiline />
               <Text style={styles.fieldLabel}>تفاصيل الخدمة</Text>
               <TextInput value={draft?.details ?? ""} onChangeText={value => updateDraft("details", value)} placeholder="اكتب تفاصيل الخدمة..." style={[styles.field, styles.multiline]} multiline />
+              <Text style={styles.fieldLabel}>القسم بالعربية</Text>
+              <TextInput value={draft?.categoryTitle ?? ""} onChangeText={value => updateDraft("categoryTitle", value)} placeholder="مثال: الصيانة" style={styles.field} />
+              <Text style={styles.fieldLabel}>القسم بالإنجليزية</Text>
+              <TextInput value={draft?.categoryEnglish ?? ""} onChangeText={value => updateDraft("categoryEnglish", value)} placeholder="Maintenance" style={styles.field} />
+              <Text style={styles.fieldLabel}>معرّف القسم</Text>
+              <TextInput value={draft?.categoryId ?? "maintenance"} onChangeText={value => updateDraft("categoryId", value.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-"))} placeholder="maintenance" autoCapitalize="none" style={[styles.field, { textAlign: "left" }]} />
               <Text style={styles.fieldLabel}>رابط الصورة</Text>
               <TextInput value={draft?.image ?? ""} onChangeText={value => updateDraft("image", value)} placeholder="https://..." autoCapitalize="none" style={[styles.field, { textAlign: "left" }]} />
               <Text style={styles.fieldLabel}>رمز الخدمة</Text>

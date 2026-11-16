@@ -13,9 +13,7 @@ export function useServices() {
       .then(result => {
         if (active && Array.isArray(result.services)) setServices(result.services);
       })
-      .catch(() => {
-        // Keep the bundled catalog available if the API is not configured yet.
-      })
+      .catch(() => {})
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
   }, []);
