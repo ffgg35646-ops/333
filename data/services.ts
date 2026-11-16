@@ -9,6 +9,8 @@ export type ServiceItem = {
   image: string;
   group: ServiceGroup;
   icon: string;
+  active?: boolean;
+  order?: number;
 };
 
 export const mainServices: ServiceItem[] = [
