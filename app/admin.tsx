@@ -6,6 +6,7 @@ import { allServices } from "../data/services";
 import type { ServiceGroup, ServiceItem } from "../data/services";
 
 type Tab = "services" | "requests" | "settings";
+type AdminRequest = { id: string; name: string; phone: string; address: string; service: string; notes?: string; status: string; createdAt?: string };
 
 export default function AdminScreen() {
   const { width } = useWindowDimensions();
@@ -13,6 +14,7 @@ export default function AdminScreen() {
   const [items, setItems] = useState<ServiceItem[]>(allServices);
   const [loading, setLoading] = useState(true);
   const [apiError, setApiError] = useState("");
+  const [requests, setRequests] = useState<AdminRequest[]>([]);
 
   useEffect(() => {
     let alive = true;
@@ -21,6 +23,8 @@ export default function AdminScreen() {
         await apiRequest("/api/admin/me", {}, true);
         const result = await apiRequest<{ services: ServiceItem[] }>("/api/services");
         if (alive && result.services) setItems(result.services);
+        const requestResult = await apiRequest<{ requests: AdminRequest[] }>("/api/requests", {}, true);
+        if (alive) setRequests(requestResult.requests || []);
       } catch (error) {
         await clearAdminToken();
         if (alive) router.replace("/admin-login" as never);
@@ -63,6 +67,18 @@ export default function AdminScreen() {
     } catch (error) {
       setApiError(error instanceof Error ? error.message : "تعذر حذف الخدمة.");
     }
+  };
+  const updateRequestStatus = async (id: string, status: string) => {
+    try {
+      await apiRequest(`/api/requests/${encodeURIComponent(id)}`, { method: "PUT", body: JSON.stringify({ status }) }, true);
+      setRequests(current => current.map(item => item.id === id ? { ...item, status } : item));
+    } catch (error) { setApiError(error instanceof Error ? error.message : "تعذر تحديث حالة الطلب."); }
+  };
+  const deleteRequest = async (id: string) => {
+    try {
+      await apiRequest(`/api/requests/${encodeURIComponent(id)}`, { method: "DELETE" }, true);
+      setRequests(current => current.filter(item => item.id !== id));
+    } catch (error) { setApiError(error instanceof Error ? error.message : "تعذر حذف الطلب."); }
   };
   const logout = async () => {
     await clearAdminToken();
@@ -150,7 +166,26 @@ export default function AdminScreen() {
             )}
 
             {tab === "requests" && (
-              <View style={styles.emptyState}><Text style={styles.emptyIcon}>▤</Text><Text style={styles.emptyTitle}>طلبات الخدمة</Text><Text style={styles.emptyText}>سيظهر هنا سجل الطلبات وحالاتها بعد تجهيز نموذج الطلب وربطه بقاعدة البيانات.</Text><View style={styles.comingTag}><Text style={styles.comingText}>بانتظار ربط Backend</Text></View></View>
+              <View style={{ gap: 14 }}>
+                <View style={styles.welcome}><View><Text style={styles.welcomeTitle}>طلبات العملاء</Text><Text style={styles.welcomeText}>تابع الطلبات الجديدة وغيّر حالتها من مكان واحد.</Text></View><Text style={styles.welcomePattern}>▤</Text></View>
+                {requests.length === 0 ? <View style={styles.emptyState}><Text style={styles.emptyIcon}>▤</Text><Text style={styles.emptyTitle}>لا توجد طلبات حتى الآن</Text><Text style={styles.emptyText}>ستظهر هنا الطلبات التي يرسلها العملاء من الموقع.</Text></View> :
+                  requests.map(item => (
+                    <View key={item.id} style={{ backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: "#E6ECE9", borderRadius: 15, padding: 16, gap: 8 }}>
+                      <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
+                        <Text style={{ color: "#17383D", fontWeight: "900", fontSize: 15 }}>{item.service}</Text>
+                        <Text style={{ color: "#07877B", fontSize: 11, fontWeight: "800" }}>{({new:"جديد",contacted:"تم التواصل",in_progress:"قيد التنفيذ",completed:"مكتمل",cancelled:"ملغي"} as Record<string,string>)[item.status] || item.status}</Text>
+                      </View>
+                      <Text style={{ color: "#415A60", textAlign: "right" }}>العميل: {item.name} · الهاتف: {item.phone}</Text>
+                      <Text style={{ color: "#667B7E", textAlign: "right" }}>العنوان: {item.address}</Text>
+                      {!!item.notes && <Text style={{ color: "#667B7E", textAlign: "right" }}>التفاصيل: {item.notes}</Text>}
+                      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 7, justifyContent: "flex-end", marginTop: 5 }}>
+                        {([{v:"contacted",t:"تم التواصل"},{v:"in_progress",t:"قيد التنفيذ"},{v:"completed",t:"مكتمل"},{v:"cancelled",t:"إلغاء"}]).map(x => <Pressable key={x.v} onPress={() => updateRequestStatus(item.id,x.v)} style={{ backgroundColor: item.status===x.v ? "#DDF3EC" : "#F2F6F4", paddingVertical:8, paddingHorizontal:10, borderRadius:8 }}><Text style={{ color:"#315B58", fontSize:10, fontWeight:"800" }}>{x.t}</Text></Pressable>)}
+                        <Pressable onPress={() => deleteRequest(item.id)} style={{ backgroundColor:"#FCEEEE",paddingVertical:8,paddingHorizontal:10,borderRadius:8 }}><Text style={{ color:"#A33B3B",fontSize:10,fontWeight:"800" }}>حذف</Text></Pressable>
+                      </View>
+                    </View>
+                  ))
+                }
+              </View>
             )}
             {tab === "settings" && (
               <View style={styles.settingsCard}><Text style={styles.sectionTitle}>إعدادات المنصة</Text><Text style={styles.settingsText}>سيتم توصيل إعدادات الحسابات والصلاحيات والتواصل بقاعدة البيانات في مرحلة إعداد Backend.</Text><View style={styles.comingTag}><Text style={styles.comingText}>واجهة أولية جاهزة للتوسّع</Text></View></View>
@@ -178,6 +213,11 @@ export default function AdminScreen() {
               <View style={styles.groupChoices}>
                 <Pressable onPress={() => updateDraft("group", "main")} style={[styles.groupChoice, draft?.group === "main" && styles.groupChoiceActive]}><Text style={[styles.groupChoiceText, draft?.group === "main" && styles.groupChoiceTextActive]}>خدمة رئيسية</Text></Pressable>
                 <Pressable onPress={() => updateDraft("group", "featured")} style={[styles.groupChoice, draft?.group === "featured" && styles.groupChoiceActive]}><Text style={[styles.groupChoiceText, draft?.group === "featured" && styles.groupChoiceTextActive]}>خدمة مميزة</Text></Pressable>
+              </View>
+              <Text style={styles.fieldLabel}>حالة الظهور</Text>
+              <View style={styles.groupChoices}>
+                <Pressable onPress={() => updateDraft("active", true as never)} style={[styles.groupChoice, draft?.active !== false && styles.groupChoiceActive]}><Text style={[styles.groupChoiceText, draft?.active !== false && styles.groupChoiceTextActive]}>ظاهر للعملاء</Text></Pressable>
+                <Pressable onPress={() => updateDraft("active", false as never)} style={[styles.groupChoice, draft?.active === false && styles.groupChoiceActive]}><Text style={[styles.groupChoiceText, draft?.active === false && styles.groupChoiceTextActive]}>مخفي</Text></Pressable>
               </View>
               <Text style={styles.modalHint}>حذف رابط الصورة أو تركه فارغًا يزيل الصورة من بطاقة الخدمة.</Text>
             </ScrollView>
