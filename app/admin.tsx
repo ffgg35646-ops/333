@@ -3,7 +3,7 @@ import { Image, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View,
 import { router } from "expo-router";
 import { apiRequest, clearAdminToken } from "../lib/api";
 import { defaultSiteSettings, type SiteSettings } from "../hooks/useSiteSettings";
-import { allServices } from "../data/services";
+import { allServices, serviceCategories } from "../data/services";
 import type { ServiceGroup, ServiceItem } from "../data/services";
 
 type Tab = "services" | "requests" | "settings";
@@ -237,12 +237,14 @@ export default function AdminScreen() {
               <TextInput value={draft?.shortDescription ?? ""} onChangeText={value => updateDraft("shortDescription", value)} placeholder="وصف يظهر في بطاقة الخدمة" style={[styles.field, styles.multiline]} multiline />
               <Text style={styles.fieldLabel}>تفاصيل الخدمة</Text>
               <TextInput value={draft?.details ?? ""} onChangeText={value => updateDraft("details", value)} placeholder="اكتب تفاصيل الخدمة..." style={[styles.field, styles.multiline]} multiline />
-              <Text style={styles.fieldLabel}>القسم بالعربية</Text>
-              <TextInput value={draft?.categoryTitle ?? ""} onChangeText={value => updateDraft("categoryTitle", value)} placeholder="مثال: الصيانة" style={styles.field} />
-              <Text style={styles.fieldLabel}>القسم بالإنجليزية</Text>
-              <TextInput value={draft?.categoryEnglish ?? ""} onChangeText={value => updateDraft("categoryEnglish", value)} placeholder="Maintenance" style={styles.field} />
-              <Text style={styles.fieldLabel}>معرّف القسم</Text>
-              <TextInput value={draft?.categoryId ?? "maintenance"} onChangeText={value => updateDraft("categoryId", value.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-"))} placeholder="maintenance" autoCapitalize="none" style={[styles.field, { textAlign: "left" }]} />
+              <Text style={styles.fieldLabel}>القسم</Text>
+              <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+                {serviceCategories.map(category => (
+                  <Pressable key={category.id} onPress={() => setDraft(current => current ? { ...current, categoryId: category.id, categoryTitle: category.title, categoryEnglish: category.english } : current)} style={[styles.groupChoice, draft?.categoryId === category.id && styles.groupChoiceActive]}>
+                    <Text style={[styles.groupChoiceText, draft?.categoryId === category.id && styles.groupChoiceTextActive]}>{category.title}</Text>
+                  </Pressable>
+                ))}
+              </View>
               <Text style={styles.fieldLabel}>رابط الصورة</Text>
               <TextInput value={draft?.image ?? ""} onChangeText={value => updateDraft("image", value)} placeholder="https://..." autoCapitalize="none" style={[styles.field, { textAlign: "left" }]} />
               <Text style={styles.fieldLabel}>رمز الخدمة</Text>
