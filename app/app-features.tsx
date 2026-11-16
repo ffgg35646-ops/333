@@ -1,6 +1,7 @@
 import { Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import { router } from "expo-router";
 import { SiteFooter, SiteHeader } from "../components/SiteShell";
+import { allServices, serviceCategories } from "../data/services";
 
 const overview = [
   { title: "نظافة منزلية", icon: "✦", items: ["إبادة حشرات", "تعقيم", "سجاد وأرضيات", "جمع القمامة"] },
@@ -116,28 +117,19 @@ export default function AppFeaturesScreen() {
           </View>
         </View>
 
-        <View style={styles.section}>
-          <SectionTitle kicker="OUR MAIN SERVICES" title="خدماتنا الرئيسية | Our Main Services" subtitle="قائمة الخدمات الأساسية باللغتين العربية والإنجليزية." />
-          <View style={styles.mainServicesGrid}>
-            {mainServices.map(([english, arabic], index) => <View key={english} style={[styles.mainServiceCard, { width: compact ? "100%" : "23.5%" }]}>
-              <Text style={styles.mainServiceNumber}>{String(index + 1).padStart(2, "0")}</Text>
-              <Text style={styles.mainServiceArabic}>{arabic}</Text>
-              <Text style={styles.mainServiceEnglish}>{english}</Text>
-            </View>)}
-          </View>
-        </View>
-
-        <View style={styles.premiumSection}>
-          <View style={styles.section}>
-            <SectionTitle kicker="PREMIUM SERVICES" title="خدمات مميزة" subtitle="خدمات إضافية متخصصة يمكن طلبها ضمن باقة الخدمات المميزة." />
-            <View style={styles.premiumGrid}>
-              {premiumServices.map((item, index) => <View key={item} style={[styles.premiumCard, { width: compact ? "100%" : "48%" }]}>
-                <View style={styles.premiumCheck}><Text style={styles.premiumCheckText}>✓</Text></View>
-                <Text style={styles.premiumText}>{item}</Text>
+        {serviceCategories.map(category => {
+          const items = allServices.filter(item => item.categoryId === category.id);
+          return <View key={category.id} style={styles.section}>
+            <SectionTitle kicker={category.english} title={category.title} subtitle={`${items.length} خدمة متاحة باللغتين العربية والإنجليزية.`} />
+            <View style={styles.mainServicesGrid}>
+              {items.map((item, index) => <View key={item.id} style={[styles.mainServiceCard, { width: compact ? "100%" : "23.5%" }]}>
+                <Text style={styles.mainServiceNumber}>{String(index + 1).padStart(2, "0")}</Text>
+                <Text style={styles.mainServiceArabic}>{item.title}</Text>
+                <Text style={styles.mainServiceEnglish}>{item.english}</Text>
               </View>)}
             </View>
-          </View>
-        </View>
+          </View>;
+        })}
 
         <View style={styles.quickSection}>
           <View style={styles.section}>
