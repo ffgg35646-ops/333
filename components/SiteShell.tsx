@@ -1,12 +1,14 @@
 import type { ReactNode } from "react";
 import { Pressable, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import { router } from "expo-router";
+import { useSiteSettings } from "../hooks/useSiteSettings";
 
 type HeaderProps = { active?: string };
 
 export function SiteHeader({ active }: HeaderProps) {
   const { width } = useWindowDimensions();
   const compact = width < 720;
+  const settings = useSiteSettings();
   const go = (path: string) => router.push(path as never);
   return (
     <View style={styles.headerWrap}>
@@ -14,7 +16,7 @@ export function SiteHeader({ active }: HeaderProps) {
         <Pressable onPress={() => go("/")} style={styles.brand}>
           <View style={styles.brandMark}><Text style={styles.brandMarkText}>خ</Text></View>
           <View>
-            <Text style={styles.brandName}>خدماتي</Text>
+            <Text style={styles.brandName}>{settings.siteName}</Text>
             <Text style={styles.brandTag}>كل خدماتك في مكان واحد</Text>
           </View>
         </Pressable>
@@ -41,8 +43,8 @@ export function SiteFooter({ children }: FooterProps) {
       <View style={styles.footerInner}>
         <View style={styles.footerBrand}>
           <View style={styles.footerLogo}><Text style={styles.footerLogoText}>خ</Text></View>
-          <Text style={styles.footerTitle}>خدماتي</Text>
-          <Text style={styles.footerDescription}>منصة تجمع لك الخدمات المنزلية والمهنية في مكان واحد، بخطوات بسيطة وتجربة واضحة.</Text>
+          <Text style={styles.footerTitle}>{settings.siteName}</Text>
+          <Text style={styles.footerDescription}>{settings.siteDescription}</Text>
         </View>
         <View style={styles.footerColumn}>
           <Text style={styles.footerHeading}>روابط مهمة</Text>
