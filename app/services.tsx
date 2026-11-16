@@ -45,21 +45,21 @@ export default function ServicesScreen() {
 }
 
 const styles = StyleSheet.create({
-  page: { flex: 1, backgroundColor: "#F7F9FF" },
-  intro: { backgroundColor: "#EAF0FF", paddingHorizontal: 24, paddingVertical: 48, alignItems: "center" },
-  kicker: { color: "#0738C8", fontWeight: "900", fontSize: 10, letterSpacing: 2 },
-  heading: { color: "#10245F", fontSize: 32, fontWeight: "900", marginTop: 10, textAlign: "center" },
+  page: { flex: 1, backgroundColor: "#F2FAFE" },
+  intro: { backgroundColor: "#E4F5FC", paddingHorizontal: 24, paddingVertical: 58, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#CDEBF7" },
+  kicker: { color: "#078BCB", fontWeight: "900", fontSize: 10, letterSpacing: 2 },
+  heading: { color: "#123B56", fontSize: 32, fontWeight: "900", marginTop: 10, textAlign: "center" },
   introText: { color: "#63777A", fontSize: 14, marginTop: 10, textAlign: "center" },
   section: { width: "100%", maxWidth: 1240, alignSelf: "center", padding: 24, paddingTop: 42, paddingBottom: 42 },
   categoryHeading: { marginBottom: 22, alignItems: "flex-end" },
-  sectionTitle: { color: "#10245F", fontSize: 24, fontWeight: "900", textAlign: "right" },
+  sectionTitle: { color: "#123B56", fontSize: 24, fontWeight: "900", textAlign: "right" },
   categoryEnglish: { color: "#849395", fontSize: 12, marginTop: 5 },
   grid: { flexDirection: "row", flexWrap: "wrap", gap: 16 },
-  tile: { backgroundColor: "#FFFFFF", borderRadius: 16, overflow: "hidden", borderWidth: 1, borderColor: "#E1E8F8", marginBottom: 2 },
+  tile: { backgroundColor: "#FFFFFF", borderRadius: 18, overflow: "hidden", borderWidth: 1, borderColor: "#DCECF4", marginBottom: 8, shadowColor: "#123B56", shadowOpacity: 0.06, shadowRadius: 12, shadowOffset: { width: 0, height: 4 }, elevation: 2 },
   image: { width: "100%", height: 150, backgroundColor: "#E3E9F8" },
   tileBody: { padding: 14, alignItems: "flex-start" },
-  title: { color: "#14275F", fontSize: 14, fontWeight: "900", textAlign: "right" },
+  title: { color: "#123B56", fontSize: 14, fontWeight: "900", textAlign: "right" },
   english: { color: "#8C9A9D", fontSize: 10, marginTop: 5, textAlign: "right" },
   description: { color: "#687B80", fontSize: 11, lineHeight: 19, marginTop: 8, textAlign: "right" },
-  more: { color: "#0738C8", fontSize: 11, fontWeight: "900", marginTop: 11 }
+  more: { color: "#078BCB", fontSize: 11, fontWeight: "900", marginTop: 11 }
 });
