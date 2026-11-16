@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   heroOuter: { backgroundColor: "#102A34", paddingHorizontal: 18, paddingTop: 18, paddingBottom: 24 },
   hero: { width: "100%", maxWidth: 1240, minHeight: 460, alignSelf: "center", justifyContent: "center", overflow: "hidden", borderRadius: 26, backgroundColor: "#102A34" },
   heroCompact: { minHeight: 500, borderRadius: 18 },
-  heroShade: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(7, 30, 37, 0.72)" },
+  heroShade: { ...StyleSheet.absoluteFill, backgroundColor: "rgba(7, 30, 37, 0.72)" },
   heroContent: { width: "100%", maxWidth: 760, paddingHorizontal: 54, paddingVertical: 54, alignItems: "flex-start" },
   heroContentCompact: { paddingHorizontal: 24, paddingVertical: 38 },
   eyebrow: { borderWidth: 1, borderColor: "rgba(255,255,255,0.35)", borderRadius: 30, paddingHorizontal: 13, paddingVertical: 7, marginBottom: 20 },

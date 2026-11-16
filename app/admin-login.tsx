@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   body: { width: "100%", maxWidth: 1160, alignSelf: "center", flex: 1, minHeight: 610, paddingHorizontal: 22, paddingVertical: 24, flexDirection: "row", gap: 24 },
   visual: { flex: 1, minHeight: 560, borderRadius: 24, overflow: "hidden", backgroundColor: "#102A34", justifyContent: "flex-end" },
   visualImage: { borderRadius: 24 },
-  visualShade: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(12, 39, 44, 0.74)" },
+  visualShade: { ...StyleSheet.absoluteFill, backgroundColor: "rgba(12, 39, 44, 0.74)" },
   visualCopy: { padding: 38, alignItems: "flex-start" },
   visualEyebrow: { color: "#A9E0D7", fontSize: 9, fontWeight: "900", letterSpacing: 2 },
   visualTitle: { color: "#FFFFFF", fontSize: 38, fontWeight: "900", lineHeight: 52, marginTop: 15, textAlign: "right" },
