@@ -1,9 +1,54 @@
 import type { ReactNode } from "react";
 import { Pressable, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import * as Linking from "expo-linking";
 import { router } from "expo-router";
 import { useSiteSettings } from "../hooks/useSiteSettings";
 
+// Add the real APK and iOS distribution URLs here when the builds are ready.
+// Keep them empty until the files or approved installation pages exist.
+const APP_DOWNLOAD_LINKS = {
+  android: "",
+  ios: ""
+};
+
 type HeaderProps = { active?: string };
+
+function AppDownloadLinks({ compact = false }: { compact?: boolean }) {
+  const openDownload = (url: string) => {
+    if (url) void Linking.openURL(url);
+  };
+
+  return (
+    <View style={[styles.downloadLinks, compact && styles.downloadLinksCompact]}>
+      <Pressable
+        accessibilityRole="link"
+        accessibilityLabel="تحميل تطبيق Android"
+        disabled={!APP_DOWNLOAD_LINKS.android}
+        onPress={() => openDownload(APP_DOWNLOAD_LINKS.android)}
+        style={[styles.downloadButton, compact && styles.downloadButtonCompact, !APP_DOWNLOAD_LINKS.android && styles.downloadButtonDisabled]}
+      >
+        <View style={styles.playMark}><Text style={styles.playMarkText}>▶</Text></View>
+        <View>
+          <Text style={styles.downloadEyebrow}>تحميل التطبيق</Text>
+          <Text style={[styles.downloadLabel, compact && styles.downloadLabelCompact]}>Google Play</Text>
+        </View>
+      </Pressable>
+      <Pressable
+        accessibilityRole="link"
+        accessibilityLabel="تحميل تطبيق iPhone"
+        disabled={!APP_DOWNLOAD_LINKS.ios}
+        onPress={() => openDownload(APP_DOWNLOAD_LINKS.ios)}
+        style={[styles.downloadButton, compact && styles.downloadButtonCompact, !APP_DOWNLOAD_LINKS.ios && styles.downloadButtonDisabled]}
+      >
+        <Text style={styles.appleMark}>●</Text>
+        <View>
+          <Text style={styles.downloadEyebrow}>تحميل التطبيق</Text>
+          <Text style={[styles.downloadLabel, compact && styles.downloadLabelCompact]}>iOS</Text>
+        </View>
+      </Pressable>
+    </View>
+  );
+}
 
 export function SiteHeader({ active }: HeaderProps) {
   const { width } = useWindowDimensions();
@@ -26,14 +71,17 @@ export function SiteHeader({ active }: HeaderProps) {
             <Text style={styles.brandTag}>كل خدماتك في مكان واحد</Text>
           </View>
         </Pressable>
-        {!compact && (
+        {!compact ? (
           <View style={styles.nav}>
             {links.map(link => (
               <Pressable key={link.key} onPress={() => go(link.path)} style={[styles.navItem, active === link.key && styles.navItemActive]}>
                 <Text style={[styles.navText, active === link.key && styles.navActive]}>{link.label}</Text>
               </Pressable>
             ))}
+            <AppDownloadLinks />
           </View>
+        ) : (
+          <AppDownloadLinks compact />
         )}
         <Pressable onPress={() => go("/admin-login")} style={[styles.accountButton, compact && styles.accountButtonCompact]}>
           <Text style={styles.accountIcon}>◉</Text>
@@ -95,7 +143,7 @@ export function SiteFooter({ children }: FooterProps) {
 const styles = StyleSheet.create({
   headerWrap: { backgroundColor: "#FFFFFF", borderBottomWidth: 1, borderBottomColor: "#E9EBE5", zIndex: 10 },
   header: { width: "100%", maxWidth: 1240, alignSelf: "center", minHeight: 78, paddingHorizontal: 24, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 18 },
-  headerCompact: { minHeight: 68, paddingVertical: 9, paddingHorizontal: 17 },
+  headerCompact: { minHeight: 68, paddingVertical: 9, paddingHorizontal: 12, gap: 8 },
   brand: { flexDirection: "row", alignItems: "center", gap: 10 },
   brandMark: { width: 42, height: 42, borderRadius: 14, backgroundColor: "#0738C8", alignItems: "center", justifyContent: "center" },
   brandMarkText: { color: "#FFFFFF", fontSize: 25, fontWeight: "900" },
@@ -106,15 +154,26 @@ const styles = StyleSheet.create({
   navItemActive: { backgroundColor: "#EAF0FF" },
   navText: { color: "#6F7973", fontSize: 13, fontWeight: "700" },
   navActive: { color: "#0738C8", fontWeight: "900" },
+  downloadLinks: { flexDirection: "row", alignItems: "center", gap: 7, marginStart: 5 },
+  downloadLinksCompact: { gap: 4, marginStart: 0 },
+  downloadButton: { flexDirection: "row", alignItems: "center", gap: 6, backgroundColor: "#F0F5FF", borderWidth: 1, borderColor: "#D9E5FF", borderRadius: 10, paddingVertical: 7, paddingHorizontal: 9 },
+  downloadButtonCompact: { paddingVertical: 6, paddingHorizontal: 6, gap: 3, borderRadius: 9 },
+  downloadButtonDisabled: { opacity: 0.72 },
+  playMark: { width: 23, height: 23, borderRadius: 7, backgroundColor: "#0738C8", alignItems: "center", justifyContent: "center" },
+  playMarkText: { color: "#FFFFFF", fontSize: 11, marginStart: 2 },
+  appleMark: { color: "#0738C8", fontSize: 21, fontWeight: "900", width: 23, textAlign: "center" },
+  downloadEyebrow: { color: "#7A8AA8", fontSize: 8, textAlign: "left" },
+  downloadLabel: { color: "#10245F", fontSize: 10, fontWeight: "900", textAlign: "left" },
+  downloadLabelCompact: { fontSize: 9 },
   accountButton: { backgroundColor: "#FFC52F", borderRadius: 11, paddingVertical: 11, paddingHorizontal: 16, flexDirection: "row", alignItems: "center", gap: 7 },
-  accountButtonCompact: { paddingVertical: 9, paddingHorizontal: 12 },
+  accountButtonCompact: { paddingVertical: 9, paddingHorizontal: 9, gap: 4 },
   accountIcon: { color: "#10245F", fontSize: 13 },
   accountButtonText: { color: "#10245F", fontSize: 12, fontWeight: "800" },
   mobileNav: { width: "100%", backgroundColor: "#FFFFFF", borderTopWidth: 1, borderTopColor: "#ECEEE8", flexDirection: "row", justifyContent: "space-around", paddingHorizontal: 7, paddingTop: 8, paddingBottom: 10 },
   mobileNavItem: { minWidth: 66, alignItems: "center", justifyContent: "center", gap: 5 },
   mobileNavText: { color: "#89918B", fontSize: 11, fontWeight: "700" },
   mobileNavActive: { color: "#0738C8", fontWeight: "900" },
-  mobileNavIndicator: { width: 16, height: 3, borderRadius: 3, backgroundColor: "#7FA89B" },
+  mobileNavIndicator: { width: 16, height: 3, borderRadius: 3, backgroundColor: "#0738C8" },
   footer: { backgroundColor: "#061A66", marginTop: 34 },
   footerInner: { width: "100%", maxWidth: 1240, alignSelf: "center", paddingHorizontal: 24, paddingVertical: 42, flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", gap: 34 },
   footerBrand: { width: 300, maxWidth: "100%" },
