@@ -128,7 +128,7 @@ export const allServices: ServiceItem[] = [
     "categoryEnglish": "Maintenance",
     "shortDescription": "نجار – Wood Worker. خدمة متخصصة تُنفّذ حسب احتياجك.",
     "details": "خدمة نجار (Wood Worker) تشمل المعاينة وتحديد المطلوب والاتفاق على التفاصيل والموعد قبل بدء التنفيذ.",
-    "image": "https://via.placeholder.com/photo/carpenter-woodworking/900x650",
+    "image": "https://images.unsplash.com/photo-1756736668479-140dfe2b0fe6?auto=format&fit=crop&fm=jpg&q=85&w=1200",
     "group": "main",
     "icon": "🪚",
     "active": true,
