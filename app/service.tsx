@@ -25,6 +25,20 @@ export default function ServiceDetailsScreen() {
               <View style={styles.rule} />
               <Text style={styles.detailsHeading}>تفاصيل الخدمة</Text>
               <Text style={styles.details}>{service.details}</Text>
+              <View style={styles.detailPanel}>
+                <Text style={styles.detailsHeading}>ماذا تشمل الخدمة؟</Text>
+                <Text style={styles.detailBullet}>• فهم احتياجك وتسجيل تفاصيل الخدمة المطلوبة.</Text>
+                <Text style={styles.detailBullet}>• مراجعة بيانات الموقع وطبيعة العمل المطلوب.</Text>
+                <Text style={styles.detailBullet}>• التواصل معك لتوضيح النطاق والتفاصيل قبل التنفيذ.</Text>
+                <Text style={styles.detailBullet}>• الاتفاق على الموعد والتكلفة بعد مراجعة الطلب.</Text>
+              </View>
+              <View style={styles.detailPanel}>
+                <Text style={styles.detailsHeading}>خطوات طلب الخدمة</Text>
+                <Text style={styles.detailStep}>١. اضغط على «اطلب هذه الخدمة».</Text>
+                <Text style={styles.detailStep}>٢. أدخل بيانات التواصل والعنوان.</Text>
+                <Text style={styles.detailStep}>٣. اكتب تفاصيل احتياجك وسنتواصل معك لتأكيد الطلب.</Text>
+              </View>
+              <Text style={styles.note}>ملاحظة: تفاصيل التنفيذ والتكلفة النهائية يتم تأكيدها معك بعد مراجعة طبيعة الخدمة ومكانها.</Text>
               <Pressable onPress={() => router.push(("/request-service?service=" + service.id) as never)} style={styles.button}><Text style={styles.buttonText}>اطلب هذه الخدمة ←</Text></Pressable>
             </View>
           </View>
@@ -48,6 +62,10 @@ const styles = StyleSheet.create({
   rule: { height: 1, backgroundColor: "#E8EEEB", width: "100%", marginVertical: 20 },
   detailsHeading: { color: "#17343D", fontSize: 18, fontWeight: "900", textAlign: "right" },
   details: { color: "#5B6F75", fontSize: 14, lineHeight: 29, marginTop: 10, textAlign: "right" },
+  detailPanel: { width: "100%", backgroundColor: "#F7F9F7", borderRadius: 14, padding: 18, marginTop: 16, borderWidth: 1, borderColor: "#E8EEEA", alignItems: "flex-start" },
+  detailBullet: { color: "#5B6F75", fontSize: 13, lineHeight: 26, marginTop: 5, textAlign: "right" },
+  detailStep: { color: "#5B6F75", fontSize: 13, lineHeight: 27, marginTop: 4, textAlign: "right" },
+  note: { color: "#65766F", fontSize: 12, lineHeight: 22, marginTop: 16, textAlign: "right", backgroundColor: "#EDF3EF", padding: 13, borderRadius: 10, width: "100%" },
   button: { backgroundColor: "#07877B", paddingHorizontal: 23, paddingVertical: 15, borderRadius: 12, marginTop: 25 },
   buttonText: { color: "#FFFFFF", fontWeight: "900", fontSize: 13 },
   notFound: { padding: 60, alignItems: "center" }
