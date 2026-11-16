@@ -59,6 +59,9 @@ export function SiteFooter({ children }: FooterProps) {
           <Text style={styles.footerMuted}>خدمات رئيسية ومميزة</Text>
           <Text style={styles.footerMuted}>تجربة واحدة على الويب والموبايل</Text>
           <Text style={styles.footerMuted}>إدارة منظمة للأقسام</Text>
+          {!!settings.contactPhone && <Text style={styles.footerMuted}>الهاتف: {settings.contactPhone}</Text>}
+          {!!settings.whatsappNumber && <Text style={styles.footerMuted}>واتساب: {settings.whatsappNumber}</Text>}
+          {!!settings.contactEmail && <Text style={styles.footerMuted}>البريد: {settings.contactEmail}</Text>}
           {children}
         </View>
       </View>
