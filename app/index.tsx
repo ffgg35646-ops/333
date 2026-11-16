@@ -38,7 +38,9 @@ export default function HomeScreen() {
   const settings = useSiteSettings();
   const compact = width < 700;
   const cardWidth = compact ? Math.min(width * 0.72, 292) : width < 1050 ? 276 : 286;
-  const categorySections = serviceCategories
+  const categoryOrder = ["maintenance", "cleaning", "personal-care", "healthcare", "professional-technical", "events", "moving-logistic", "safety-security"];
+  const categorySections = [...serviceCategories]
+    .sort((a, b) => categoryOrder.indexOf(a.id) - categoryOrder.indexOf(b.id))
     .map(category => ({
       ...category,
       items: mainServices
