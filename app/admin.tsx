@@ -124,7 +124,7 @@ export default function AdminScreen() {
           </View>
           <View style={styles.sidebarBottom}>
             <View style={styles.adminAvatar}><Text style={styles.avatarText}>A</Text></View>
-            <View style={{ flex: 1 }}><Text style={styles.adminName}>مدير المنصة</Text><Text style={styles.adminRole}>معاينة لوحة الإدارة</Text></View>
+            <View style={{ flex: 1 }}><Text style={styles.adminName}>مدير المنصة</Text><Text style={styles.adminRole}>إدارة النظام</Text></View>
             <Pressable onPress={logout}><Text style={styles.logout}>↪</Text></Pressable>
           </View>
         </View>
@@ -146,7 +146,7 @@ export default function AdminScreen() {
                   <View style={styles.statCard}><Text style={styles.statLabel}>إجمالي الأقسام</Text><Text style={styles.statValue}>{items.length}</Text><Text style={styles.statFoot}>رئيسية ومميزة</Text></View>
                   <View style={styles.statCard}><Text style={styles.statLabel}>الخدمات الرئيسية</Text><Text style={styles.statValue}>{items.filter(item => item.group === "main").length}</Text><Text style={styles.statFoot}>قسم أساسي</Text></View>
                   <View style={styles.statCard}><Text style={styles.statLabel}>الخدمات المميزة</Text><Text style={styles.statValue}>{items.filter(item => item.group === "featured").length}</Text><Text style={styles.statFoot}>قسم إضافي</Text></View>
-                  <View style={styles.statCard}><Text style={styles.statLabel}>طلبات جديدة</Text><Text style={styles.statValue}>—</Text><Text style={styles.statFoot}>بانتظار ربط الطلبات</Text></View>
+                  <View style={styles.statCard}><Text style={styles.statLabel}>طلبات جديدة</Text><Text style={styles.statValue}>{requests.filter(item => item.status === "new").length}</Text><Text style={styles.statFoot}>طلبات جديدة</Text></View>
                 </View>
                 <View style={styles.sectionHead}>
                   <View><Text style={styles.sectionTitle}>أقسام الخدمات</Text><Text style={styles.sectionSub}>أضف قسمًا أو عدّل الصورة والنص والتفاصيل.</Text></View>
@@ -290,9 +290,9 @@ const styles = StyleSheet.create({
   pageKicker: { color: "#8A9A9D", fontSize: 9, fontWeight: "900", letterSpacing: 1.5, textAlign: "right" },
   pageTitle: { color: "#102A34", fontSize: 22, fontWeight: "900", marginTop: 5, textAlign: "right" },
   topActions: { flexDirection: "row", alignItems: "center", gap: 10 },
-  previewBadge: { backgroundColor: "#FFF6E4", borderRadius: 20, paddingVertical: 8, paddingHorizontal: 11, flexDirection: "row", alignItems: "center", gap: 7 },
-  previewDot: { width: 6, height: 6, borderRadius: 5, backgroundColor: "#D99A31" },
-  previewBadgeText: { color: "#956B25", fontSize: 10, fontWeight: "800" },
+  previewBadge: { backgroundColor: "#E8F4EF", borderRadius: 20, paddingVertical: 8, paddingHorizontal: 11, flexDirection: "row", alignItems: "center", gap: 7 },
+  previewDot: { width: 6, height: 6, borderRadius: 5, backgroundColor: "#07877B" },
+  previewBadgeText: { color: "#07877B", fontSize: 10, fontWeight: "800" },
   siteButton: { backgroundColor: "#102A34", borderRadius: 10, paddingVertical: 10, paddingHorizontal: 13 },
   siteButtonText: { color: "#FFFFFF", fontSize: 10, fontWeight: "800" },
   content: { padding: 25, paddingBottom: 50, width: "100%", maxWidth: 1450, alignSelf: "center" },
