@@ -11,6 +11,40 @@ const overview = [
   { title: "رعاية الحيوانات", icon: "🐾", items: ["أكل للحيوانات", "رعاية صحية", "إكسسوارات"] }
 ];
 
+const mainServices = [
+  ["Electricity", "كهرباء"],
+  ["Carpentry", "نجارة وتركيب"],
+  ["Plumbing", "سباكة"],
+  ["Painting", "نقاشة ودهانات"],
+  ["Conditioning", "تكييف"],
+  ["Cleaning", "خدمة النظافة"],
+  ["Satellite & Receiver", "ساتلايت ورسيفر"],
+  ["Gypsum Board", "جبس بورد"],
+  ["Ceramic & Tiles", "بلاط وسيراميك"],
+  ["Aluminum", "ألوميتال"],
+  ["Appliances", "أجهزة إلكترونية"],
+  ["Sterilization", "تعقيم وتطهير"],
+  ["Pest Control", "مكافحة حشرات"],
+  ["Plastering", "محارة"]
+];
+
+const premiumServices = [
+  "الديكور",
+  "تنظيف المنزل وخادمات المنازل",
+  "خدمات الزراعة والحدائق",
+  "غسيل وكوي الملابس والمفروشات",
+  "نقل الأثاث وتجميعه",
+  "تفصيل وتنجيد الكنب والمفروشات والستائر",
+  "نقل السيارات",
+  "صيانة أجهزة الكمبيوتر والطابعات",
+  "تمديد وصيانة شبكات الإنترنت السلكية واللاسلكية",
+  "الإصلاحات المنزلية والتحسينات",
+  "خدمات التوصيل والنقل",
+  "خدمات برك وحمامات السباحة",
+  "تركيب وصيانة كاميرات المراقبة",
+  "تنظيف وغسيل خزانات المياه"
+];
+
 const quick = [
   { code: "A", title: "دليفري", icon: "🛵", description: "الوصول السريع إلى المطاعم والسوبر ماركت والخضروات والفواكه والبقالة." , items: ["مطاعم", "سوبر ماركت", "خضروات", "فواكه", "بقالة"] },
   { code: "B", title: "خدمة بسرعة", icon: "⚡", description: "طلب توصيل سريع بليموزين أو موتوسيكل لنقل الأشخاص أو الأوراق والطلبات العاجلة.", items: ["ليموزين", "موتوسيكل", "نقل أشخاص", "توصيل أوراق"] },
@@ -79,6 +113,29 @@ export default function AppFeaturesScreen() {
           <SectionTitle kicker="OVERVIEW" title="الخدمات الأساسية" subtitle="مجموعة متنوعة من الخدمات التي يمكن الوصول إليها من خلال منصة خدماتي." />
           <View style={styles.grid}>
             {overview.map((item, index) => <View key={item.title} style={[styles.overviewCard, { width: compact ? "100%" : "31.5%" }]}><Text style={styles.cardIcon}>{item.icon}</Text><Text style={styles.cardTitle}>{index + 1}. {item.title}</Text><View style={styles.chips}>{item.items.map(value => <Text key={value} style={styles.chip}>{value}</Text>)}</View></View>)}
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <SectionTitle kicker="OUR MAIN SERVICES" title="خدماتنا الرئيسية | Our Main Services" subtitle="قائمة الخدمات الأساسية باللغتين العربية والإنجليزية." />
+          <View style={styles.mainServicesGrid}>
+            {mainServices.map(([english, arabic], index) => <View key={english} style={[styles.mainServiceCard, { width: compact ? "100%" : "23.5%" }]}>
+              <Text style={styles.mainServiceNumber}>{String(index + 1).padStart(2, "0")}</Text>
+              <Text style={styles.mainServiceArabic}>{arabic}</Text>
+              <Text style={styles.mainServiceEnglish}>{english}</Text>
+            </View>)}
+          </View>
+        </View>
+
+        <View style={styles.premiumSection}>
+          <View style={styles.section}>
+            <SectionTitle kicker="PREMIUM SERVICES" title="خدمات مميزة" subtitle="خدمات إضافية متخصصة يمكن طلبها ضمن باقة الخدمات المميزة." />
+            <View style={styles.premiumGrid}>
+              {premiumServices.map((item, index) => <View key={item} style={[styles.premiumCard, { width: compact ? "100%" : "48%" }]}>
+                <View style={styles.premiumCheck}><Text style={styles.premiumCheckText}>✓</Text></View>
+                <Text style={styles.premiumText}>{item}</Text>
+              </View>)}
+            </View>
           </View>
         </View>
 
@@ -152,6 +209,17 @@ const styles = StyleSheet.create({
   cardTitle: { color: "#17343D", fontSize: 16, fontWeight: "900", textAlign: "right" },
   chips: { flexDirection: "row", flexWrap: "wrap", gap: 7, marginTop: 13, justifyContent: "flex-start" },
   chip: { color: "#35615C", backgroundColor: "#EAF4F0", borderRadius: 20, overflow: "hidden", paddingHorizontal: 10, paddingVertical: 6, fontSize: 11, fontWeight: "700" },
+  mainServicesGrid: { flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", gap: 12 },
+  mainServiceCard: { backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: "#E3EBE6", borderRadius: 15, padding: 16, minHeight: 112, justifyContent: "center" },
+  mainServiceNumber: { color: "#0A897D", fontSize: 10, fontWeight: "900", textAlign: "right", marginBottom: 8 },
+  mainServiceArabic: { color: "#17343D", fontSize: 16, fontWeight: "900", textAlign: "right" },
+  mainServiceEnglish: { color: "#718187", fontSize: 11, fontWeight: "700", textAlign: "right", marginTop: 5 },
+  premiumSection: { backgroundColor: "#EDF4F1" },
+  premiumGrid: { flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", gap: 12 },
+  premiumCard: { backgroundColor: "#FFFFFF", borderRadius: 13, borderWidth: 1, borderColor: "#E1EAE5", padding: 15, flexDirection: "row", alignItems: "center", gap: 11, minHeight: 64 },
+  premiumCheck: { width: 25, height: 25, borderRadius: 13, backgroundColor: "#E7F4EF", alignItems: "center", justifyContent: "center" },
+  premiumCheckText: { color: "#07877B", fontSize: 14, fontWeight: "900" },
+  premiumText: { flex: 1, color: "#25434A", fontSize: 13, fontWeight: "700", textAlign: "right", lineHeight: 21 },
   quickSection: { backgroundColor: "#EDF4F1" },
   quickCard: { backgroundColor: "#FFFFFF", borderRadius: 18, borderWidth: 1, borderColor: "#E1EAE5", padding: 20, minHeight: 220 },
   quickHead: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 13 },
