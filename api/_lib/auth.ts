@@ -24,10 +24,7 @@ export function createSession(admin: { _id: { toString(): string }; email: strin
 export function getSession(req: VercelRequest): Session | null {
   const header = req.headers.authorization || "";
   const bearer = Array.isArray(header) ? header[0] : header;
-  const cookieHeader = req.headers.cookie || "";
-  const cookie = (Array.isArray(cookieHeader) ? cookieHeader[0] : cookieHeader)
-    .split(";").map(v => v.trim()).find(v => v.startsWith("khadamati_admin="))?.slice("khadamati_admin=".length);
-  const token = bearer.startsWith("Bearer ") ? bearer.slice(7) : cookie;
+  const token = bearer.startsWith("Bearer ") ? bearer.slice(7) : undefined;
   if (!token) return null;
   const [body, supplied] = token.split(".");
   if (!body || !supplied) return null;
