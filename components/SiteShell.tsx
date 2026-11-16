@@ -24,13 +24,14 @@ export function SiteHeader({ active }: HeaderProps) {
           <Pressable onPress={() => go("/")} style={styles.navItem}><Text style={[styles.navText, active === "home" && styles.navActive]}>الرئيسية</Text></Pressable>
           <Pressable onPress={() => go("/services")} style={styles.navItem}><Text style={[styles.navText, active === "services" && styles.navActive]}>الخدمات</Text></Pressable>
           <Pressable onPress={() => go("/request-service")} style={styles.navItem}><Text style={styles.navText}>اطلب خدمة</Text></Pressable>
+          <Pressable onPress={() => go("/app-features")} style={styles.navItem}><Text style={[styles.navText, active === "features" && styles.navActive]}>خدمات التطبيق</Text></Pressable>
           {!compact && <Pressable onPress={() => go("/about")} style={styles.navItem}><Text style={[styles.navText, active === "about" && styles.navActive]}>من نحن</Text></Pressable>}
         </View>
         <Pressable onPress={() => go("/admin-login")} style={[styles.adminButton, compact && styles.adminButtonCompact]}>
           <Text style={styles.adminButtonText}>دخول الإدارة</Text>
         </Pressable>
       </View>
-      {compact && <Pressable onPress={() => go("/about")} style={styles.mobileAbout}><Text style={styles.mobileAboutText}>من نحن</Text></Pressable>}
+      {compact && <View style={styles.mobileExtraLinks}><Pressable onPress={() => go("/app-features")}><Text style={styles.mobileAboutText}>خدمات التطبيق</Text></Pressable><Pressable onPress={() => go("/about")}><Text style={styles.mobileAboutText}>من نحن</Text></Pressable></View>}
     </View>
   );
 }
@@ -52,6 +53,7 @@ export function SiteFooter({ children }: FooterProps) {
           <Pressable onPress={() => go("/")}><Text style={styles.footerLink}>الرئيسية</Text></Pressable>
           <Pressable onPress={() => go("/services")}><Text style={styles.footerLink}>كل الخدمات</Text></Pressable>
           <Pressable onPress={() => go("/request-service")}><Text style={styles.footerLink}>اطلب خدمة</Text></Pressable>
+          <Pressable onPress={() => go("/app-features")}><Text style={styles.footerLink}>خدمات التطبيق</Text></Pressable>
           <Pressable onPress={() => go("/about")}><Text style={styles.footerLink}>About Us · من نحن</Text></Pressable>
         </View>
         <View style={styles.footerColumn}>
@@ -87,7 +89,7 @@ const styles = StyleSheet.create({
   adminButton: { backgroundColor: "#102A34", borderRadius: 12, paddingVertical: 12, paddingHorizontal: 18 },
   adminButtonCompact: { paddingVertical: 9, paddingHorizontal: 14 },
   adminButtonText: { color: "#FFFFFF", fontSize: 12, fontWeight: "800" },
-  mobileAbout: { alignSelf: "center", paddingBottom: 10 },
+  mobileExtraLinks: { alignSelf: "center", flexDirection: "row", gap: 22, paddingBottom: 10 },
   mobileAboutText: { color: "#52636A", fontSize: 12, fontWeight: "700" },
   footer: { backgroundColor: "#102A34", marginTop: 34 },
   footerInner: { width: "100%", maxWidth: 1240, alignSelf: "center", paddingHorizontal: 24, paddingVertical: 42, flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", gap: 34 },
