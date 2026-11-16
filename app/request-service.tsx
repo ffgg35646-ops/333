@@ -15,6 +15,7 @@ export default function RequestServiceScreen() {
   const [propertyNumber, setPropertyNumber] = useState("");
   const [propertyName, setPropertyName] = useState("");
   const [serviceName, setServiceName] = useState(selected?.title ?? "");
+  const [serviceDropdownOpen, setServiceDropdownOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [feedback, setFeedback] = useState("");
 
@@ -70,7 +71,32 @@ export default function RequestServiceScreen() {
             <Text style={styles.label}>اسم العقار</Text>
             <TextInput value={propertyName} onChangeText={setPropertyName} placeholder="اكتب اسم العقار" style={styles.input} textAlign="right" />
             <Text style={styles.label}>الخدمة المطلوبة</Text>
-            <TextInput value={serviceName} onChangeText={setServiceName} placeholder="اكتب اسم الخدمة المطلوبة" style={styles.input} textAlign="right" />
+            <Pressable
+              onPress={() => setServiceDropdownOpen(open => !open)}
+              style={[styles.input, styles.dropdownTrigger]}
+              accessibilityRole="button"
+              accessibilityState={{ expanded: serviceDropdownOpen }}
+            >
+              <Text style={[styles.dropdownValue, !serviceName && styles.dropdownPlaceholder]}>{serviceName || "اختر الخدمة المطلوبة"}</Text>
+              <Text style={styles.dropdownArrow}>{serviceDropdownOpen ? "⌃" : "⌄"}</Text>
+            </Pressable>
+            {serviceDropdownOpen && (
+              <View style={styles.dropdownList}>
+                <ScrollView nestedScrollEnabled style={styles.dropdownScroll} keyboardShouldPersistTaps="handled">
+                  {services.filter(item => item.active !== false).map(item => (
+                    <Pressable
+                      key={item.id}
+                      onPress={() => { setServiceName(item.title); setServiceDropdownOpen(false); }}
+                      style={[styles.dropdownOption, serviceName === item.title && styles.dropdownOptionSelected]}
+                    >
+                      <Text style={[styles.dropdownOptionText, serviceName === item.title && styles.dropdownOptionTextSelected]}>{item.title}</Text>
+                      <Text style={styles.dropdownOptionIcon}>{item.icon}</Text>
+                    </Pressable>
+                  ))}
+                  {!services.some(item => item.active !== false) && <Text style={styles.dropdownEmpty}>لا توجد خدمات متاحة حاليًا.</Text>}
+                </ScrollView>
+              </View>
+            )}
             <Pressable onPress={submit} disabled={busy} style={[styles.submit, busy && { opacity: 0.6 }]}>
               <Text style={styles.submitText}>{busy ? "جارٍ إرسال الطلب..." : "إرسال الطلب"}</Text>
             </Pressable>
@@ -104,6 +130,18 @@ const styles = StyleSheet.create({
   formTitle: { color: "#102A34", fontSize: 18, fontWeight: "900", textAlign: "right", marginBottom: 8 },
   label: { color: "#415A60", fontSize: 12, fontWeight: "800", marginTop: 14, marginBottom: 7, textAlign: "right" },
   input: { borderWidth: 1, borderColor: "#E3EBE7", backgroundColor: "#F8FAF9", borderRadius: 10, minHeight: 49, paddingHorizontal: 13, color: "#19383F", fontSize: 13 },
+  dropdownTrigger: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+  dropdownValue: { color: "#19383F", fontSize: 13, flex: 1, textAlign: "right" },
+  dropdownPlaceholder: { color: "#8A9B98" },
+  dropdownArrow: { color: "#07877B", fontSize: 23, fontWeight: "900", marginLeft: 8 },
+  dropdownList: { marginTop: 6, borderWidth: 1, borderColor: "#DCE8E2", borderRadius: 11, backgroundColor: "#FFFFFF", overflow: "hidden" },
+  dropdownScroll: { maxHeight: 220 },
+  dropdownOption: { minHeight: 45, paddingHorizontal: 13, flexDirection: "row", alignItems: "center", justifyContent: "space-between", borderBottomWidth: 1, borderBottomColor: "#EEF2F0" },
+  dropdownOptionSelected: { backgroundColor: "#EAF6F2" },
+  dropdownOptionText: { color: "#29464A", fontSize: 13, textAlign: "right", flex: 1 },
+  dropdownOptionTextSelected: { color: "#087D73", fontWeight: "900" },
+  dropdownOptionIcon: { fontSize: 16, marginLeft: 10 },
+  dropdownEmpty: { color: "#7B8D89", padding: 14, textAlign: "center", fontSize: 12 },
   submit: { backgroundColor: "#07877B", borderRadius: 11, minHeight: 50, alignItems: "center", justifyContent: "center", marginTop: 24 },
   submitText: { color: "#FFFFFF", fontWeight: "900", fontSize: 14 },
   error: { color: "#B42318", textAlign: "center", marginTop: 12, fontSize: 12, fontWeight: "700" },
