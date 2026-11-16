@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { apiRequest, setAdminToken } from "../lib/api";
-import { Alert, ImageBackground, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { ImageBackground, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { router } from "expo-router";
 
 export default function AdminLoginScreen() {
