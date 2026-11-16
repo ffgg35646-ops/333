@@ -3,6 +3,7 @@ import { SiteFooter, SiteHeader } from "../components/SiteShell";
 import { useSiteSettings } from "../hooks/useSiteSettings";
 
 export default function AboutScreen() {
+  const settings = useSiteSettings();
   return (
     <View style={styles.page}>
       <SiteHeader active="about" />
