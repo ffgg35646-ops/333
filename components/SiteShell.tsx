@@ -38,6 +38,7 @@ export function SiteHeader({ active }: HeaderProps) {
 type FooterProps = { children?: ReactNode };
 export function SiteFooter({ children }: FooterProps) {
   const go = (path: string) => router.push(path as never);
+  const settings = useSiteSettings();
   return (
     <View style={styles.footer}>
       <View style={styles.footerInner}>
