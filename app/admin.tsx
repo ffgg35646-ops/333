@@ -43,9 +43,9 @@ export default function AdminScreen() {
   const [filter, setFilter] = useState<"all" | ServiceGroup>("all");
   const [draft, setDraft] = useState<ServiceItem | null>(null);
   const [search, setSearch] = useState("");
-  const visibleItems = useMemo(() => items.filter(item => (filter === "all" || item.group === filter) && (item.title.includes(search) || item.english.toLowerCase().includes(search.toLowerCase()))), [items, filter, search]);
+  const visibleItems = useMemo(() => items.filter(item => (filter === "all" || item.group === filter) && (item.title.includes(search) || item.english.toLowerCase().includes(search.toLowerCase()) || (item.categoryTitle || "").includes(search) || (item.categoryEnglish || "").toLowerCase().includes(search.toLowerCase()))), [items, filter, search]);
 
-  const openNew = (group: ServiceGroup) => setDraft({ id: "new-" + Date.now(), title: "", english: "", shortDescription: "", details: "", image: "", group, icon: "✦", active: true, order: items.length });
+  const openNew = (group: ServiceGroup) => setDraft({ id: "new-" + Date.now(), title: "", english: "", shortDescription: "", details: "", image: "", group, icon: "✦", categoryId: "maintenance", categoryTitle: "الصيانة", categoryEnglish: "Maintenance", active: true, order: items.length });
   const updateDraft = <K extends keyof ServiceItem,>(key: K, value: ServiceItem[K]) => setDraft(current => current ? { ...current, [key]: value } : current);
   const saveDraft = async () => {
     if (!draft || !draft.title.trim()) return;
@@ -143,7 +143,7 @@ export default function AdminScreen() {
               <>
                 <View style={styles.welcome}><View><Text style={styles.welcomeTitle}>أهلًا بك في لوحة خدماتي 👋</Text><Text style={styles.welcomeText}>نظّم أقسام الخدمات والصور والتفاصيل من مكان واحد.</Text></View><Text style={styles.welcomePattern}>✦</Text></View>
                 <View style={styles.stats}>
-                  <View style={styles.statCard}><Text style={styles.statLabel}>إجمالي الأقسام</Text><Text style={styles.statValue}>{items.length}</Text><Text style={styles.statFoot}>رئيسية ومميزة</Text></View>
+                  <View style={styles.statCard}><Text style={styles.statLabel}>إجمالي الخدمات</Text><Text style={styles.statValue}>{items.length}</Text><Text style={styles.statFoot}>داخل الأقسام الثمانية</Text></View>
                   <View style={styles.statCard}><Text style={styles.statLabel}>الخدمات الرئيسية</Text><Text style={styles.statValue}>{items.filter(item => item.group === "main").length}</Text><Text style={styles.statFoot}>قسم أساسي</Text></View>
                   <View style={styles.statCard}><Text style={styles.statLabel}>الخدمات المميزة</Text><Text style={styles.statValue}>{items.filter(item => item.group === "featured").length}</Text><Text style={styles.statFoot}>قسم إضافي</Text></View>
                   <View style={styles.statCard}><Text style={styles.statLabel}>طلبات جديدة</Text><Text style={styles.statValue}>{requests.filter(item => item.status === "new").length}</Text><Text style={styles.statFoot}>طلبات جديدة</Text></View>
