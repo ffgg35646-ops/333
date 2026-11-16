@@ -1,6 +1,7 @@
 import { Image, ImageBackground, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import { router } from "expo-router";
 import { useServices } from "../hooks/useServices";
+import { useSiteSettings } from "../hooks/useSiteSettings";
 import type { ServiceItem } from "../data/services";
 import { SiteFooter, SiteHeader } from "../components/SiteShell";
 
@@ -24,6 +25,7 @@ function ServiceCard({ item, compact = false }: { item: ServiceItem; compact?: b
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
   const { mainServices, featuredServices } = useServices();
+  const settings = useSiteSettings();
   const compact = width < 700;
   const cardWidth = width > 1040 ? "23.5%" : width > 700 ? "31.5%" : "47.5%";
   return (
@@ -35,14 +37,14 @@ export default function HomeScreen() {
             <View style={styles.heroShade} />
             <View style={[styles.heroContent, compact && styles.heroContentCompact]}>
               <View style={styles.eyebrow}><Text style={styles.eyebrowText}>KHADAMATI · خدماتي</Text></View>
-              <Text style={[styles.heroTitle, compact && styles.heroTitleCompact]}>كل خدماتك في مكان واحد</Text>
-              <Text style={[styles.heroText, compact && styles.heroTextCompact]}>من صيانة منزلك إلى تفاصيل يومك، اختَر الخدمة المناسبة واترك الباقي علينا.</Text>
+              <Text style={[styles.heroTitle, compact && styles.heroTitleCompact]}>{settings.heroTitle}</Text>
+              <Text style={[styles.heroText, compact && styles.heroTextCompact]}>{settings.heroSubtitle}</Text>
               <View style={styles.heroActions}>
                 <Pressable onPress={() => router.push("/services" as never)} style={styles.primaryButton}><Text style={styles.primaryButtonText}>استكشف الخدمات <Text>←</Text></Text></Pressable>
                 <Pressable onPress={() => router.push("/request-service" as never)} style={styles.secondaryButton}><Text style={styles.secondaryButtonText}>اطلب خدمة الآن</Text></Pressable>
               </View>
               <View style={styles.heroStats}>
-                <View><Text style={styles.statNumber}>14</Text><Text style={styles.statLabel}>خدمة رئيسية</Text></View>
+                <View><Text style={styles.statNumber}>{featuredServices.length}</Text><Text style={styles.statLabel}>خدمة رئيسية</Text></View>
                 <View style={styles.statDivider} />
                 <View><Text style={styles.statNumber}>14</Text><Text style={styles.statLabel}>خدمة مميزة</Text></View>
                 <View style={styles.statDivider} />
@@ -60,7 +62,7 @@ export default function HomeScreen() {
 
         <View style={styles.section}>
           <View style={styles.sectionHeading}>
-            <View><Text style={styles.sectionKicker}>OUR MAIN SERVICES</Text><Text style={styles.sectionTitle}>خدماتنا الرئيسية</Text><Text style={styles.sectionSubtitle}>كل ما تحتاجه لصيانة وتجديد منزلك في مكان واحد.</Text></View>
+            <View><Text style={styles.sectionKicker}>OUR MAIN SERVICES</Text><Text style={styles.sectionTitle}>{settings.mainSectionTitle}</Text><Text style={styles.sectionSubtitle}>{settings.mainSectionDescription}</Text></View>
             <Pressable onPress={() => router.push("/services" as never)} style={styles.textLink}><Text style={styles.textLinkText}>عرض كل الخدمات ←</Text></Pressable>
           </View>
           <View style={styles.cardsGrid}>
@@ -71,7 +73,7 @@ export default function HomeScreen() {
         <View style={styles.featuredSection}>
           <View style={styles.section}>
             <View style={styles.sectionHeading}>
-              <View><Text style={styles.sectionKicker}>SPECIAL SERVICES</Text><Text style={styles.sectionTitle}>خدمات مميزة</Text><Text style={styles.sectionSubtitle}>خدمات إضافية تختصر عليك الوقت والمجهود.</Text></View>
+              <View><Text style={styles.sectionKicker}>SPECIAL SERVICES</Text><Text style={styles.sectionTitle}>{settings.featuredSectionTitle}</Text><Text style={styles.sectionSubtitle}>{settings.featuredSectionDescription}</Text></View>
               <Pressable onPress={() => router.push("/services" as never)} style={styles.textLink}><Text style={styles.textLinkText}>اكتشف المزيد ←</Text></Pressable>
             </View>
             <View style={styles.cardsGrid}>
