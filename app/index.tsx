@@ -5,30 +5,48 @@ import { useSiteSettings } from "../hooks/useSiteSettings";
 import { serviceCategories, type ServiceItem } from "../data/services";
 import { SiteFooter, SiteHeader } from "../components/SiteShell";
 
-function ServiceCard({ item, compact = false }: { item: ServiceItem; compact?: boolean }) {
+function ServiceCard({ item, width }: { item: ServiceItem; width: number }) {
   return (
-    <Pressable onPress={() => router.push(("/service?id=" + item.id) as never)} style={[styles.card, compact && styles.cardCompact]}>
-      <Image source={{ uri: item.image }} style={[styles.cardImage, compact && styles.cardImageCompact]} resizeMode="cover" />
-      <View style={styles.cardBody}>
-        <View style={styles.cardTitleRow}>
-          <Text style={styles.cardIcon}>{item.icon}</Text>
-          <Text style={styles.cardTitle}>{item.title}</Text>
+    <View style={[styles.card, { width }]}>
+      <Pressable onPress={() => router.push(("/service?id=" + item.id) as never)} accessibilityRole="button">
+        <Image source={{ uri: item.image }} style={styles.cardImage} resizeMode="cover" />
+        <View style={styles.cardBody}>
+          <View style={styles.cardTitleRow}>
+            <Text style={styles.cardIcon}>{item.icon}</Text>
+            <Text style={styles.cardTitle} numberOfLines={1}>{item.title}</Text>
+          </View>
+          <Text style={styles.cardEnglish} numberOfLines={1}>{item.english}</Text>
+          <Text style={styles.cardDescription} numberOfLines={2}>{item.shortDescription}</Text>
         </View>
-        <Text style={styles.cardEnglish}>{item.english}</Text>
-        {!compact && <Text style={styles.cardDescription} numberOfLines={2}>{item.shortDescription}</Text>}
-        <Text style={styles.cardMore}>التفاصيل <Text style={styles.arrow}>←</Text></Text>
-      </View>
-    </Pressable>
+      </Pressable>
+      <Pressable
+        onPress={() => router.push(("/request-service?service=" + item.id) as never)}
+        style={styles.orderButton}
+        accessibilityRole="button"
+        accessibilityLabel={"اطلب خدمة " + item.title}
+      >
+        <Text style={styles.orderButtonText}>اطلب الخدمة</Text>
+        <Text style={styles.orderArrow}>←</Text>
+      </Pressable>
+    </View>
   );
 }
 
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
   const { mainServices } = useServices();
-  const categorySections = serviceCategories.map(category => ({ ...category, items: mainServices.filter(item => item.active !== false && item.categoryId === category.id) })).filter(category => category.items.length > 0);
   const settings = useSiteSettings();
   const compact = width < 700;
-  const cardWidth = width > 1040 ? "23.5%" : width > 700 ? "31.5%" : "47.5%";
+  const cardWidth = compact ? Math.min(width * 0.72, 292) : width < 1050 ? 276 : 286;
+  const categorySections = serviceCategories
+    .map(category => ({
+      ...category,
+      items: mainServices
+        .filter(item => item.active !== false && item.categoryId === category.id)
+        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+    }))
+    .filter(category => category.items.length > 0);
+
   return (
     <View style={styles.page}>
       <SiteHeader active="home" />
@@ -37,22 +55,31 @@ export default function HomeScreen() {
           <ImageBackground source={{ uri: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1800&q=90" }} resizeMode="cover" style={[styles.hero, compact && styles.heroCompact]}>
             <View style={styles.heroShade} />
             <View style={[styles.heroContent, compact && styles.heroContentCompact]}>
-              <View style={styles.eyebrow}><Text style={styles.eyebrowText}>KHADAMATI · خدماتي</Text></View>
+              <View style={styles.eyebrow}><Text style={styles.eyebrowText}>خدماتي · KHADAMATI</Text></View>
               <Text style={[styles.heroTitle, compact && styles.heroTitleCompact]}>{settings.heroTitle}</Text>
               <Text style={[styles.heroText, compact && styles.heroTextCompact]}>{settings.heroSubtitle}</Text>
               <View style={styles.heroActions}>
-                <Pressable onPress={() => router.push("/services" as never)} style={styles.primaryButton}><Text style={styles.primaryButtonText}>استكشف الخدمات <Text>←</Text></Text></Pressable>
+                <Pressable onPress={() => router.push("/services" as never)} style={styles.primaryButton}><Text style={styles.primaryButtonText}>اكتشف الخدمات ←</Text></Pressable>
                 <Pressable onPress={() => router.push("/request-service" as never)} style={styles.secondaryButton}><Text style={styles.secondaryButtonText}>اطلب خدمة الآن</Text></Pressable>
               </View>
               <View style={styles.heroStats}>
                 <View><Text style={styles.statNumber}>{serviceCategories.length}</Text><Text style={styles.statLabel}>أقسام رئيسية</Text></View>
                 <View style={styles.statDivider} />
-                <View><Text style={styles.statNumber}>{mainServices.length}</Text><Text style={styles.statLabel}>خدمة متنوعة</Text></View>
+                <View><Text style={styles.statNumber}>{mainServices.filter(item => item.active !== false).length}</Text><Text style={styles.statLabel}>خدمة متاحة</Text></View>
                 <View style={styles.statDivider} />
                 <View><Text style={styles.statNumber}>3</Text><Text style={styles.statLabel}>منصات في تجربة واحدة</Text></View>
               </View>
             </View>
           </ImageBackground>
+        </View>
+
+        <View style={styles.introStrip}>
+          <View style={styles.introCopy}>
+            <Text style={styles.introKicker}>أهلاً بيك في خدماتي</Text>
+            <Text style={styles.introTitle}>اختار الخدمة المناسبة ليك واحنا نتولى الباقي</Text>
+            <Text style={styles.introText}>تصفح الأقسام، شوف تفاصيل كل خدمة، واطلبها بسهولة.</Text>
+          </View>
+          <Pressable onPress={() => router.push("/services" as never)} style={styles.introLink}><Text style={styles.introLinkText}>كل الخدمات ←</Text></Pressable>
         </View>
 
         <View style={styles.trustStrip}>
@@ -64,18 +91,29 @@ export default function HomeScreen() {
         {categorySections.map(category => (
           <View key={category.id} style={styles.section}>
             <View style={styles.sectionHeading}>
-              <View><Text style={styles.sectionKicker}>{category.english}</Text><Text style={styles.sectionTitle}>{category.title}</Text><Text style={styles.sectionSubtitle}>{category.items.length} خدمة متاحة داخل القسم</Text></View>
-              <Pressable onPress={() => router.push("/services" as never)} style={styles.textLink}><Text style={styles.textLinkText}>عرض كل الخدمات ←</Text></Pressable>
+              <View style={styles.sectionTitleGroup}>
+                <Text style={styles.sectionKicker}>{category.english}</Text>
+                <Text style={styles.sectionTitle}>{category.title}</Text>
+                <Text style={styles.sectionSubtitle}>اكتشف خدمات القسم · {category.items.length} خدمة</Text>
+              </View>
+              <Pressable onPress={() => router.push("/services" as never)} style={styles.textLink}>
+                <Text style={styles.textLinkText}>عرض الكل ←</Text>
+              </Pressable>
             </View>
-            <View style={styles.cardsGrid}>
-              {category.items.slice(0, 4).map(item => <View key={item.id} style={{ width: cardWidth }}><ServiceCard item={item} /></View>)}
-            </View>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.horizontalCards}
+              style={styles.horizontalScroller}
+            >
+              {category.items.map(item => <ServiceCard key={item.id} item={item} width={cardWidth} />)}
+            </ScrollView>
           </View>
         ))}
 
         <View style={styles.ctaWrap}>
           <View style={[styles.cta, compact && styles.ctaCompact]}>
-            <View style={styles.ctaCopy}><Text style={styles.ctaKicker}>NEED A HAND?</Text><Text style={styles.ctaTitle}>خدمتك تبدأ من هنا</Text><Text style={styles.ctaText}>تصفح الأقسام واختر الخدمة التي تحتاجها، وسنساعدك في الوصول إلى الاختيار المناسب.</Text></View>
+            <View style={styles.ctaCopy}><Text style={styles.ctaKicker}>KHADAMATI</Text><Text style={styles.ctaTitle}>خدمتك تبدأ من هنا</Text><Text style={styles.ctaText}>اختار الخدمة اللي محتاجها، وسجّل بياناتك، وفريقنا هيتواصل معاك قريبًا.</Text></View>
             <Pressable onPress={() => router.push("/request-service" as never)} style={styles.ctaButton}><Text style={styles.ctaButtonText}>اطلب خدمتك الآن ←</Text></Pressable>
           </View>
         </View>
@@ -86,60 +124,67 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  page: { flex: 1, backgroundColor: "#F6F8F7" },
-  heroOuter: { backgroundColor: "#102A34", paddingHorizontal: 18, paddingTop: 18, paddingBottom: 24 },
-  hero: { width: "100%", maxWidth: 1240, minHeight: 460, alignSelf: "center", justifyContent: "center", overflow: "hidden", borderRadius: 26, backgroundColor: "#102A34" },
-  heroCompact: { minHeight: 500, borderRadius: 18 },
-  heroShade: { ...StyleSheet.absoluteFill, backgroundColor: "rgba(7, 30, 37, 0.72)" },
-  heroContent: { width: "100%", maxWidth: 760, paddingHorizontal: 54, paddingVertical: 54, alignItems: "flex-start" },
-  heroContentCompact: { paddingHorizontal: 24, paddingVertical: 38 },
-  eyebrow: { borderWidth: 1, borderColor: "rgba(255,255,255,0.35)", borderRadius: 30, paddingHorizontal: 13, paddingVertical: 7, marginBottom: 20 },
-  eyebrowText: { color: "#B8E5DC", fontSize: 10, fontWeight: "900", letterSpacing: 2 },
-  heroTitle: { color: "#FFFFFF", fontSize: 48, fontWeight: "900", textAlign: "right", lineHeight: 62 },
-  heroTitleCompact: { fontSize: 34, lineHeight: 47 },
-  heroText: { color: "#D5E2E2", fontSize: 17, lineHeight: 30, textAlign: "right", maxWidth: 570, marginTop: 14 },
-  heroTextCompact: { fontSize: 15, lineHeight: 27 },
-  heroActions: { flexDirection: "row", flexWrap: "wrap", gap: 12, marginTop: 28 },
-  primaryButton: { backgroundColor: "#0A9A8A", borderRadius: 12, paddingVertical: 14, paddingHorizontal: 22 },
-  primaryButtonText: { color: "#FFFFFF", fontSize: 14, fontWeight: "900" },
-  secondaryButton: { borderWidth: 1, borderColor: "rgba(255,255,255,0.55)", borderRadius: 12, paddingVertical: 14, paddingHorizontal: 22 },
-  secondaryButtonText: { color: "#FFFFFF", fontSize: 14, fontWeight: "800" },
-  heroStats: { flexDirection: "row", alignItems: "center", gap: 22, marginTop: 38 },
-  statNumber: { color: "#FFFFFF", fontSize: 23, fontWeight: "900", textAlign: "right" },
-  statLabel: { color: "#BDCECE", fontSize: 10, marginTop: 3, textAlign: "right" },
-  statDivider: { width: 1, height: 36, backgroundColor: "rgba(255,255,255,0.25)" },
-  trustStrip: { width: "100%", maxWidth: 1150, alignSelf: "center", paddingHorizontal: 22, paddingVertical: 23, flexDirection: "row", justifyContent: "space-around", flexWrap: "wrap", gap: 18, borderBottomWidth: 1, borderBottomColor: "#E6ECE9" },
-  trustItem: { flexDirection: "row", alignItems: "center", gap: 9 },
-  trustIcon: { color: "#07877B", fontSize: 19, fontWeight: "900" },
-  trustText: { color: "#43565C", fontSize: 13, fontWeight: "700" },
-  section: { width: "100%", maxWidth: 1240, alignSelf: "center", paddingHorizontal: 24, paddingTop: 54, paddingBottom: 42 },
-  sectionHeading: { flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 18, marginBottom: 25 },
-  sectionKicker: { color: "#07877B", fontSize: 10, fontWeight: "900", letterSpacing: 2, textAlign: "right" },
-  sectionTitle: { color: "#102A34", fontSize: 29, fontWeight: "900", marginTop: 7, textAlign: "right" },
-  sectionSubtitle: { color: "#77878B", fontSize: 13, marginTop: 8, textAlign: "right" },
-  textLink: { paddingVertical: 8, paddingHorizontal: 4 },
-  textLinkText: { color: "#07877B", fontWeight: "900", fontSize: 13 },
-  cardsGrid: { flexDirection: "row", flexWrap: "wrap", gap: 16, justifyContent: "flex-start" },
-  card: { backgroundColor: "#FFFFFF", borderRadius: 17, overflow: "hidden", borderWidth: 1, borderColor: "#E8EEEB", minHeight: 270, shadowColor: "#163A3C", shadowOpacity: 0.05, shadowRadius: 12, shadowOffset: { width: 0, height: 5 }, elevation: 2 },
-  cardCompact: { minHeight: 220 },
-  cardImage: { width: "100%", height: 145, backgroundColor: "#DCE7E3" },
-  cardImageCompact: { height: 116 },
-  cardBody: { padding: 14, alignItems: "flex-start" },
+  page: { flex: 1, backgroundColor: "#F7F7F4" },
+  heroOuter: { backgroundColor: "#F7F7F4", paddingHorizontal: 18, paddingTop: 18, paddingBottom: 12 },
+  hero: { width: "100%", maxWidth: 1240, minHeight: 430, alignSelf: "center", justifyContent: "center", overflow: "hidden", borderRadius: 24, backgroundColor: "#303B3B" },
+  heroCompact: { minHeight: 470, borderRadius: 18 },
+  heroShade: { ...StyleSheet.absoluteFill, backgroundColor: "rgba(24, 34, 34, 0.58)" },
+  heroContent: { width: "100%", maxWidth: 760, paddingHorizontal: 54, paddingVertical: 48, alignItems: "flex-start" },
+  heroContentCompact: { paddingHorizontal: 23, paddingVertical: 34 },
+  eyebrow: { borderWidth: 1, borderColor: "rgba(255,255,255,0.42)", borderRadius: 30, paddingHorizontal: 13, paddingVertical: 7, marginBottom: 18 },
+  eyebrowText: { color: "#D2E9E3", fontSize: 10, fontWeight: "900", letterSpacing: 1.5 },
+  heroTitle: { color: "#FFFFFF", fontSize: 44, fontWeight: "900", textAlign: "right", lineHeight: 59 },
+  heroTitleCompact: { fontSize: 32, lineHeight: 45 },
+  heroText: { color: "#E2E8E5", fontSize: 16, lineHeight: 29, textAlign: "right", maxWidth: 570, marginTop: 13 },
+  heroTextCompact: { fontSize: 14, lineHeight: 26 },
+  heroActions: { flexDirection: "row", flexWrap: "wrap", gap: 11, marginTop: 25 },
+  primaryButton: { backgroundColor: "#398F83", borderRadius: 11, paddingVertical: 13, paddingHorizontal: 20 },
+  primaryButtonText: { color: "#FFFFFF", fontSize: 13, fontWeight: "900" },
+  secondaryButton: { borderWidth: 1, borderColor: "rgba(255,255,255,0.65)", borderRadius: 11, paddingVertical: 13, paddingHorizontal: 20 },
+  secondaryButtonText: { color: "#FFFFFF", fontSize: 13, fontWeight: "800" },
+  heroStats: { flexDirection: "row", alignItems: "center", gap: 20, marginTop: 32 },
+  statNumber: { color: "#FFFFFF", fontSize: 22, fontWeight: "900", textAlign: "right" },
+  statLabel: { color: "#D1DBD7", fontSize: 10, marginTop: 3, textAlign: "right" },
+  statDivider: { width: 1, height: 34, backgroundColor: "rgba(255,255,255,0.3)" },
+  introStrip: { width: "100%", maxWidth: 1190, alignSelf: "center", paddingHorizontal: 24, paddingTop: 28, paddingBottom: 23, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 18 },
+  introCopy: { flex: 1, alignItems: "flex-start" },
+  introKicker: { color: "#438C80", fontSize: 12, fontWeight: "900", textAlign: "right" },
+  introTitle: { color: "#303A39", fontSize: 22, fontWeight: "900", textAlign: "right", marginTop: 6 },
+  introText: { color: "#78817E", fontSize: 12, marginTop: 7, textAlign: "right" },
+  introLink: { paddingHorizontal: 14, paddingVertical: 11, borderRadius: 10, backgroundColor: "#E7F0EC" },
+  introLinkText: { color: "#397F75", fontSize: 12, fontWeight: "900" },
+  trustStrip: { width: "100%", maxWidth: 1150, alignSelf: "center", paddingHorizontal: 22, paddingVertical: 17, flexDirection: "row", justifyContent: "space-around", flexWrap: "wrap", gap: 16, borderTopWidth: 1, borderBottomWidth: 1, borderColor: "#E8E9E4" },
+  trustItem: { flexDirection: "row", alignItems: "center", gap: 8 },
+  trustIcon: { color: "#55978B", fontSize: 18, fontWeight: "900" },
+  trustText: { color: "#626E6A", fontSize: 12, fontWeight: "700" },
+  section: { width: "100%", maxWidth: 1240, alignSelf: "center", paddingHorizontal: 24, paddingTop: 40, paddingBottom: 10 },
+  sectionHeading: { flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between", gap: 14, marginBottom: 18 },
+  sectionTitleGroup: { alignItems: "flex-start", flex: 1 },
+  sectionKicker: { color: "#6A9D92", fontSize: 10, fontWeight: "900", letterSpacing: 1.5, textAlign: "right" },
+  sectionTitle: { color: "#343D3A", fontSize: 24, fontWeight: "900", marginTop: 5, textAlign: "right" },
+  sectionSubtitle: { color: "#8A918D", fontSize: 12, marginTop: 6, textAlign: "right" },
+  textLink: { paddingVertical: 8, paddingHorizontal: 3 },
+  textLinkText: { color: "#538F84", fontWeight: "900", fontSize: 12 },
+  horizontalScroller: { flexGrow: 0, overflow: "visible" },
+  horizontalCards: { flexDirection: "row", gap: 14, paddingBottom: 12, paddingRight: 1 },
+  card: { backgroundColor: "#FFFFFF", borderRadius: 15, overflow: "hidden", borderWidth: 1, borderColor: "#E9EBE6", shadowColor: "#303B36", shadowOpacity: 0.045, shadowRadius: 9, shadowOffset: { width: 0, height: 3 }, elevation: 1 },
+  cardImage: { width: "100%", height: 148, backgroundColor: "#E7EAE5" },
+  cardBody: { paddingHorizontal: 14, paddingTop: 13, paddingBottom: 8, alignItems: "flex-start" },
   cardTitleRow: { width: "100%", flexDirection: "row", alignItems: "center", gap: 8 },
-  cardIcon: { fontSize: 17 },
-  cardTitle: { color: "#16333B", fontSize: 15, fontWeight: "900", textAlign: "right", flexShrink: 1 },
-  cardEnglish: { color: "#93A0A1", fontSize: 10, marginTop: 5, textAlign: "right" },
-  cardDescription: { color: "#708085", fontSize: 11, lineHeight: 19, marginTop: 9, textAlign: "right" },
-  cardMore: { color: "#07877B", fontSize: 11, fontWeight: "900", marginTop: 12 },
-  arrow: { fontSize: 14 },
-  featuredSection: { backgroundColor: "#EDF4F1" },
-  ctaWrap: { paddingHorizontal: 18, paddingTop: 22, paddingBottom: 10 },
-  cta: { width: "100%", maxWidth: 1200, alignSelf: "center", backgroundColor: "#DCEFE9", borderRadius: 24, paddingHorizontal: 34, paddingVertical: 30, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 20 },
-  ctaCompact: { flexDirection: "column", alignItems: "flex-start", paddingHorizontal: 23 },
-  ctaCopy: { maxWidth: 650 },
-  ctaKicker: { color: "#07877B", fontSize: 10, fontWeight: "900", letterSpacing: 2 },
-  ctaTitle: { color: "#102A34", fontSize: 25, fontWeight: "900", marginTop: 8, textAlign: "right" },
-  ctaText: { color: "#587077", fontSize: 13, lineHeight: 23, marginTop: 8, textAlign: "right" },
-  ctaButton: { backgroundColor: "#102A34", borderRadius: 12, paddingHorizontal: 22, paddingVertical: 15 },
-  ctaButtonText: { color: "#FFFFFF", fontWeight: "900", fontSize: 13 }
+  cardIcon: { fontSize: 16 },
+  cardTitle: { color: "#38423E", fontSize: 14, fontWeight: "900", textAlign: "right", flex: 1 },
+  cardEnglish: { color: "#A0A7A1", fontSize: 9, marginTop: 4, textAlign: "right" },
+  cardDescription: { color: "#77817B", fontSize: 11, lineHeight: 18, marginTop: 8, textAlign: "right", minHeight: 36 },
+  orderButton: { marginHorizontal: 13, marginBottom: 13, minHeight: 39, borderRadius: 9, backgroundColor: "#EAF2EE", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 7 },
+  orderButtonText: { color: "#477F74", fontSize: 12, fontWeight: "900" },
+  orderArrow: { color: "#477F74", fontSize: 15, fontWeight: "900" },
+  ctaWrap: { paddingHorizontal: 18, paddingTop: 32, paddingBottom: 10 },
+  cta: { width: "100%", maxWidth: 1200, alignSelf: "center", backgroundColor: "#E9EFEB", borderRadius: 20, paddingHorizontal: 30, paddingVertical: 27, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 20 },
+  ctaCompact: { flexDirection: "column", alignItems: "flex-start", paddingHorizontal: 22 },
+  ctaCopy: { maxWidth: 650, alignItems: "flex-start" },
+  ctaKicker: { color: "#71978D", fontSize: 10, fontWeight: "900", letterSpacing: 1.5 },
+  ctaTitle: { color: "#343D3A", fontSize: 23, fontWeight: "900", marginTop: 7, textAlign: "right" },
+  ctaText: { color: "#707C75", fontSize: 12, lineHeight: 22, marginTop: 7, textAlign: "right" },
+  ctaButton: { backgroundColor: "#414B47", borderRadius: 10, paddingHorizontal: 20, paddingVertical: 14 },
+  ctaButtonText: { color: "#FFFFFF", fontWeight: "900", fontSize: 12 }
 });
