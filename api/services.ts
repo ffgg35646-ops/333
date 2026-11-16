@@ -22,7 +22,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         if (operations.length) await services.bulkWrite(operations, { ordered: false });
         await services.updateMany({ categoryId: { $exists: false } }, { $set: { active: false, updatedAt: new Date() } });
       }
-      const filter = getSession(req) ? {} : { active: { $ne: false } };
+      const filter = getSession(req) ? { categoryId: { $exists: true } } : { active: { $ne: false }, categoryId: { $exists: true } };
       const items = await services.find(filter).sort({ order: 1, title: 1 }).toArray();
       return res.status(200).json({ services: items.map(({ _id, ...item }) => item) });
     }
