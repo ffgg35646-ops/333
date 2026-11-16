@@ -1,6 +1,7 @@
 import { Image, ImageBackground, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import { router } from "expo-router";
-import { mainServices, featuredServices, ServiceItem } from "../data/services";
+import { mainServices, featuredServices } from "../data/services";
+import type { ServiceItem } from "../data/services";
 import { SiteFooter, SiteHeader } from "../components/SiteShell";
 
 function ServiceCard({ item, compact = false }: { item: ServiceItem; compact?: boolean }) {

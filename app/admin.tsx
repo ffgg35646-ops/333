@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
 import { Image, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View, useWindowDimensions } from "react-native";
 import { router } from "expo-router";
-import { allServices, ServiceGroup, ServiceItem } from "../data/services";
+import { allServices } from "../data/services";
+import type { ServiceGroup, ServiceItem } from "../data/services";
 
 type Tab = "services" | "requests" | "settings";
 
@@ -16,7 +17,7 @@ export default function AdminScreen() {
   const visibleItems = useMemo(() => items.filter(item => (filter === "all" || item.group === filter) && (item.title.includes(search) || item.english.toLowerCase().includes(search.toLowerCase()))), [items, filter, search]);
 
   const openNew = (group: ServiceGroup) => setDraft({ id: "new-" + Date.now(), title: "", english: "", shortDescription: "", details: "", image: "", group, icon: "✦" });
-  const updateDraft = (key: keyof ServiceItem, value: string) => setDraft(current => current ? { ...current, [key]: value } : current);
+  const updateDraft = <K extends keyof ServiceItem,>(key: K, value: ServiceItem[K]) => setDraft(current => current ? { ...current, [key]: value } : current);
   const saveDraft = () => {
     if (!draft || !draft.title.trim()) return;
     setItems(current => current.some(item => item.id === draft.id) ? current.map(item => item.id === draft.id ? draft : item) : [draft, ...current]);
