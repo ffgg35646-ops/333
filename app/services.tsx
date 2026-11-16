@@ -1,6 +1,7 @@
 import { Image, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import { router } from "expo-router";
 import { useServices } from "../hooks/useServices";
+import { useSiteSettings } from "../hooks/useSiteSettings";
 import type { ServiceItem } from "../data/services";
 import { SiteFooter, SiteHeader } from "../components/SiteShell";
 
@@ -21,6 +22,7 @@ function ServiceTile({ item, width }: { item: ServiceItem; width: string }) {
 export default function ServicesScreen() {
   const { width } = useWindowDimensions();
   const { mainServices, featuredServices } = useServices();
+  const settings = useSiteSettings();
   const tileWidth = width > 1050 ? "23.5%" : width > 700 ? "31.5%" : "47.5%";
   return (
     <View style={styles.page}>
@@ -28,12 +30,12 @@ export default function ServicesScreen() {
       <ScrollView>
         <View style={styles.intro}><Text style={styles.kicker}>OUR SERVICES</Text><Text style={styles.heading}>اكتشف خدمات خدماتي</Text><Text style={styles.introText}>اختَر القسم المناسب، وتعرّف على تفاصيل الخدمة قبل طلبها.</Text></View>
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>الخدمات الرئيسية</Text>
+          <Text style={styles.sectionTitle}>{settings.mainSectionTitle}</Text>
           <View style={styles.grid}>{mainServices.map(item => <ServiceTile key={item.id} item={item} width={tileWidth} />)}</View>
         </View>
         <View style={styles.featured}>
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>خدمات مميزة</Text>
+            <Text style={styles.sectionTitle}>{settings.featuredSectionTitle}</Text>
             <View style={styles.grid}>{featuredServices.map(item => <ServiceTile key={item.id} item={item} width={tileWidth} />)}</View>
           </View>
         </View>
