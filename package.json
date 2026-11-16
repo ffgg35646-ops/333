@@ -10,7 +10,8 @@
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
     "doctor": "npx expo-doctor",
-    "seed:services": "tsx scripts/seed-services.ts"
+    "seed:services": "tsx scripts/seed-services.ts",
+    "admin:create": "node scripts/create-admin.mjs"
   },
   "dependencies": {
     "@expo/metro-runtime": "~58.0.17",
