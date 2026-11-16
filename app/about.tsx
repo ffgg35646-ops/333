@@ -1,12 +1,13 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SiteFooter, SiteHeader } from "../components/SiteShell";
+import { useSiteSettings } from "../hooks/useSiteSettings";
 
 export default function AboutScreen() {
   return (
     <View style={styles.page}>
       <SiteHeader active="about" />
       <ScrollView>
-        <View style={styles.hero}><Text style={styles.kicker}>ABOUT KHADAMATI</Text><Text style={styles.title}>من نحن</Text><Text style={styles.lead}>خدماتي منصة تهدف إلى جمع الخدمات المنزلية والمهنية في تجربة واحدة سهلة وواضحة.</Text></View>
+        <View style={styles.hero}><Text style={styles.kicker}>ABOUT KHADAMATI</Text><Text style={styles.title}>من نحن</Text><Text style={styles.lead}>{settings.aboutText}</Text></View>
         <View style={styles.content}>
           <View style={styles.card}><Text style={styles.heading}>فكرتنا</Text><Text style={styles.body}>بدلًا من البحث في أماكن متعددة، تساعدك خدماتي على اكتشاف مجموعة من الخدمات الرئيسية والمميزة، والاطلاع على وصف كل خدمة وتفاصيلها من مكان واحد.</Text></View>
           <View style={styles.card}><Text style={styles.heading}>رؤيتنا</Text><Text style={styles.body}>تقديم تجربة منظمة لعرض الخدمات والوصول إليها بسهولة عبر الويب وتطبيقات Android وiOS.</Text></View>
