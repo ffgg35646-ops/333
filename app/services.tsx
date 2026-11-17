@@ -1,5 +1,5 @@
 import { Image, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useServices } from "../hooks/useServices";
 import { serviceCategories, type ServiceItem } from "../data/services";
 import { SiteFooter, SiteHeader } from "../components/SiteShell";
@@ -21,6 +21,7 @@ function ServiceTile({ item, width }: { item: ServiceItem; width: number }) {
 export default function ServicesScreen() {
   const { width } = useWindowDimensions();
   const { services } = useServices();
+  const params = useLocalSearchParams<{ category?: string }>();
   const compact = width <= 700;
   const contentWidth = width - (compact ? 40 : 48);
   const gap = compact ? 12 : 16;
@@ -31,7 +32,7 @@ export default function ServicesScreen() {
       <SiteHeader active="services" />
       <ScrollView>
         <View style={styles.intro}><Text style={styles.kicker}>OUR SERVICES</Text><Text style={styles.heading}>اكتشف خدمات خدماتي</Text><Text style={styles.introText}>ثمانية أقسام تضم خدمات متنوعة باللغتين العربية والإنجليزية.</Text></View>
-        {serviceCategories.map(category => {
+        {serviceCategories.filter(category => !params.category || category.id === params.category).map(category => {
           const items = services.filter(item => item.active !== false && item.categoryId === category.id);
           if (!items.length) return null;
           return <View key={category.id} style={[styles.section, compact && styles.sectionCompact]}>
