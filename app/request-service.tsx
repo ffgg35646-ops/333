@@ -29,10 +29,10 @@ export default function RequestServiceScreen() {
     const cleanPhone = phone.trim();
     const normalizedPhone = cleanPhone.replace(/[٠-٩]/g, digit => String("٠١٢٣٤٥٦٧٨٩".indexOf(digit)));
     if (!cleanName) { setFeedback("من فضلك اكتب الاسم الثلاثي."); return; }
-    if (cleanName.split(/\\s+/).length < 3) { setFeedback("من فضلك اكتب الاسم كاملًا (ثلاثة أسماء على الأقل)."); return; }
+    if (cleanName.split(/\s+/).length < 3) { setFeedback("من فضلك اكتب الاسم كاملًا (ثلاثة أسماء على الأقل)."); return; }
     if (!cleanPhone) { setFeedback("من فضلك أدخل رقم التليفون."); return; }
-    if (!/^[0-9+()\\s-]+$/.test(normalizedPhone)) { setFeedback("رقم التليفون غير صحيح. من فضلك أدخل أرقامًا فقط."); return; }
-    const phoneDigits = normalizedPhone.replace(/\\D/g, "");
+    if (!/^[0-9+()\s-]+$/.test(normalizedPhone)) { setFeedback("رقم التليفون غير صحيح. من فضلك أدخل أرقامًا فقط."); return; }
+    const phoneDigits = normalizedPhone.replace(/\D/g, "");
     if (phoneDigits.length < 10 || phoneDigits.length > 15) { setFeedback("رقم التليفون غير مكتمل أو أطول من اللازم. من فضلك راجع الرقم."); return; }
     if (!compoundName.trim()) { setFeedback("من فضلك اكتب اسم الكمباوند."); return; }
     if (!propertyNumber.trim()) { setFeedback("من فضلك أدخل رقم العقار."); return; }
