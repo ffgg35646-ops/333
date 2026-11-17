@@ -6,6 +6,10 @@ import { useSiteSettings } from "../hooks/useSiteSettings";
 import { serviceCategories, type ServiceItem } from "../data/services";
 import { SiteFooter, SiteHeader } from "../components/SiteShell";
 
+// React Native Web forwards these browser image hints; native builds safely ignore them.
+const FastImage = Image as any;
+const FastImageBackground = ImageBackground as any;
+
 const HERO_IMAGES = [
   "https://cdn.jsdelivr.net/gh/ffgg35646-ops/333@main/%D8%AA%D8%A3%D9%85%D9%8A%D9%86%20%D8%AD%D9%81%D9%84%D8%A7%D8%AA.jpg",
   "https://cdn.jsdelivr.net/gh/ffgg35646-ops/333@main/%D9%85%D8%AF%D8%B1%D8%A8%20%D9%8A%D9%88%D8%AC%D8%A7.jpg",
@@ -23,7 +27,7 @@ function ServiceCard({ item, width }: { item: ServiceItem; width: number }) {
   return (
     <View style={[styles.card, { width }]}>
       <Pressable onPress={() => router.push(("/service?id=" + item.id) as never)} accessibilityRole="button">
-        <Image source={{ uri: item.image }} style={styles.cardImage} resizeMode="cover" />
+        <FastImage source={{ uri: item.image }} style={styles.cardImage} resizeMode="cover" loading="lazy" decoding="async" />
         <View style={styles.cardBody}>
           <View style={styles.cardTitleRow}>
             <Text style={styles.cardIcon}>{item.icon}</Text>
@@ -93,7 +97,12 @@ export default function HomeScreen() {
   const { mainServices } = useServices();
   const settings = useSiteSettings();
   const [heroIndex, setHeroIndex] = useState(0);
-  useEffect(() => { HERO_IMAGES.forEach(uri => { Image.prefetch(uri).catch(() => {}); }); }, []);
+  useEffect(() => {
+    // Keep the first hero image urgent, then warm only the next two slides.
+    Image.prefetch(HERO_IMAGES[heroIndex]).catch(() => {});
+    Image.prefetch(HERO_IMAGES[(heroIndex + 1) % HERO_IMAGES.length]).catch(() => {});
+    Image.prefetch(HERO_IMAGES[(heroIndex + 2) % HERO_IMAGES.length]).catch(() => {});
+  }, [heroIndex]);
   useEffect(() => {
     const timer = setInterval(() => setHeroIndex(current => (current + 1) % HERO_IMAGES.length), 10000);
     return () => clearInterval(timer);
@@ -116,7 +125,7 @@ export default function HomeScreen() {
       <SiteHeader active="home" />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.heroOuter}>
-          <ImageBackground source={{ uri: HERO_IMAGES[heroIndex] }} resizeMode="cover" style={[styles.hero, compact && styles.heroCompact]}>
+          <FastImageBackground source={{ uri: HERO_IMAGES[heroIndex] }} resizeMode="cover" loading="eager" style={[styles.hero, compact && styles.heroCompact]}>
             <View style={styles.heroShade} />
             <View style={[styles.heroContent, compact && styles.heroContentCompact]}>
               <View style={styles.eyebrow}><Text style={styles.eyebrowText}>خدماتي · KHADAMATI</Text></View>
@@ -134,7 +143,7 @@ export default function HomeScreen() {
                 <View><Text style={styles.statNumber}>3</Text><Text style={styles.statLabel}>منصات في تجربة واحدة</Text></View>
               </View>
             </View>
-          </ImageBackground>
+          </FastImageBackground>
         </View>
 
         <View style={styles.introStrip}>
