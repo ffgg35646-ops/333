@@ -39,7 +39,7 @@ export default function RequestServiceScreen() {
           service: serviceName.trim()
         })
       });
-      Alert.alert("خدماتي", "سيتم التواصل معك قريبًا.");
+      Alert.alert("تم إرسال طلبك بنجاح", "برجاء الانتظار، سيتم التواصل قريبًا معك عبر الهاتف.");
       setName(""); setPhone(""); setCompoundName(""); setPropertyNumber(""); setPropertyName("");
     } catch (error) {
       setFeedback(error instanceof Error ? error.message : "تعذر إرسال الطلب الآن، حاول مرة أخرى.");
