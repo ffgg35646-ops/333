@@ -105,7 +105,7 @@ export default function HomeScreen() {
     Image.prefetch(HERO_IMAGES[(heroIndex + 2) % HERO_IMAGES.length]).catch(() => {});
   }, [heroIndex]);
   useEffect(() => {
-    const timer = setInterval(() => setHeroIndex(current => (current + 1) % HERO_IMAGES.length), 20000);
+    const timer = setInterval(() => setHeroIndex(current => (current + 1) % HERO_IMAGES.length), 5000);
     return () => clearInterval(timer);
   }, []);
   const compact = width < 700;
@@ -140,9 +140,9 @@ export default function HomeScreen() {
                     { id: "professional-technical", label: "خدمات مهنية وتقنية", icon: "🧰" },
                     { id: "moving-logistic", label: "نقل الأثاث والعفش", icon: "🚚" }
                   ].map(category => (
-                    <Pressable key={category.id} onPress={() => router.push(("/services?category=" + category.id) as never)} style={styles.heroCategory} accessibilityRole="button">
-                      <Text style={styles.heroCategoryIcon}>{category.icon}</Text>
-                      <Text style={styles.heroCategoryText}>{category.label}</Text>
+                    <Pressable key={category.id} onPress={() => router.push(("/services?category=" + category.id) as never)} style={[styles.heroCategory, compact && styles.heroCategoryCompact, compact && { width: Math.floor((width - 46) / 5) }]} accessibilityRole="button">
+                      <Text style={[styles.heroCategoryIcon, compact && styles.heroCategoryIconCompact]}>{category.icon}</Text>
+                      <Text style={[styles.heroCategoryText, compact && styles.heroCategoryTextCompact]} numberOfLines={2}>{category.label}</Text>
                     </Pressable>
                   ))}
                 </View>
@@ -216,10 +216,13 @@ const styles = StyleSheet.create({
   heroText: { color: "#FFFFFF", fontSize: 24, lineHeight: 36, textAlign: "right", marginTop: 12, fontFamily: "Arial" },
   heroTextCompact: { fontSize: 15, lineHeight: 25 },
   heroCategoryRow: { flexDirection: "row", flexWrap: "wrap", justifyContent: "flex-end", gap: 12, marginTop: 28, width: "100%" },
-  heroCategoryRowCompact: { gap: 7, marginTop: 20 },
+  heroCategoryRowCompact: { gap: 5, marginTop: 16, flexWrap: "nowrap" },
   heroCategory: { width: 145, minHeight: 130, paddingHorizontal: 8, paddingVertical: 13, borderRadius: 20, borderWidth: 1, borderColor: "rgba(210,245,248,0.38)", backgroundColor: "rgba(13,39,51,0.72)", alignItems: "center", justifyContent: "center" },
+  heroCategoryCompact: { minHeight: 68, paddingHorizontal: 3, paddingVertical: 6, borderRadius: 11, borderWidth: 1, flexShrink: 1 },
   heroCategoryIcon: { color: "#FFFFFF", fontSize: 34, marginBottom: 9 },
+  heroCategoryIconCompact: { fontSize: 19, marginBottom: 3 },
   heroCategoryText: { color: "#FFFFFF", fontSize: 14, fontWeight: "800", textAlign: "center", lineHeight: 21, fontFamily: "Arial" },
+  heroCategoryTextCompact: { fontSize: 8, lineHeight: 11, fontWeight: "700" },
   primaryButton: { backgroundColor: "#08BDB8", borderRadius: 40, paddingVertical: 16, paddingHorizontal: 30, marginTop: 28, minWidth: 230, alignItems: "center" },
   primaryButtonText: { color: "#FFFFFF", fontSize: 17, fontWeight: "900", fontFamily: "Arial" },
   heroDots: { flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 11, marginTop: 34, alignSelf: "center" },
