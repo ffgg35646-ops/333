@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { useServices } from "../hooks/useServices";
+import { serviceCategories } from "../data/services";
 import { apiRequest } from "../lib/api";
 import { SiteFooter, SiteHeader } from "../components/SiteShell";
 
@@ -14,13 +15,17 @@ export default function RequestServiceScreen() {
   const [compoundName, setCompoundName] = useState("");
   const [propertyNumber, setPropertyNumber] = useState("");
   const [propertyName, setPropertyName] = useState("");
+  const [categoryId, setCategoryId] = useState(selected?.categoryId ?? "");
+  const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
   const [serviceName, setServiceName] = useState(selected?.title ?? "");
   const [serviceDropdownOpen, setServiceDropdownOpen] = useState(false);
+  const availableServices = services.filter(item => item.active !== false && item.categoryId === categoryId);
+  const selectedCategory = serviceCategories.find(item => item.id === categoryId);
   const [busy, setBusy] = useState(false);
   const [feedback, setFeedback] = useState("");
 
   const submit = async () => {
-    if (!name.trim() || !phone.trim() || !compoundName.trim() || !propertyNumber.trim() || !propertyName.trim() || !serviceName.trim()) {
+    if (!name.trim() || !phone.trim() || !compoundName.trim() || !propertyNumber.trim() || !propertyName.trim() || !categoryId || !serviceName.trim()) {
       setFeedback("من فضلك أكمل جميع البيانات المطلوبة.");
       return;
     }
@@ -70,20 +75,40 @@ export default function RequestServiceScreen() {
             <TextInput value={propertyNumber} onChangeText={setPropertyNumber} placeholder="اكتب رقم العقار" style={styles.input} textAlign="right" />
             <Text style={styles.label}>اسم العقار</Text>
             <TextInput value={propertyName} onChangeText={setPropertyName} placeholder="اكتب اسم العقار" style={styles.input} textAlign="right" />
+            <Text style={styles.label}>القسم</Text>
+            <Pressable
+              onPress={() => { setCategoryDropdownOpen(open => !open); setServiceDropdownOpen(false); }}
+              style={[styles.input, styles.dropdownTrigger]}
+              accessibilityRole="button"
+              accessibilityState={{ expanded: categoryDropdownOpen }}
+            >
+              <Text style={[styles.dropdownValue, !selectedCategory && styles.dropdownPlaceholder]}>{selectedCategory ? `${selectedCategory.icon}  ${selectedCategory.title}` : "اختر القسم"}</Text>
+              <Text style={styles.dropdownArrow}>{categoryDropdownOpen ? "⌃" : "⌄"}</Text>
+            </Pressable>
+            {categoryDropdownOpen && (
+              <View style={styles.dropdownList}>
+                {serviceCategories.map(category => (
+                  <Pressable key={category.id} onPress={() => { setCategoryId(category.id); setServiceName(""); setCategoryDropdownOpen(false); setServiceDropdownOpen(true); }} style={[styles.dropdownOption, categoryId === category.id && styles.dropdownOptionSelected]}>
+                    <Text style={[styles.dropdownOptionText, categoryId === category.id && styles.dropdownOptionTextSelected]}>{category.title}</Text>
+                    <Text style={styles.dropdownOptionIcon}>{category.icon}</Text>
+                  </Pressable>
+                ))}
+              </View>
+            )}
             <Text style={styles.label}>الخدمة المطلوبة</Text>
             <Pressable
-              onPress={() => setServiceDropdownOpen(open => !open)}
+              onPress={() => { if (categoryId) setServiceDropdownOpen(open => !open); }}
               style={[styles.input, styles.dropdownTrigger]}
               accessibilityRole="button"
               accessibilityState={{ expanded: serviceDropdownOpen }}
             >
-              <Text style={[styles.dropdownValue, !serviceName && styles.dropdownPlaceholder]}>{serviceName || "اختر الخدمة المطلوبة"}</Text>
+              <Text style={[styles.dropdownValue, !serviceName && styles.dropdownPlaceholder]}>{serviceName || (categoryId ? "اختر الخدمة المطلوبة" : "اختر القسم أولاً")}</Text>
               <Text style={styles.dropdownArrow}>{serviceDropdownOpen ? "⌃" : "⌄"}</Text>
             </Pressable>
             {serviceDropdownOpen && (
               <View style={styles.dropdownList}>
                 <ScrollView nestedScrollEnabled style={styles.dropdownScroll} keyboardShouldPersistTaps="handled">
-                  {services.filter(item => item.active !== false).map(item => (
+                  {availableServices.map(item => (
                     <Pressable
                       key={item.id}
                       onPress={() => { setServiceName(item.title); setServiceDropdownOpen(false); }}
@@ -93,7 +118,7 @@ export default function RequestServiceScreen() {
                       <Text style={styles.dropdownOptionIcon}>{item.icon}</Text>
                     </Pressable>
                   ))}
-                  {!services.some(item => item.active !== false) && <Text style={styles.dropdownEmpty}>لا توجد خدمات متاحة حاليًا.</Text>}
+                  {!availableServices.length && <Text style={styles.dropdownEmpty}>لا توجد خدمات متاحة في هذا القسم حاليًا.</Text>}
                 </ScrollView>
               </View>
             )}
