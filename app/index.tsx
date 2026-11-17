@@ -7,16 +7,16 @@ import { serviceCategories, type ServiceItem } from "../data/services";
 import { SiteFooter, SiteHeader } from "../components/SiteShell";
 
 const HERO_IMAGES = [
-  "https://raw.githubusercontent.com/ffgg35646-ops/333/main/%D8%AA%D8%A3%D9%85%D9%8A%D9%86%20%D8%AD%D9%81%D9%84%D8%A7%D8%AA.jpg",
-  "https://raw.githubusercontent.com/ffgg35646-ops/333/main/%D9%85%D8%AF%D8%B1%D8%A8%20%D9%8A%D9%88%D8%AC%D8%A7.jpg",
-  "https://raw.githubusercontent.com/ffgg35646-ops/333/main/%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%8A%20%D9%88%D8%AF%D9%8A%20%D8%AC%D9%8A.jpg",
-  "https://raw.githubusercontent.com/ffgg35646-ops/333/main/%D8%AD%D9%85%D8%A7%D9%85%D8%A7%D8%AA.jpg",
-  "https://raw.githubusercontent.com/ffgg35646-ops/333/main/%D9%85%D8%AE%D8%A7%D8%B2%D9%86%20%D9%88%D9%85%D8%B3%D8%AA%D9%88%D8%AF%D8%B9%D8%A7%D8%AA.jpg",
-  "https://raw.githubusercontent.com/ffgg35646-ops/333/main/%D8%AA%D8%AC%D8%AF%D9%8A%D8%AF%20%D9%88%D8%AA%D8%B1%D9%85%D9%8A%D9%85.jpg",
-  "https://raw.githubusercontent.com/ffgg35646-ops/333/main/%D8%AA%D8%A3%D8%AC%D9%8A%D8%B1%20%D9%85%D8%B9%D8%AF%D8%A7%D8%AA%20%D8%B7%D8%A8%D9%8A%D8%B9.jpg",
-  "https://raw.githubusercontent.com/ffgg35646-ops/333/main/%D8%AD%D9%81%D9%84%D8%A7%D8%AA%20%D9%88%D9%85%D9%86%D8%A7%D8%B3%D8%A8%D8%A7%D8%AA.jpg",
-  "https://raw.githubusercontent.com/ffgg35646-ops/333/main/%D9%86%D9%82%D9%84%20%D9%85%D9%86%D8%A7%D8%B2%D9%84.jpg",
-  "https://raw.githubusercontent.com/ffgg35646-ops/333/main/%D8%AC%D8%A7%D9%85%D8%B9%20%D8%A7%D9%84%D9%82%D9%85%D8%A7%D9%85%D8%A9.jpg"
+  "https://cdn.jsdelivr.net/gh/ffgg35646-ops/333@main/%D8%AA%D8%A3%D9%85%D9%8A%D9%86%20%D8%AD%D9%81%D9%84%D8%A7%D8%AA.jpg",
+  "https://cdn.jsdelivr.net/gh/ffgg35646-ops/333@main/%D9%85%D8%AF%D8%B1%D8%A8%20%D9%8A%D9%88%D8%AC%D8%A7.jpg",
+  "https://cdn.jsdelivr.net/gh/ffgg35646-ops/333@main/%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%8A%20%D9%88%D8%AF%D9%8A%20%D8%AC%D9%8A.jpg",
+  "https://cdn.jsdelivr.net/gh/ffgg35646-ops/333@main/%D8%AD%D9%85%D8%A7%D9%85%D8%A7%D8%AA.jpg",
+  "https://cdn.jsdelivr.net/gh/ffgg35646-ops/333@main/%D9%85%D8%AE%D8%A7%D8%B2%D9%86%20%D9%88%D9%85%D8%B3%D8%AA%D9%88%D8%AF%D8%B9%D8%A7%D8%AA.jpg",
+  "https://cdn.jsdelivr.net/gh/ffgg35646-ops/333@main/%D8%AA%D8%AC%D8%AF%D9%8A%D8%AF%20%D9%88%D8%AA%D8%B1%D9%85%D9%8A%D9%85.jpg",
+  "https://cdn.jsdelivr.net/gh/ffgg35646-ops/333@main/%D8%AA%D8%A3%D8%AC%D9%8A%D8%B1%20%D9%85%D8%B9%D8%AF%D8%A7%D8%AA%20%D8%B7%D8%A8%D9%8A%D8%B9.jpg",
+  "https://cdn.jsdelivr.net/gh/ffgg35646-ops/333@main/%D8%AD%D9%81%D9%84%D8%A7%D8%AA%20%D9%88%D9%85%D9%86%D8%A7%D8%B3%D8%A8%D8%A7%D8%AA.jpg",
+  "https://cdn.jsdelivr.net/gh/ffgg35646-ops/333@main/%D9%86%D9%82%D9%84%20%D9%85%D9%86%D8%A7%D8%B2%D9%84.jpg",
+  "https://cdn.jsdelivr.net/gh/ffgg35646-ops/333@main/%D8%AC%D8%A7%D9%85%D8%B9%20%D8%A7%D9%84%D9%82%D9%85%D8%A7%D9%85%D8%A9.jpg"
 ];
 
 function ServiceCard({ item, width }: { item: ServiceItem; width: number }) {
@@ -93,12 +93,13 @@ export default function HomeScreen() {
   const { mainServices } = useServices();
   const settings = useSiteSettings();
   const [heroIndex, setHeroIndex] = useState(0);
+  useEffect(() => { HERO_IMAGES.forEach(uri => { Image.prefetch(uri).catch(() => {}); }); }, []);
   useEffect(() => {
     const timer = setInterval(() => setHeroIndex(current => (current + 1) % HERO_IMAGES.length), 10000);
     return () => clearInterval(timer);
   }, []);
   const compact = width < 700;
-  const cardWidth = compact ? Math.min(width * 0.72, 292) : width < 1050 ? 276 : 286;
+  const cardWidth = compact ? Math.max(148, (width - 70) / 2) : width < 1050 ? 276 : 286;
   const categoryOrder = ["maintenance", "cleaning", "personal-care", "healthcare", "professional-technical", "events", "moving-logistic", "safety-security"];
   const categorySections = [...serviceCategories]
     .sort((a, b) => categoryOrder.indexOf(a.id) - categoryOrder.indexOf(b.id))
@@ -213,7 +214,7 @@ const styles = StyleSheet.create({
   trustItem: { flexDirection: "row", alignItems: "center", gap: 8 },
   trustIcon: { color: "#0F766E", fontSize: 18, fontWeight: "900" , fontFamily: "Arial" },
   trustText: { color: "#626E6A", fontSize: 12, fontWeight: "700" , fontFamily: "Arial" },
-  section: { width: "100%", maxWidth: 1240, alignSelf: "center", paddingHorizontal: 28, paddingTop: 42, paddingBottom: 18 },
+  section: { width: "100%", maxWidth: 1240, alignSelf: "center", paddingHorizontal: 16, paddingTop: 30, paddingBottom: 14 },
   sectionHeading: { flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between", gap: 14, marginBottom: 18 },
   sectionTitleGroup: { alignItems: "flex-start", flex: 1 },
   sectionKicker: { color: "#5FA69A", fontSize: 10, fontWeight: "900", letterSpacing: 1.5, textAlign: "right" , fontFamily: "Arial" },
@@ -224,13 +225,13 @@ const styles = StyleSheet.create({
   horizontalScroller: { width: "100%", flexGrow: 0, flexShrink: 1, overflow: "hidden", direction: "ltr" },
   horizontalCards: { flexDirection: "row", gap: 14, paddingBottom: 12, paddingRight: 1, direction: "ltr" },
   card: { backgroundColor: "#FFFFFF", borderRadius: 20, overflow: "hidden", borderWidth: 1, borderColor: "#E2E9E4", shadowColor: "#173B38", shadowOpacity: 0.07, shadowRadius: 16, shadowOffset: { width: 0, height: 7 }, elevation: 3 },
-  cardImage: { width: "100%", height: 164, backgroundColor: "#E8EEEA" },
-  cardBody: { paddingHorizontal: 14, paddingTop: 13, paddingBottom: 8, alignItems: "flex-start" },
+  cardImage: { width: "100%", height: 124, backgroundColor: "#E8EEEA" },
+  cardBody: { paddingHorizontal: 10, paddingTop: 10, paddingBottom: 7, alignItems: "flex-start" },
   cardTitleRow: { width: "100%", flexDirection: "row", alignItems: "center", gap: 8 },
   cardIcon: { fontSize: 16 },
-  cardTitle: { color: "#38423E", fontSize: 14, fontWeight: "900", textAlign: "right", flex: 1 , fontFamily: "Arial" },
+  cardTitle: { color: "#38423E", fontSize: 12, fontWeight: "900", textAlign: "right", flex: 1 , fontFamily: "Arial" },
   cardEnglish: { color: "#9AA69F", fontSize: 9, marginTop: 4, textAlign: "right" , fontFamily: "Arial" },
-  cardDescription: { color: "#6D7C74", fontSize: 11, lineHeight: 18, marginTop: 8, textAlign: "right", minHeight: 36 , fontFamily: "Arial" },
+  cardDescription: { color: "#6D7C74", fontSize: 10, lineHeight: 16, marginTop: 7, textAlign: "right", minHeight: 32 , fontFamily: "Arial" },
   orderButton: { marginHorizontal: 13, marginBottom: 13, minHeight: 39, borderRadius: 11, backgroundColor: "#E6F2EF", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 7 },
   orderButtonText: { color: "#0F766E", fontSize: 12, fontWeight: "900" , fontFamily: "Arial" },
   orderArrow: { color: "#0F766E", fontSize: 15, fontWeight: "900" , fontFamily: "Arial" },
