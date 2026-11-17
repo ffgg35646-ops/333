@@ -22,31 +22,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         if (operations.length) await services.bulkWrite(operations, { ordered: false });
         await services.updateMany({ categoryId: { $exists: false } }, { $set: { active: false, updatedAt: new Date() } });
       }
-      // Replace legacy placeholder/duplicate service images with service-topic photo searches.
-      // The stable lock keeps each service on its own distinct image selection.
+      // Repair legacy placeholder/relative image URLs using the original repository photos.
       const activeForImages = await services.find(
         { active: { $ne: false }, categoryId: { $exists: true } },
-        { projection: { id: 1, english: 1, title: 1, image: 1 } }
+        { projection: { id: 1, image: 1 } }
       ).toArray();
+      const canonicalImages = new Map(allServices.map(item => [item.id, item.image]));
       const imageUpdates = activeForImages
-        .filter(item => item.id && !String(item.image || "").startsWith("https://loremflickr.com/"))
-        .map(item => {
-          const key = String(item.id);
-          let lock = 0;
-          for (let i = 0; i < key.length; i++) lock = (lock * 31 + key.charCodeAt(i)) >>> 0;
-          const topic = String(item.english || item.title || key).trim().replace(/\\s+/g, " ");
-          return {
-            updateOne: {
-              filter: { id: item.id },
-              update: {
-                $set: {
-                  image: `https://loremflickr.com/900/600/${encodeURIComponent(topic)}?lock=${lock}`,
-                  imageUpdatedAt: new Date()
-                }
-              }
-            }
-          };
-        });
+        .filter(item => {
+          const current = String(item.image || "");
+          return current.startsWith("https://loremflickr.com/") || !/^https?:\\/\\//i.test(current);
+        })
+        .map(item => ({
+          updateOne: {
+            filter: { id: item.id },
+            update: { $set: { image: canonicalImages.get(String(item.id)), imageUpdatedAt: new Date() } }
+          }
+        }))
+        .filter(operation => Boolean(operation.updateOne.update.$set.image));
       if (imageUpdates.length) await services.bulkWrite(imageUpdates, { ordered: false });
       const filter = getSession(req) ? { categoryId: { $exists: true } } : { active: { $ne: false }, categoryId: { $exists: true } };
       const items = await services.find(filter).sort({ order: 1, title: 1 }).toArray();
