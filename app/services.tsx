@@ -63,9 +63,9 @@ const styles = StyleSheet.create({
   grid: { flexDirection: "row", flexWrap: "wrap", gap: 12 },
   tile: { backgroundColor: "#FFFFFF", borderRadius: 21, overflow: "hidden", borderWidth: 1, borderColor: "#E2E9E4", marginBottom: 8, shadowColor: "#173B38", shadowOpacity: 0.07, shadowRadius: 16, shadowOffset: { width: 0, height: 6 }, elevation: 3 },
   image: { width: "100%", height: 124, backgroundColor: "#E8EEEA" },
-  tileBody: { padding: 10, alignItems: "flex-start" },
+  tileBody: { padding: 12, alignItems: "flex-start", minHeight: 132 },
   title: { color: "#173B38", fontSize: 12, fontWeight: "900", textAlign: "right" , fontFamily: "Arial" },
   english: { color: "#89958F", fontSize: 10, marginTop: 5, textAlign: "right" , fontFamily: "Arial" },
-  description: { color: "#62736D", fontSize: 10, lineHeight: 16, marginTop: 7, textAlign: "right" , fontFamily: "Arial" },
+  description: { color: "#52645D", fontSize: 11, lineHeight: 19, marginTop: 9, textAlign: "right", width: "100%", minHeight: 38, paddingHorizontal: 9, paddingVertical: 7, borderRadius: 9, backgroundColor: "#F5F8F6", overflow: "hidden", fontFamily: "Arial" },
   more: { color: "#0F766E", fontSize: 11, fontWeight: "900", marginTop: 11 , fontFamily: "Arial" },
 });
