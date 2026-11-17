@@ -125,7 +125,7 @@ export default function HomeScreen() {
     <View style={styles.page}>
       <SiteHeader active="home" />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.heroOuter}>
+        <View style={[styles.heroOuter, compact && styles.heroOuterCompact]}>
           <FastImageBackground source={{ uri: HERO_IMAGES[heroIndex] }} resizeMode="cover" loading="eager" style={[styles.hero, compact && styles.heroCompact]}>
             <View style={styles.heroShade} />
             <View style={[styles.heroContent, compact && styles.heroContentCompact]}>
@@ -204,11 +204,12 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   page: { flex: 1, backgroundColor: "#F5F7F6" },
   heroOuter: { backgroundColor: "#F5F7F6", paddingHorizontal: 0, paddingTop: 0, paddingBottom: 18 },
+  heroOuterCompact: { paddingHorizontal: 12, paddingTop: 10, paddingBottom: 14 },
   hero: { width: "100%", maxWidth: 1600, minHeight: 650, alignSelf: "center", justifyContent: "center", overflow: "hidden", borderRadius: 0, backgroundColor: "#102A35" },
-  heroCompact: { minHeight: 590, borderRadius: 0 },
+  heroCompact: { minHeight: 470, borderRadius: 22, overflow: "hidden" },
   heroShade: { ...StyleSheet.absoluteFill, backgroundColor: "rgba(5, 22, 31, 0.58)" },
   heroContent: { width: "100%", minHeight: 650, paddingHorizontal: 54, paddingVertical: 46, justifyContent: "center", alignItems: "flex-end" },
-  heroContentCompact: { minHeight: 590, paddingHorizontal: 15, paddingVertical: 34, justifyContent: "center" },
+  heroContentCompact: { minHeight: 470, paddingHorizontal: 15, paddingVertical: 24, justifyContent: "center" },
   heroCopy: { width: "100%", maxWidth: 850, alignItems: "flex-end" },
   heroTitle: { color: "#FFFFFF", fontSize: 54, fontWeight: "900", textAlign: "right", lineHeight: 72, fontFamily: "Arial" },
   heroTitleCompact: { fontSize: 30, lineHeight: 43 },
