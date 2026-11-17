@@ -164,8 +164,8 @@ export default function HomeScreen() {
 
         {categorySections.map(category => (
           <View key={category.id} style={styles.section}>
-            <View style={styles.sectionHeading}>
-              <View style={styles.sectionTitleGroup}>
+            <View style={[styles.sectionHeading, compact && styles.sectionHeadingCompact]}>
+              <View style={[styles.sectionTitleGroup, compact && styles.sectionTitleGroupCompact]}>
                 <Text style={styles.sectionKicker}>{category.english}</Text>
                 <Text style={styles.sectionTitle}>{category.title}</Text>
               </View>
@@ -225,7 +225,9 @@ const styles = StyleSheet.create({
   trustText: { color: "#626E6A", fontSize: 12, fontWeight: "700" , fontFamily: "Arial" },
   section: { width: "100%", maxWidth: 1240, alignSelf: "center", paddingHorizontal: 16, paddingTop: 30, paddingBottom: 14 },
   sectionHeading: { flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between", gap: 14, marginBottom: 18 },
+  sectionHeadingCompact: { backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: "#DCE9E3", borderRadius: 15, paddingHorizontal: 15, paddingVertical: 13, marginBottom: 16, shadowColor: "#173B38", shadowOpacity: 0.09, shadowRadius: 9, shadowOffset: { width: 0, height: 4 }, elevation: 4 },
   sectionTitleGroup: { alignItems: "flex-start", flex: 1 },
+  sectionTitleGroupCompact: { alignItems: "flex-end" },
   sectionKicker: { color: "#5FA69A", fontSize: 10, fontWeight: "900", letterSpacing: 1.5, textAlign: "right" , fontFamily: "Arial" },
   sectionTitle: { color: "#173B38", fontSize: 24, fontWeight: "900", marginTop: 5, textAlign: "right" , fontFamily: "Arial" },
   sectionSubtitle: { color: "#8A918D", fontSize: 12, marginTop: 6, textAlign: "right" , fontFamily: "Arial" },
