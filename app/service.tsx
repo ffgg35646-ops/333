@@ -23,29 +23,27 @@ export default function ServiceDetailsScreen() {
               <Text style={styles.kicker}>{service.group === "main" ? "MAIN SERVICE" : "SPECIAL SERVICE"}</Text>
               <Text style={styles.title}>{service.icon}  {service.title}</Text>
               <Text style={styles.english}>{service.english}</Text>
-              <View style={styles.summaryPanel}>
-                <Text style={styles.summaryLabel}>نبذة عن الخدمة</Text>
+
+              <View style={styles.descriptionSection}>
+                <Text style={styles.sectionHeading}>✦  وصف</Text>
                 <Text style={styles.summary}>{service.shortDescription}</Text>
               </View>
-              <View style={styles.rule} />
-              <View style={styles.descriptionSection}>
-                <Text style={styles.detailsHeading}>تفاصيل الخدمة</Text>
-                <Text style={styles.details}>{service.details}</Text>
-              </View>
-              <View style={styles.detailPanel}>
-                <Text style={styles.detailsHeading}>ماذا تشمل الخدمة؟</Text>
-                <Text style={styles.detailBullet}>• فهم احتياجك وتسجيل تفاصيل الخدمة المطلوبة.</Text>
-                <Text style={styles.detailBullet}>• مراجعة بيانات الموقع وطبيعة العمل المطلوب.</Text>
-                <Text style={styles.detailBullet}>• التواصل معك لتوضيح النطاق والتفاصيل قبل التنفيذ.</Text>
-                <Text style={styles.detailBullet}>• الاتفاق على الموعد والتكلفة بعد مراجعة الطلب.</Text>
-              </View>
-              <View style={styles.detailPanel}>
-                <Text style={styles.detailsHeading}>خطوات طلب الخدمة</Text>
+
+              {!!service.details && (
+                <View style={styles.descriptionSection}>
+                  <View style={styles.rule} />
+                  <Text style={styles.details}>{service.details}</Text>
+                </View>
+              )}
+
+              <View style={styles.stepsSection}>
+                <View style={styles.rule} />
+                <Text style={styles.stepsHeading}>⌁  خطوات طلب الخدمة</Text>
                 <Text style={styles.detailStep}>١. اضغط على «اطلب هذه الخدمة».</Text>
                 <Text style={styles.detailStep}>٢. أدخل بيانات التواصل والعنوان.</Text>
                 <Text style={styles.detailStep}>٣. اكتب تفاصيل احتياجك وسنتواصل معك لتأكيد الطلب.</Text>
               </View>
-              <Text style={styles.note}>ملاحظة: تفاصيل التنفيذ والتكلفة النهائية يتم تأكيدها معك بعد مراجعة طبيعة الخدمة ومكانها.</Text>
+
               <Pressable onPress={() => router.push(("/request-service?service=" + service.id) as never)} style={styles.button}><Text style={styles.buttonText}>اطلب هذه الخدمة ←</Text></Pressable>
             </View>
           </View>
@@ -59,24 +57,21 @@ export default function ServiceDetailsScreen() {
 const styles = StyleSheet.create({
   page: { flex: 1, backgroundColor: "#F5F7F6" },
   content: { width: "100%", maxWidth: 1000, alignSelf: "center", padding: 24, paddingTop: 28 },
-  back: { color: "#0F766E", fontSize: 13, fontWeight: "800", textAlign: "right", marginBottom: 18 , fontFamily: "Arial" },
+  back: { color: "#0F766E", fontSize: 13, fontWeight: "700", textAlign: "right", marginBottom: 18, fontFamily: "Arial" },
   image: { width: "100%", height: 340, borderRadius: 26, backgroundColor: "#E8EEEA" },
-  info: { backgroundColor: "#FFFFFF", padding: 32, borderRadius: 26, marginTop: 22, borderWidth: 1, borderColor: "#E2E9E4", alignItems: "flex-start", shadowColor: "#173B38", shadowOpacity: 0.06, shadowRadius: 14, shadowOffset: { width: 0, height: 5 }, elevation: 2 },
-  kicker: { color: "#0F766E", fontSize: 10, fontWeight: "900", letterSpacing: 2 , fontFamily: "Arial" },
-  title: { color: "#173B38", fontSize: 28, fontWeight: "900", textAlign: "right", marginTop: 9 , fontFamily: "Arial" },
-  english: { color: "#89958F", fontSize: 12, marginTop: 6 , fontFamily: "Arial" },
-  summaryPanel: { width: "100%", marginTop: 20, paddingHorizontal: 18, paddingVertical: 16, borderRadius: 16, backgroundColor: "#F0F7F3", borderWidth: 1, borderColor: "#DCEBE2", alignItems: "flex-start" },
-  summaryLabel: { color: "#0F766E", fontSize: 13, fontWeight: "900", marginBottom: 8, textAlign: "right", fontFamily: "Arial" },
-  summary: { color: "#435B52", fontSize: 15, lineHeight: 29, textAlign: "right", width: "100%", fontFamily: "Arial" },
-  descriptionSection: { width: "100%", alignItems: "flex-start" },
-  rule: { height: 1, backgroundColor: "#DCE7E3", width: "100%", marginVertical: 20 },
-  detailsHeading: { color: "#173B38", fontSize: 18, fontWeight: "900", textAlign: "right" , fontFamily: "Arial" },
-  details: { color: "#536A65", fontSize: 14, lineHeight: 30, marginTop: 12, textAlign: "right", width: "100%", paddingHorizontal: 15, paddingVertical: 13, borderRadius: 13, backgroundColor: "#F7F9F8", fontFamily: "Arial" },
-  detailPanel: { width: "100%", backgroundColor: "#F6F9F7", borderRadius: 14, padding: 18, marginTop: 16, borderWidth: 1, borderColor: "#DCE7E3", alignItems: "flex-start" },
-  detailBullet: { color: "#536A65", fontSize: 13, lineHeight: 26, marginTop: 5, textAlign: "right" , fontFamily: "Arial" },
-  detailStep: { color: "#536A65", fontSize: 13, lineHeight: 27, marginTop: 4, textAlign: "right" , fontFamily: "Arial" },
-  note: { color: "#65766F", fontSize: 12, lineHeight: 22, marginTop: 16, textAlign: "right", backgroundColor: "#E6F2EF", padding: 13, borderRadius: 10, width: "100%" , fontFamily: "Arial" },
-  button: { backgroundColor: "#0F766E", paddingHorizontal: 23, paddingVertical: 15, borderRadius: 12, marginTop: 25 },
-  buttonText: { color: "#173B38", fontWeight: "900", fontSize: 13 , fontFamily: "Arial" },
+  info: { backgroundColor: "#FFFFFF", padding: 32, borderRadius: 26, marginTop: 22, borderWidth: 1, borderColor: "#E2E9E4", alignItems: "flex-start", shadowColor: "#173B38", shadowOpacity: 0.05, shadowRadius: 14, shadowOffset: { width: 0, height: 5 }, elevation: 2 },
+  kicker: { color: "#0F766E", fontSize: 10, fontWeight: "800", letterSpacing: 1.6, fontFamily: "Arial" },
+  title: { color: "#173B38", fontSize: 27, fontWeight: "800", textAlign: "right", marginTop: 10, lineHeight: 39, fontFamily: "Arial" },
+  english: { color: "#89958F", fontSize: 11, marginTop: 5, fontFamily: "Arial" },
+  descriptionSection: { width: "100%", alignItems: "flex-start", marginTop: 25 },
+  sectionHeading: { color: "#0F766E", fontSize: 18, fontWeight: "800", textAlign: "right", marginBottom: 10, fontFamily: "Arial" },
+  summary: { color: "#435B52", fontSize: 15, lineHeight: 30, textAlign: "right", width: "100%", fontFamily: "Arial" },
+  rule: { height: 1, backgroundColor: "#E5ECE8", width: "100%", marginBottom: 19 },
+  details: { color: "#536A65", fontSize: 14, lineHeight: 29, textAlign: "right", width: "100%", fontFamily: "Arial" },
+  stepsSection: { width: "100%", alignItems: "flex-start", marginTop: 27 },
+  stepsHeading: { color: "#173B38", fontSize: 16, fontWeight: "800", textAlign: "right", marginBottom: 9, fontFamily: "Arial" },
+  detailStep: { color: "#536A65", fontSize: 13, lineHeight: 27, marginTop: 5, textAlign: "right", width: "100%", fontFamily: "Arial" },
+  button: { backgroundColor: "#0F766E", paddingHorizontal: 23, paddingVertical: 15, borderRadius: 12, marginTop: 27 },
+  buttonText: { color: "#FFFFFF", fontWeight: "800", fontSize: 14, fontFamily: "Arial" },
   notFound: { padding: 60, alignItems: "center" }
 });
