@@ -158,7 +158,7 @@ export function SiteFooter({ children }: FooterProps) {
 
 const styles = StyleSheet.create({
   headerWrap: { backgroundColor: "rgba(23,59,56,0.70)", borderBottomWidth: 1, borderBottomColor: "rgba(255,255,255,0.14)", zIndex: 10, shadowColor: "#102E2B", shadowOpacity: 0.16, shadowRadius: 16, shadowOffset: { width: 0, height: 5 }, elevation: 3, ...( { backdropFilter: "blur(18px) saturate(120%)", WebkitBackdropFilter: "blur(18px) saturate(120%)" } as any) },
-  headerWrapDesktop: { backgroundColor: "rgba(23,59,56,0.70)", borderBottomColor: "rgba(255,255,255,0.14)", borderBottomWidth: 1, shadowColor: "#102E2B", shadowOpacity: 0.16, shadowRadius: 16, shadowOffset: { width: 0, height: 5 }, ...( { backdropFilter: "blur(18px) saturate(120%)", WebkitBackdropFilter: "blur(18px) saturate(120%)" } as any) },
+  headerWrapDesktop: { backgroundColor: "rgba(23,59,56,0.24)", borderBottomColor: "rgba(255,255,255,0.20)", borderBottomWidth: 1, shadowColor: "#102E2B", shadowOpacity: 0.08, shadowRadius: 18, shadowOffset: { width: 0, height: 5 }, ...( { backdropFilter: "blur(22px) saturate(145%)", WebkitBackdropFilter: "blur(22px) saturate(145%)" } as any) },
   header: { width: "100%", maxWidth: 1600, alignSelf: "center", minHeight: 88, paddingHorizontal: 30, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 22 },
   headerCompact: { minHeight: 68, paddingVertical: 9, paddingHorizontal: 12, gap: 8 },
   brand: { flexDirection: "row", alignItems: "center", gap: 10 },
