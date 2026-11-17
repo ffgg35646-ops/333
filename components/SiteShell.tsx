@@ -83,10 +83,6 @@ export function SiteHeader({ active }: HeaderProps) {
         ) : (
           <AppDownloadLinks compact />
         )}
-        <Pressable onPress={() => go("/admin-login")} style={[styles.accountButton, compact && styles.accountButtonCompact]}>
-          <Text style={styles.accountIcon}>◉</Text>
-          <Text style={styles.accountButtonText}>حسابي</Text>
-        </Pressable>
       </View>
       {compact && (
         <View style={styles.mobileNav}>
@@ -96,9 +92,6 @@ export function SiteHeader({ active }: HeaderProps) {
               {active === link.key && <View style={styles.mobileNavIndicator} />}
             </Pressable>
           ))}
-          <Pressable onPress={() => go("/admin-login")} style={styles.mobileNavItem}>
-            <Text style={styles.mobileNavText}>حسابي</Text>
-          </Pressable>
         </View>
       )}
     </View>
@@ -142,15 +135,15 @@ export function SiteFooter({ children }: FooterProps) {
 
 const styles = StyleSheet.create({
   headerWrap: { backgroundColor: "#FFFFFF", borderBottomWidth: 1, borderBottomColor: "#DCECF4", zIndex: 10 },
-  header: { width: "100%", maxWidth: 1240, alignSelf: "center", minHeight: 82, paddingHorizontal: 28, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 22 },
+  header: { width: "100%", maxWidth: 1320, alignSelf: "center", minHeight: 88, paddingHorizontal: 30, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 22 },
   headerCompact: { minHeight: 68, paddingVertical: 9, paddingHorizontal: 12, gap: 8 },
   brand: { flexDirection: "row", alignItems: "center", gap: 10 },
-  brandMark: { width: 42, height: 42, borderRadius: 14, backgroundColor: "#078BCB", alignItems: "center", justifyContent: "center" },
-  brandMarkText: { color: "#FFFFFF", fontSize: 25, fontWeight: "900" },
+  brandMark: { width: 46, height: 46, borderRadius: 16, backgroundColor: "#073B5B", alignItems: "center", justifyContent: "center", borderWidth: 2, borderColor: "#72D7E8", shadowColor: "#078BCB", shadowOpacity: 0.22, shadowRadius: 9, shadowOffset: { width: 0, height: 3 }, elevation: 4 },
+  brandMarkText: { color: "#72D7E8", fontSize: 27, fontWeight: "900" },
   brandName: { color: "#123B56", fontSize: 19, fontWeight: "900", textAlign: "right" },
   brandTag: { color: "#929A94", fontSize: 10, marginTop: 2, textAlign: "right" },
-  nav: { flexDirection: "row", alignItems: "center", gap: 5, flexWrap: "wrap", justifyContent: "center" },
-  navItem: { paddingVertical: 11, paddingHorizontal: 14, borderRadius: 11 },
+  nav: { flexDirection: "row", alignItems: "center", gap: 7, flexWrap: "wrap", justifyContent: "center", backgroundColor: "#F3F8FB", padding: 6, borderRadius: 16, borderWidth: 1, borderColor: "#E4EEF3" },
+  navItem: { paddingVertical: 12, paddingHorizontal: 16, borderRadius: 12 },
   navItemActive: { backgroundColor: "#E4F5FC" },
   navText: { color: "#6F7973", fontSize: 13, fontWeight: "700" },
   navActive: { color: "#078BCB", fontWeight: "900" },
@@ -169,7 +162,7 @@ const styles = StyleSheet.create({
   accountButtonCompact: { paddingVertical: 9, paddingHorizontal: 9, gap: 4 },
   accountIcon: { color: "#123B56", fontSize: 13 },
   accountButtonText: { color: "#123B56", fontSize: 12, fontWeight: "800" },
-  mobileNav: { width: "100%", backgroundColor: "#FFFFFF", borderTopWidth: 1, borderTopColor: "#ECEEE8", flexDirection: "row", justifyContent: "space-around", paddingHorizontal: 7, paddingTop: 8, paddingBottom: 10 },
+  mobileNav: { width: "100%", backgroundColor: "#FFFFFF", borderTopWidth: 1, borderTopColor: "#DCECF4", flexDirection: "row", justifyContent: "space-around", paddingHorizontal: 7, paddingTop: 11, paddingBottom: 12 },
   mobileNavItem: { minWidth: 66, alignItems: "center", justifyContent: "center", gap: 5 },
   mobileNavText: { color: "#89918B", fontSize: 11, fontWeight: "700" },
   mobileNavActive: { color: "#078BCB", fontWeight: "900" },
