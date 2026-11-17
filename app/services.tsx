@@ -4,14 +4,14 @@ import { useServices } from "../hooks/useServices";
 import { serviceCategories, type ServiceItem } from "../data/services";
 import { SiteFooter, SiteHeader } from "../components/SiteShell";
 
-function ServiceTile({ item, width }: { item: ServiceItem; width: string }) {
+function ServiceTile({ item, width }: { item: ServiceItem; width: number }) {
   return (
     <Pressable onPress={() => router.push(("/service?id=" + item.id) as never)} style={[styles.tile, { width }]}>
       <Image source={{ uri: item.image }} style={styles.image} />
       <View style={styles.tileBody}>
         <Text style={styles.title}>{item.icon}  {item.title}</Text>
         <Text style={styles.english}>{item.english}</Text>
-        <Text style={styles.description}>{item.shortDescription}</Text>
+        <Text style={styles.description} numberOfLines={2}>{item.shortDescription}</Text>
         <Text style={styles.more}>عرض التفاصيل ←</Text>
       </View>
     </Pressable>
@@ -21,7 +21,11 @@ function ServiceTile({ item, width }: { item: ServiceItem; width: string }) {
 export default function ServicesScreen() {
   const { width } = useWindowDimensions();
   const { services } = useServices();
-  const tileWidth = width > 1050 ? "23.5%" : width > 700 ? "31.5%" : "47.5%";
+  const compact = width <= 700;
+  const contentWidth = width - (compact ? 40 : 48);
+  const gap = compact ? 12 : 16;
+  const columns = width > 1050 ? 4 : width > 700 ? 3 : 2;
+  const tileWidth = (contentWidth - gap * (columns - 1)) / columns;
   return (
     <View style={styles.page}>
       <SiteHeader active="services" />
@@ -50,16 +54,16 @@ const styles = StyleSheet.create({
   kicker: { color: "#0F766E", fontWeight: "900", fontSize: 10, letterSpacing: 2 , fontFamily: "Arial" },
   heading: { color: "#173B38", fontSize: 32, fontWeight: "900", marginTop: 10, textAlign: "center" , fontFamily: "Arial" },
   introText: { color: "#657771", fontSize: 14, marginTop: 10, textAlign: "center" , fontFamily: "Arial" },
-  section: { width: "100%", maxWidth: 1240, alignSelf: "center", padding: 24, paddingTop: 42, paddingBottom: 42 },
+  section: { width: "100%", maxWidth: 1240, alignSelf: "center", padding: 20, paddingTop: 28, paddingBottom: 32 },
   categoryHeading: { marginBottom: 22, alignItems: "flex-end" },
   sectionTitle: { color: "#173B38", fontSize: 24, fontWeight: "900", textAlign: "right" , fontFamily: "Arial" },
   categoryEnglish: { color: "#89958F", fontSize: 12, marginTop: 5 , fontFamily: "Arial" },
-  grid: { flexDirection: "row", flexWrap: "wrap", gap: 16 },
+  grid: { flexDirection: "row", flexWrap: "wrap", gap: 12 },
   tile: { backgroundColor: "#FFFFFF", borderRadius: 21, overflow: "hidden", borderWidth: 1, borderColor: "#E2E9E4", marginBottom: 8, shadowColor: "#173B38", shadowOpacity: 0.07, shadowRadius: 16, shadowOffset: { width: 0, height: 6 }, elevation: 3 },
-  image: { width: "100%", height: 164, backgroundColor: "#E8EEEA" },
-  tileBody: { padding: 14, alignItems: "flex-start" },
-  title: { color: "#173B38", fontSize: 14, fontWeight: "900", textAlign: "right" , fontFamily: "Arial" },
+  image: { width: "100%", height: 124, backgroundColor: "#E8EEEA" },
+  tileBody: { padding: 10, alignItems: "flex-start" },
+  title: { color: "#173B38", fontSize: 12, fontWeight: "900", textAlign: "right" , fontFamily: "Arial" },
   english: { color: "#89958F", fontSize: 10, marginTop: 5, textAlign: "right" , fontFamily: "Arial" },
-  description: { color: "#62736D", fontSize: 11, lineHeight: 19, marginTop: 8, textAlign: "right" , fontFamily: "Arial" },
+  description: { color: "#62736D", fontSize: 10, lineHeight: 16, marginTop: 7, textAlign: "right" , fontFamily: "Arial" },
   more: { color: "#0F766E", fontSize: 11, fontWeight: "900", marginTop: 11 , fontFamily: "Arial" },
 });
