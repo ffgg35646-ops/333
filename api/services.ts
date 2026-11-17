@@ -31,7 +31,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const imageUpdates = activeForImages
         .filter(item => {
           const current = String(item.image || "");
-          return current.startsWith("https://loremflickr.com/") || !/^https?:\\/\\//i.test(current);
+          return current.startsWith("https://loremflickr.com/") || !(current.startsWith("https://") || current.startsWith("http://"));
         })
         .map(item => ({
           updateOne: {
