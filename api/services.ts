@@ -30,16 +30,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const canonicalImages = new Map(allServices.map(item => [item.id, item.image]));
       const imageUpdates = activeForImages
         .filter(item => {
-          const current = String(item.image || "");
-          return current.startsWith("https://loremflickr.com/") || !(current.startsWith("https://") || current.startsWith("http://"));
+          const canonical = canonicalImages.get(String(item.id));
+          return Boolean(canonical && String(item.image || "") !== canonical);
         })
         .map(item => ({
           updateOne: {
             filter: { id: item.id },
             update: { $set: { image: canonicalImages.get(String(item.id)), imageUpdatedAt: new Date() } }
           }
-        }))
-        .filter(operation => Boolean(operation.updateOne.update.$set.image));
+        }));
       if (imageUpdates.length) await services.bulkWrite(imageUpdates, { ordered: false });
       const filter = getSession(req) ? { categoryId: { $exists: true } } : { active: { $ne: false }, categoryId: { $exists: true } };
       const items = await services.find(filter).sort({ order: 1, title: 1 }).toArray();
