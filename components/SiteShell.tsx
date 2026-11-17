@@ -86,10 +86,16 @@ export function SiteHeader({ active }: HeaderProps) {
       </View>
       {compact && (
         <View style={styles.mobileNav}>
-          {links.slice(0, 3).map(link => (
-            <Pressable key={link.key} onPress={() => go(link.path)} style={styles.mobileNavItem}>
-              <Text style={[styles.mobileNavText, active === link.key && styles.mobileNavActive]}>{link.label}</Text>
-              {active === link.key && <View style={styles.mobileNavIndicator} />}
+          {links.map(link => (
+            <Pressable
+              key={link.key}
+              onPress={() => go(link.path)}
+              accessibilityRole="button"
+              accessibilityLabel={link.label}
+              style={[styles.mobileNavItem, link.key === "request" && styles.mobileRequestItem]}
+            >
+              <Text style={[styles.mobileNavText, active === link.key && styles.mobileNavActive, link.key === "request" && styles.mobileRequestText]}>{link.label}</Text>
+              {active === link.key && link.key !== "request" && <View style={styles.mobileNavIndicator} />}
             </Pressable>
           ))}
         </View>
@@ -162,10 +168,12 @@ const styles = StyleSheet.create({
   accountButtonCompact: { paddingVertical: 9, paddingHorizontal: 9, gap: 4 },
   accountIcon: { color: "#173B38", fontSize: 13 , fontFamily: "Arial" },
   accountButtonText: { color: "#173B38", fontSize: 12, fontWeight: "800" , fontFamily: "Arial" },
-  mobileNav: { width: "100%", backgroundColor: "#FFFFFF", borderTopWidth: 1, borderTopColor: "#DCE7E3", flexDirection: "row", justifyContent: "space-around", paddingHorizontal: 7, paddingTop: 11, paddingBottom: 12 },
-  mobileNavItem: { minWidth: 66, alignItems: "center", justifyContent: "center", gap: 5 },
+  mobileNav: { position: "fixed" as any, left: 0, right: 0, bottom: 0, zIndex: 1000, width: "100%", backgroundColor: "rgba(255,255,255,0.98)", borderTopWidth: 1, borderTopColor: "#DCE7E3", flexDirection: "row", justifyContent: "space-around", alignItems: "center", paddingHorizontal: 10, paddingTop: 9, paddingBottom: 12, shadowColor: "#173B38", shadowOpacity: 0.12, shadowRadius: 16, shadowOffset: { width: 0, height: -5 }, elevation: 12 },
+  mobileNavItem: { flex: 1, minHeight: 40, alignItems: "center", justifyContent: "center", gap: 4 },
   mobileNavText: { color: "#89918B", fontSize: 11, fontWeight: "700" , fontFamily: "Arial" },
   mobileNavActive: { color: "#0F766E", fontWeight: "900" , fontFamily: "Arial" },
+  mobileRequestItem: { flex: 1.35, minHeight: 44, marginHorizontal: 5, borderRadius: 14, backgroundColor: "#16A34A", shadowColor: "#16A34A", shadowOpacity: 0.28, shadowRadius: 9, shadowOffset: { width: 0, height: 3 }, elevation: 5 },
+  mobileRequestText: { color: "#FFFFFF", fontSize: 12, fontWeight: "900" , fontFamily: "Arial" },
   mobileNavIndicator: { width: 16, height: 3, borderRadius: 3, backgroundColor: "#0F766E" },
   footer: { backgroundColor: "#173B38", marginTop: 52 },
   footerInner: { width: "100%", maxWidth: 1240, alignSelf: "center", paddingHorizontal: 24, paddingVertical: 42, flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", gap: 34 },
