@@ -105,7 +105,7 @@ export default function HomeScreen() {
     Image.prefetch(HERO_IMAGES[(heroIndex + 2) % HERO_IMAGES.length]).catch(() => {});
   }, [heroIndex]);
   useEffect(() => {
-    const timer = setInterval(() => setHeroIndex(current => (current + 1) % HERO_IMAGES.length), 10000);
+    const timer = setInterval(() => setHeroIndex(current => (current + 1) % HERO_IMAGES.length), 20000);
     return () => clearInterval(timer);
   }, []);
   const compact = width < 700;
@@ -129,19 +129,31 @@ export default function HomeScreen() {
           <FastImageBackground source={{ uri: HERO_IMAGES[heroIndex] }} resizeMode="cover" loading="eager" style={[styles.hero, compact && styles.heroCompact]}>
             <View style={styles.heroShade} />
             <View style={[styles.heroContent, compact && styles.heroContentCompact]}>
-              <View style={styles.eyebrow}><Text style={styles.eyebrowText}>خدماتي · KHADAMATI</Text></View>
-              <Text style={[styles.heroTitle, compact && styles.heroTitleCompact]}>{settings.heroTitle}</Text>
-              <Text style={[styles.heroText, compact && styles.heroTextCompact]}>{settings.heroSubtitle}</Text>
-              <View style={styles.heroActions}>
-                <Pressable onPress={() => router.push("/services" as never)} style={styles.primaryButton}><Text style={styles.primaryButtonText}>اكتشف الخدمات ←</Text></Pressable>
-                <Pressable onPress={() => router.push("/request-service" as never)} style={styles.secondaryButton}><Text style={styles.secondaryButtonText}>اطلب خدمة الآن</Text></Pressable>
+              <View style={styles.heroCopy}>
+                <Text style={[styles.heroTitle, compact && styles.heroTitleCompact]}>خدمات متكاملة <Text style={styles.heroAccent}>.. لحياة أسهل</Text></Text>
+                <Text style={[styles.heroText, compact && styles.heroTextCompact]}>نقدم لك أفضل الخدمات بجودة عالية واحترافية</Text>
+                <View style={[styles.heroCategoryRow, compact && styles.heroCategoryRowCompact]}>
+                  {[
+                    { id: "maintenance", label: "الصيانة", icon: "🔧" },
+                    { id: "cleaning", label: "خدمات التنظيف", icon: "🧹" },
+                    { id: "healthcare", label: "الرعاية الصحية", icon: "✚" },
+                    { id: "professional-technical", label: "خدمات مهنية وتقنية", icon: "🧰" },
+                    { id: "moving-logistic", label: "نقل الأثاث والعفش", icon: "🚚" }
+                  ].map(category => (
+                    <Pressable key={category.id} onPress={() => router.push(("/services?category=" + category.id) as never)} style={styles.heroCategory} accessibilityRole="button">
+                      <Text style={styles.heroCategoryIcon}>{category.icon}</Text>
+                      <Text style={styles.heroCategoryText}>{category.label}</Text>
+                    </Pressable>
+                  ))}
+                </View>
+                <Pressable onPress={() => router.push("/services" as never)} style={styles.primaryButton}>
+                  <Text style={styles.primaryButtonText}>اكتشف خدماتنا  ←</Text>
+                </Pressable>
               </View>
-              <View style={styles.heroStats}>
-                <View><Text style={styles.statNumber}>{serviceCategories.length}</Text><Text style={styles.statLabel}>أقسام رئيسية</Text></View>
-                <View style={styles.statDivider} />
-                <View><Text style={styles.statNumber}>{mainServices.filter(item => item.active !== false).length}</Text><Text style={styles.statLabel}>خدمة متاحة</Text></View>
-                <View style={styles.statDivider} />
-                <View><Text style={styles.statNumber}>3</Text><Text style={styles.statLabel}>منصات في تجربة واحدة</Text></View>
+              <View style={styles.heroDots}>
+                {HERO_IMAGES.map((_, i) => (
+                  <Pressable key={i} onPress={() => setHeroIndex(i)} accessibilityRole="button" accessibilityLabel={"الصورة " + (i + 1)} style={[styles.heroDot, heroIndex === i && styles.heroDotActive]} />
+                ))}
               </View>
             </View>
           </FastImageBackground>
@@ -191,27 +203,28 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   page: { flex: 1, backgroundColor: "#F5F7F6" },
-  heroOuter: { backgroundColor: "#F5F7F6", paddingHorizontal: 24, paddingTop: 26, paddingBottom: 18 },
-  hero: { width: "100%", maxWidth: 1240, minHeight: 450, alignSelf: "center", justifyContent: "center", overflow: "hidden", borderRadius: 30, backgroundColor: "#115E59" },
-  heroCompact: { minHeight: 470, borderRadius: 18 },
-  heroShade: { ...StyleSheet.absoluteFill, backgroundColor: "rgba(12, 42, 38, 0.76)" },
-  heroContent: { width: "100%", maxWidth: 760, paddingHorizontal: 54, paddingVertical: 48, alignItems: "flex-start" },
-  heroContentCompact: { paddingHorizontal: 23, paddingVertical: 34 },
-  eyebrow: { borderWidth: 1, borderColor: "rgba(255,255,255,0.42)", borderRadius: 30, paddingHorizontal: 13, paddingVertical: 7, marginBottom: 18 },
-  eyebrowText: { color: "#D2E9E3", fontSize: 10, fontWeight: "900", letterSpacing: 1.5 , fontFamily: "Arial" },
-  heroTitle: { color: "#FFFFFF", fontSize: 46, fontWeight: "800", textAlign: "right", lineHeight: 62, letterSpacing: -0.5 , fontFamily: "Arial" },
-  heroTitleCompact: { fontSize: 32, lineHeight: 45 },
-  heroText: { color: "#E7F0EC", fontSize: 16, lineHeight: 29, textAlign: "right", maxWidth: 570, marginTop: 13 , fontFamily: "Arial" },
-  heroTextCompact: { fontSize: 14, lineHeight: 26 },
-  heroActions: { flexDirection: "row", flexWrap: "wrap", gap: 11, marginTop: 25 },
-  primaryButton: { backgroundColor: "#BFE4D8", borderRadius: 13, paddingVertical: 14, paddingHorizontal: 22 },
-  primaryButtonText: { color: "#17443D", fontSize: 13, fontWeight: "900" , fontFamily: "Arial" },
-  secondaryButton: { borderWidth: 1, borderColor: "rgba(255,255,255,0.65)", borderRadius: 11, paddingVertical: 13, paddingHorizontal: 20 },
-  secondaryButtonText: { color: "#FFFFFF", fontSize: 13, fontWeight: "800" , fontFamily: "Arial" },
-  heroStats: { flexDirection: "row", alignItems: "center", gap: 20, marginTop: 32 },
-  statNumber: { color: "#FFFFFF", fontSize: 22, fontWeight: "900", textAlign: "right" , fontFamily: "Arial" },
-  statLabel: { color: "#DCEBE5", fontSize: 10, marginTop: 3, textAlign: "right" , fontFamily: "Arial" },
-  statDivider: { width: 1, height: 34, backgroundColor: "rgba(255,255,255,0.3)" },
+  heroOuter: { backgroundColor: "#F5F7F6", paddingHorizontal: 0, paddingTop: 0, paddingBottom: 18 },
+  hero: { width: "100%", maxWidth: 1600, minHeight: 650, alignSelf: "center", justifyContent: "center", overflow: "hidden", borderRadius: 0, backgroundColor: "#102A35" },
+  heroCompact: { minHeight: 590, borderRadius: 0 },
+  heroShade: { ...StyleSheet.absoluteFill, backgroundColor: "rgba(5, 22, 31, 0.58)" },
+  heroContent: { width: "100%", minHeight: 650, paddingHorizontal: 54, paddingVertical: 46, justifyContent: "center", alignItems: "flex-end" },
+  heroContentCompact: { minHeight: 590, paddingHorizontal: 15, paddingVertical: 34, justifyContent: "center" },
+  heroCopy: { width: "100%", maxWidth: 850, alignItems: "flex-end" },
+  heroTitle: { color: "#FFFFFF", fontSize: 54, fontWeight: "900", textAlign: "right", lineHeight: 72, fontFamily: "Arial" },
+  heroTitleCompact: { fontSize: 30, lineHeight: 43 },
+  heroAccent: { color: "#12D4D0" },
+  heroText: { color: "#FFFFFF", fontSize: 24, lineHeight: 36, textAlign: "right", marginTop: 12, fontFamily: "Arial" },
+  heroTextCompact: { fontSize: 15, lineHeight: 25 },
+  heroCategoryRow: { flexDirection: "row", flexWrap: "wrap", justifyContent: "flex-end", gap: 12, marginTop: 28, width: "100%" },
+  heroCategoryRowCompact: { gap: 7, marginTop: 20 },
+  heroCategory: { width: 145, minHeight: 130, paddingHorizontal: 8, paddingVertical: 13, borderRadius: 20, borderWidth: 1, borderColor: "rgba(210,245,248,0.38)", backgroundColor: "rgba(13,39,51,0.72)", alignItems: "center", justifyContent: "center" },
+  heroCategoryIcon: { color: "#FFFFFF", fontSize: 34, marginBottom: 9 },
+  heroCategoryText: { color: "#FFFFFF", fontSize: 14, fontWeight: "800", textAlign: "center", lineHeight: 21, fontFamily: "Arial" },
+  primaryButton: { backgroundColor: "#08BDB8", borderRadius: 40, paddingVertical: 16, paddingHorizontal: 30, marginTop: 28, minWidth: 230, alignItems: "center" },
+  primaryButtonText: { color: "#FFFFFF", fontSize: 17, fontWeight: "900", fontFamily: "Arial" },
+  heroDots: { flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 11, marginTop: 34, alignSelf: "center" },
+  heroDot: { width: 11, height: 11, borderRadius: 8, backgroundColor: "rgba(255,255,255,0.55)" },
+  heroDotActive: { width: 19, height: 19, borderRadius: 10, backgroundColor: "#10D5D0" },
   introStrip: { width: "100%", maxWidth: 1190, alignSelf: "center", paddingHorizontal: 28, paddingTop: 34, paddingBottom: 30, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 18 },
   introCopy: { flex: 1, alignItems: "flex-start" },
   introKicker: { color: "#0F766E", fontSize: 12, fontWeight: "900", textAlign: "right" , fontFamily: "Arial" },
