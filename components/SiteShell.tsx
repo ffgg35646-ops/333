@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
   brandMarkAccent: { position: "absolute", width: 8, height: 8, borderRadius: 4, right: 8, bottom: 7, backgroundColor: "#2DD4BF", borderWidth: 1, borderColor: "#173B38" },
   brandName: { color: "#173B38", fontSize: 19, fontWeight: "900", textAlign: "right" , fontFamily: "Arial" },
   brandTag: { color: "#89958F", fontSize: 10, marginTop: 2, textAlign: "right" , fontFamily: "Arial" },
-  nav: { flex: 1, flexDirection: "row", alignItems: "center", gap: 7, flexWrap: "wrap", justifyContent: "center", backgroundColor: "#F5F7F5", padding: 6, borderRadius: 16, borderWidth: 1, borderColor: "#E4EEF3" },
+  nav: { position: "absolute", left: "50%", transform: [{ translateX: -0.5 }], zIndex: 2, flexDirection: "row", alignItems: "center", gap: 7, flexWrap: "wrap", justifyContent: "center", backgroundColor: "#F5F7F5", padding: 6, borderRadius: 16, borderWidth: 1, borderColor: "#E4EEF3" },
   navItem: { paddingVertical: 12, paddingHorizontal: 16, borderRadius: 12 },
   navItemActive: { backgroundColor: "#E6F2EF" },
   navText: { color: "#65736D", fontSize: 13, fontWeight: "700" , fontFamily: "Arial" },
