@@ -109,7 +109,7 @@ export default function HomeScreen() {
     return () => clearInterval(timer);
   }, []);
   const compact = width < 700;
-  const cardWidth = compact ? Math.max(153, (width - 60) / 2) : width < 1050 ? 276 : 286;
+  const cardWidth = compact ? Math.max(153, (width - 60) / 2) : width < 1050 ? 300 : 318;
   const categoryOrder = ["maintenance", "cleaning", "personal-care", "healthcare", "professional-technical", "events", "moving-logistic", "safety-security"];
   const categorySections = [...serviceCategories]
     .sort((a, b) => categoryOrder.indexOf(a.id) - categoryOrder.indexOf(b.id))
@@ -224,28 +224,28 @@ const styles = StyleSheet.create({
   trustIcon: { color: "#0F766E", fontSize: 18, fontWeight: "900" , fontFamily: "Arial" },
   trustText: { color: "#626E6A", fontSize: 12, fontWeight: "700" , fontFamily: "Arial" },
   section: { width: "100%", maxWidth: 1240, alignSelf: "center", paddingHorizontal: 16, paddingTop: 30, paddingBottom: 14 },
-  sectionHeading: { flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between", gap: 14, marginBottom: 18 },
-  sectionHeadingCompact: { backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: "#DCE9E3", borderRadius: 15, paddingHorizontal: 15, paddingVertical: 13, marginBottom: 16, shadowColor: "#173B38", shadowOpacity: 0.09, shadowRadius: 9, shadowOffset: { width: 0, height: 4 }, elevation: 4 },
+  sectionHeading: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 14, marginBottom: 18, backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: "#DCE9E3", borderRadius: 17, paddingHorizontal: 20, paddingVertical: 15, shadowColor: "#173B38", shadowOpacity: 0.06, shadowRadius: 10, shadowOffset: { width: 0, height: 4 }, elevation: 2 },
+  sectionHeadingCompact: { paddingHorizontal: 15, paddingVertical: 13, marginBottom: 16 },
   sectionTitleGroup: { alignItems: "flex-start", flex: 1 },
   sectionTitleGroupCompact: { alignItems: "flex-end" },
   sectionKicker: { color: "#5FA69A", fontSize: 10, fontWeight: "900", letterSpacing: 1.5, textAlign: "right" , fontFamily: "Arial" },
-  sectionTitle: { color: "#173B38", fontSize: 24, fontWeight: "900", marginTop: 5, textAlign: "right" , fontFamily: "Arial" },
+  sectionTitle: { color: "#173B38", fontSize: 27, fontWeight: "900", marginTop: 5, textAlign: "right" , fontFamily: "Arial" },
   sectionSubtitle: { color: "#8A918D", fontSize: 12, marginTop: 6, textAlign: "right" , fontFamily: "Arial" },
   textLink: { paddingVertical: 8, paddingHorizontal: 3 },
   textLinkText: { color: "#0F766E", fontWeight: "900", fontSize: 12 , fontFamily: "Arial" },
   horizontalScroller: { width: "100%", flexGrow: 0, flexShrink: 1, overflow: "hidden", direction: "ltr" },
   horizontalCards: { flexDirection: "row", gap: 14, paddingBottom: 12, paddingRight: 1, direction: "ltr" },
   card: { backgroundColor: "#FFFFFF", borderRadius: 20, overflow: "hidden", borderWidth: 1, borderColor: "#E2E9E4", shadowColor: "#173B38", shadowOpacity: 0.07, shadowRadius: 16, shadowOffset: { width: 0, height: 7 }, elevation: 3 },
-  cardImage: { width: "100%", height: 132, backgroundColor: "#E8EEEA" },
+  cardImage: { width: "100%", height: 178, backgroundColor: "#E8EEEA" },
   cardImageCompact: { height: 168 },
-  cardBody: { paddingHorizontal: 12, paddingTop: 15, paddingBottom: 15, alignItems: "flex-start", minHeight: 88 },
+  cardBody: { paddingHorizontal: 14, paddingTop: 12, paddingBottom: 13, alignItems: "flex-start", minHeight: 70, justifyContent: "center" },
   cardBodyCompact: { minHeight: 57, paddingHorizontal: 10, paddingTop: 9, paddingBottom: 9, justifyContent: "center", backgroundColor: "transparent" },
-  cardTitleGlass: { width: "100%" },
-  cardTitleGlassCompact: { paddingHorizontal: 10, paddingVertical: 8, borderRadius: 12, backgroundColor: "rgba(255,255,255,0.72)", borderWidth: 1, borderColor: "rgba(255,255,255,0.88)", shadowColor: "#173B38", shadowOpacity: 0.10, shadowRadius: 8, shadowOffset: { width: 0, height: 3 }, elevation: 2 },
+  cardTitleGlass: { width: "100%", paddingHorizontal: 11, paddingVertical: 10, borderRadius: 12, backgroundColor: "rgba(245,250,247,0.92)", borderWidth: 1, borderColor: "#E5EEE9" },
+  cardTitleGlassCompact: { paddingHorizontal: 10, paddingVertical: 8, backgroundColor: "rgba(255,255,255,0.88)", borderColor: "#FFFFFF" },
   cardTitleRow: { width: "100%", flexDirection: "row", alignItems: "center", gap: 8 },
   cardIcon: { fontSize: 16 },
   cardIconCompact: { fontSize: 18 },
-  cardTitle: { color: "#38423E", fontSize: 12, fontWeight: "900", textAlign: "right", flex: 1 , fontFamily: "Arial" },
+  cardTitle: { color: "#244A43", fontSize: 15, fontWeight: "900", textAlign: "right", flex: 1 , fontFamily: "Arial" },
   cardTitleCompact: { color: "#244A43", fontSize: 15, fontWeight: "900" , fontFamily: "Arial" },
   cardEnglish: { color: "#9AA69F", fontSize: 9, marginTop: 4, textAlign: "right" , fontFamily: "Arial" },
   cardDescription: { color: "#52645D", fontSize: 11, lineHeight: 19, marginTop: 9, textAlign: "right", minHeight: 38, width: "100%", paddingHorizontal: 9, paddingVertical: 7, borderRadius: 9, backgroundColor: "#F5F8F6", overflow: "hidden", fontFamily: "Arial" },
