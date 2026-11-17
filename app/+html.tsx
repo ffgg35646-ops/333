@@ -6,7 +6,7 @@ export default function Root({ children }: PropsWithChildren) {
     <html lang="ar" dir="rtl">
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <ScrollViewStyleReset />
         <style>{`
           html,
@@ -19,14 +19,16 @@ export default function Root({ children }: PropsWithChildren) {
           }
 
           body {
+            display: block;
             min-height: 100vh;
-            display: flex;
             overflow-x: hidden;
           }
 
-          #root {
+          #root,
+          body > div {
             display: flex;
-            flex: 1 1 auto;
+            flex-direction: column;
+            align-items: stretch;
             width: 100%;
             min-width: 0;
             min-height: 100vh;
