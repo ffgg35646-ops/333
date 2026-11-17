@@ -166,7 +166,6 @@ export default function HomeScreen() {
               <View style={styles.sectionTitleGroup}>
                 <Text style={styles.sectionKicker}>{category.english}</Text>
                 <Text style={styles.sectionTitle}>{category.title}</Text>
-                <Text style={styles.sectionSubtitle}>اكتشف خدمات القسم · {category.items.length} خدمة</Text>
               </View>
               <Pressable onPress={() => router.push("/services" as never)} style={styles.textLink}>
                 <Text style={styles.textLinkText}>عرض الكل ←</Text>
