@@ -22,7 +22,7 @@ const HERO_IMAGES = [
 function ServiceCard({ item, width }: { item: ServiceItem; width: number }) {
   return (
     <View style={[styles.card, { width }]}>
-      <Pressable onPress={() => router.push(("https://raw.githubusercontent.com/ffgg35646-ops/333/main/service?id=" + item.id) as never)} accessibilityRole="button">
+      <Pressable onPress={() => router.push(("/service?id=" + item.id) as never)} accessibilityRole="button">
         <Image source={{ uri: item.image }} style={styles.cardImage} resizeMode="cover" />
         <View style={styles.cardBody}>
           <View style={styles.cardTitleRow}>
@@ -34,7 +34,7 @@ function ServiceCard({ item, width }: { item: ServiceItem; width: number }) {
         </View>
       </Pressable>
       <Pressable
-        onPress={() => router.push(("https://raw.githubusercontent.com/ffgg35646-ops/333/main/request-service?service=" + item.id) as never)}
+        onPress={() => router.push(("/request-service?service=" + item.id) as never)}
         style={styles.orderButton}
         accessibilityRole="button"
         accessibilityLabel={"اطلب خدمة " + item.title}
@@ -122,8 +122,8 @@ export default function HomeScreen() {
               <Text style={[styles.heroTitle, compact && styles.heroTitleCompact]}>{settings.heroTitle}</Text>
               <Text style={[styles.heroText, compact && styles.heroTextCompact]}>{settings.heroSubtitle}</Text>
               <View style={styles.heroActions}>
-                <Pressable onPress={() => router.push("https://raw.githubusercontent.com/ffgg35646-ops/333/main/services" as never)} style={styles.primaryButton}><Text style={styles.primaryButtonText}>اكتشف الخدمات ←</Text></Pressable>
-                <Pressable onPress={() => router.push("https://raw.githubusercontent.com/ffgg35646-ops/333/main/request-service" as never)} style={styles.secondaryButton}><Text style={styles.secondaryButtonText}>اطلب خدمة الآن</Text></Pressable>
+                <Pressable onPress={() => router.push("/services" as never)} style={styles.primaryButton}><Text style={styles.primaryButtonText}>اكتشف الخدمات ←</Text></Pressable>
+                <Pressable onPress={() => router.push("/request-service" as never)} style={styles.secondaryButton}><Text style={styles.secondaryButtonText}>اطلب خدمة الآن</Text></Pressable>
               </View>
               <View style={styles.heroStats}>
                 <View><Text style={styles.statNumber}>{serviceCategories.length}</Text><Text style={styles.statLabel}>أقسام رئيسية</Text></View>
@@ -142,7 +142,7 @@ export default function HomeScreen() {
             <Text style={styles.introTitle}>اختار الخدمة المناسبة ليك واحنا نتولى الباقي</Text>
             <Text style={styles.introText}>تصفح الأقسام، شوف تفاصيل كل خدمة، واطلبها بسهولة.</Text>
           </View>
-          <Pressable onPress={() => router.push("https://raw.githubusercontent.com/ffgg35646-ops/333/main/services" as never)} style={styles.introLink}><Text style={styles.introLinkText}>كل الخدمات ←</Text></Pressable>
+          <Pressable onPress={() => router.push("/services" as never)} style={styles.introLink}><Text style={styles.introLinkText}>كل الخدمات ←</Text></Pressable>
         </View>
 
         <View style={styles.trustStrip}>
@@ -159,7 +159,7 @@ export default function HomeScreen() {
                 <Text style={styles.sectionTitle}>{category.title}</Text>
                 <Text style={styles.sectionSubtitle}>اكتشف خدمات القسم · {category.items.length} خدمة</Text>
               </View>
-              <Pressable onPress={() => router.push("https://raw.githubusercontent.com/ffgg35646-ops/333/main/services" as never)} style={styles.textLink}>
+              <Pressable onPress={() => router.push("/services" as never)} style={styles.textLink}>
                 <Text style={styles.textLinkText}>عرض الكل ←</Text>
               </Pressable>
             </View>
@@ -170,7 +170,7 @@ export default function HomeScreen() {
         <View style={styles.ctaWrap}>
           <View style={[styles.cta, compact && styles.ctaCompact]}>
             <View style={styles.ctaCopy}><Text style={styles.ctaKicker}>KHADAMATI</Text><Text style={styles.ctaTitle}>خدمتك تبدأ من هنا</Text><Text style={styles.ctaText}>اختار الخدمة اللي محتاجها، وسجّل بياناتك، وفريقنا هيتواصل معاك قريبًا.</Text></View>
-            <Pressable onPress={() => router.push("https://raw.githubusercontent.com/ffgg35646-ops/333/main/request-service" as never)} style={styles.ctaButton}><Text style={styles.ctaButtonText}>اطلب خدمتك الآن ←</Text></Pressable>
+            <Pressable onPress={() => router.push("/request-service" as never)} style={styles.ctaButton}><Text style={styles.ctaButtonText}>اطلب خدمتك الآن ←</Text></Pressable>
           </View>
         </View>
         <SiteFooter />
