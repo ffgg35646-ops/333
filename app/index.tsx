@@ -1,4 +1,4 @@
-import { Image, ImageBackground, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import { Image, ImageBackground, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions, type ScrollViewInstance } from "react-native";
 import { useEffect, useRef, useState } from "react";
 import { router } from "expo-router";
 import { useServices } from "../hooks/useServices";
@@ -47,7 +47,7 @@ function ServiceCard({ item, width }: { item: ServiceItem; width: number }) {
 }
 
 function AutoServiceCarousel({ items, cardWidth }: { items: ServiceItem[]; cardWidth: number }) {
-  const scrollRef = useRef<ScrollView>(null);
+  const scrollRef = useRef<ScrollViewInstance>(null);
   const offsetRef = useRef(0);
   const viewportRef = useRef(0);
   const contentRef = useRef(0);
