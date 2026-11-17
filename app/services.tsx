@@ -31,7 +31,20 @@ export default function ServicesScreen() {
     <View style={styles.page}>
       <SiteHeader active="services" />
       <ScrollView>
-        <View style={styles.intro}><Text style={styles.kicker}>OUR SERVICES</Text><Text style={styles.heading}>اكتشف خدمات خدماتي</Text><Text style={styles.introText}>ثمانية أقسام تضم خدمات متنوعة باللغتين العربية والإنجليزية.</Text></View>
+        <View style={[styles.intro, compact && styles.introCompact]}>
+          <View style={styles.introGlow} />
+          <Text style={styles.kicker}>خدماتي • كل احتياجاتك في مكان واحد</Text>
+          <Text style={styles.heading}>خدمات متكاملة.. لحياة أسهل</Text>
+          <Text style={styles.introText}>اختار القسم المناسب واستكشف الخدمات المتاحة ليك</Text>
+          <View style={styles.introCategories}>
+            {serviceCategories.map(category => (
+              <Pressable key={category.id} onPress={() => router.push(("/services?category=" + category.id) as never)} style={[styles.introCategory, compact && styles.introCategoryCompact]}>
+                <Text style={[styles.introCategoryIcon, compact && styles.introCategoryIconCompact]}>{category.icon}</Text>
+                <Text style={[styles.introCategoryTitle, compact && styles.introCategoryTitleCompact]} numberOfLines={2}>{category.title}</Text>
+              </Pressable>
+            ))}
+          </View>
+        </View>
         {serviceCategories.filter(category => !params.category || category.id === params.category).map(category => {
           const items = services.filter(item => item.active !== false && item.categoryId === category.id);
           if (!items.length) return null;
@@ -51,10 +64,19 @@ export default function ServicesScreen() {
 
 const styles = StyleSheet.create({
   page: { flex: 1, backgroundColor: "#F5F7F6" },
-  intro: { backgroundColor: "#EAF2EE", paddingHorizontal: 24, paddingVertical: 66, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#C9DED8" },
-  kicker: { color: "#0F766E", fontWeight: "900", fontSize: 10, letterSpacing: 2 , fontFamily: "Arial" },
-  heading: { color: "#173B38", fontSize: 32, fontWeight: "900", marginTop: 10, textAlign: "center" , fontFamily: "Arial" },
-  introText: { color: "#657771", fontSize: 14, marginTop: 10, textAlign: "center" , fontFamily: "Arial" },
+  intro: { position: "relative", overflow: "hidden", backgroundColor: "#102B35", paddingHorizontal: 24, paddingVertical: 42, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#1B5960" },
+  introCompact: { paddingHorizontal: 14, paddingVertical: 28 },
+  introGlow: { position: "absolute", width: 260, height: 260, borderRadius: 130, backgroundColor: "rgba(18,212,208,0.10)", top: -140, right: -45 },
+  introCategories: { width: "100%", maxWidth: 980, flexDirection: "row", flexWrap: "wrap", justifyContent: "center", gap: 10, marginTop: 26 },
+  introCategory: { width: 112, minHeight: 90, paddingHorizontal: 9, paddingVertical: 12, borderRadius: 16, borderWidth: 1, borderColor: "rgba(210,245,248,0.28)", backgroundColor: "rgba(255,255,255,0.08)", alignItems: "center", justifyContent: "center", gap: 7 },
+  introCategoryCompact: { width: "22%" as any, minHeight: 76, paddingHorizontal: 4, paddingVertical: 8, borderRadius: 12 },
+  introCategoryIcon: { color: "#16D2CF", fontSize: 25 },
+  introCategoryIconCompact: { fontSize: 20 },
+  introCategoryTitle: { color: "#FFFFFF", fontSize: 11, fontWeight: "800", textAlign: "center", lineHeight: 16, fontFamily: "Arial" },
+  introCategoryTitleCompact: { fontSize: 9, lineHeight: 13 },
+  kicker: { color: "#16D2CF", fontWeight: "900", fontSize: 11, letterSpacing: 1, textAlign: "center", fontFamily: "Arial" },
+  heading: { color: "#FFFFFF", fontSize: 32, fontWeight: "900", marginTop: 10, textAlign: "center", fontFamily: "Arial" },
+  introText: { color: "#D1E2E2", fontSize: 14, marginTop: 10, textAlign: "center", fontFamily: "Arial" },
   section: { width: "100%", maxWidth: 1240, alignSelf: "center", padding: 20, paddingTop: 28, paddingBottom: 32 },
   sectionCompact: { paddingHorizontal: 15 },
   categoryHeading: { marginBottom: 22, alignItems: "flex-end", backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: "#DCE9E3", borderRadius: 17, paddingHorizontal: 20, paddingVertical: 16, shadowColor: "#173B38", shadowOpacity: 0.06, shadowRadius: 10, shadowOffset: { width: 0, height: 4 }, elevation: 2 },
