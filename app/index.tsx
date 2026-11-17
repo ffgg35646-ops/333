@@ -1,4 +1,5 @@
 import { Image, ImageBackground, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import { useEffect, useRef, useState } from "react";
 import { router } from "expo-router";
 import { useServices } from "../hooks/useServices";
 import { useSiteSettings } from "../hooks/useSiteSettings";
@@ -29,6 +30,36 @@ function ServiceCard({ item, width }: { item: ServiceItem; width: number }) {
         <Text style={styles.orderArrow}>←</Text>
       </Pressable>
     </View>
+  );
+}
+
+function AutoServiceCarousel({ items, cardWidth }: { items: ServiceItem[]; cardWidth: number }) {
+  const scrollRef = useRef<ScrollView>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    if (items.length < 2) return;
+    const timer = setInterval(() => {
+      setActiveIndex(current => {
+        const next = (current + 1) % items.length;
+        scrollRef.current?.scrollTo({ x: next * (cardWidth + 14), animated: true });
+        return next;
+      });
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [items.length, cardWidth]);
+
+  return (
+    <ScrollView
+      ref={scrollRef}
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={styles.horizontalCards}
+      style={styles.horizontalScroller}
+      onScrollBeginDrag={() => setActiveIndex(0)}
+    >
+      {items.map(item => <ServiceCard key={item.id} item={item} width={cardWidth} />)}
+    </ScrollView>
   );
 }
 
@@ -102,14 +133,7 @@ export default function HomeScreen() {
                 <Text style={styles.textLinkText}>عرض الكل ←</Text>
               </Pressable>
             </View>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.horizontalCards}
-              style={styles.horizontalScroller}
-            >
-              {category.items.map(item => <ServiceCard key={item.id} item={item} width={cardWidth} />)}
-            </ScrollView>
+            <AutoServiceCarousel items={category.items} cardWidth={cardWidth} />
           </View>
         ))}
 
