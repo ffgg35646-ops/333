@@ -16,7 +16,13 @@ type HeaderProps = { active?: string };
 function BrandMark({ footer = false }: { footer?: boolean }) {
   return (
     <View style={[styles.brandMark, footer && styles.footerLogo]}>
-      <Text style={[styles.brandMarkText, footer && styles.footerLogoText]}>⌂</Text>
+      <View style={styles.brandRoofLeft} />
+      <View style={styles.brandRoofRight} />
+      <View style={styles.brandHouse}>
+        <View style={styles.brandWindowRow}><View style={styles.brandWindow} /><View style={styles.brandWindow} /></View>
+        <View style={styles.brandWindowRow}><View style={styles.brandWindow} /><View style={styles.brandWindow} /></View>
+      </View>
+      <View style={styles.brandHand} />
       <View style={[styles.brandMarkAccent, footer && styles.footerLogoAccent]} />
     </View>
   );
@@ -154,8 +160,13 @@ const styles = StyleSheet.create({
   headerCompact: { minHeight: 68, paddingVertical: 9, paddingHorizontal: 12, gap: 8 },
   brand: { flexDirection: "row", alignItems: "center", gap: 10 },
   brandDesktop: { position: "absolute", right: 30, zIndex: 3 },
-  brandMark: { width: 48, height: 48, borderRadius: 16, backgroundColor: "#0D343D", alignItems: "center", justifyContent: "center", borderWidth: 2, borderColor: "#16D2CF", shadowColor: "#0F766E", shadowOpacity: 0.28, shadowRadius: 9, shadowOffset: { width: 0, height: 3 }, elevation: 4 },
-  brandMarkText: { color: "#16D2CF", fontSize: 37, lineHeight: 42, fontWeight: "900", fontFamily: "Arial" },
+  brandMark: { width: 58, height: 52, backgroundColor: "transparent", alignItems: "center", justifyContent: "center" },
+  brandRoofLeft: { position: "absolute", top: 8, left: 7, width: 29, height: 5, borderRadius: 4, backgroundColor: "#16D2CF", transform: [{ rotate: "-39deg" }] },
+  brandRoofRight: { position: "absolute", top: 8, right: 7, width: 29, height: 5, borderRadius: 4, backgroundColor: "#16D2CF", transform: [{ rotate: "39deg" }] },
+  brandHouse: { position: "absolute", top: 15, width: 26, height: 23, borderTopWidth: 0, alignItems: "center", justifyContent: "center", gap: 3 },
+  brandWindowRow: { flexDirection: "row", gap: 3 },
+  brandWindow: { width: 7, height: 7, backgroundColor: "#FFFFFF" },
+  brandHand: { position: "absolute", bottom: 5, width: 42, height: 8, borderRadius: 12, backgroundColor: "#16D2CF", transform: [{ rotate: "-7deg" }] },
   brandMarkAccent: { position: "absolute", width: 8, height: 8, borderRadius: 4, right: 8, bottom: 7, backgroundColor: "#2DD4BF", borderWidth: 1, borderColor: "#173B38" },
   brandName: { color: "#FFFFFF", fontSize: 19, fontWeight: "900", textAlign: "right" , fontFamily: "Arial" },
   brandTag: { color: "#C3D3D7", fontSize: 10, marginTop: 2, textAlign: "right" , fontFamily: "Arial" },
@@ -189,7 +200,7 @@ const styles = StyleSheet.create({
   footer: { backgroundColor: "#173B38", marginTop: 52 },
   footerInner: { width: "100%", maxWidth: 1240, alignSelf: "center", paddingHorizontal: 24, paddingVertical: 42, flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", gap: 34 },
   footerBrand: { width: 300, maxWidth: "100%" },
-  footerLogo: { width: 40, height: 40, borderRadius: 13, backgroundColor: "#0F766E", alignItems: "center", justifyContent: "center", marginBottom: 12 },
+  footerLogo: { width: 48, height: 44, backgroundColor: "transparent", alignItems: "center", justifyContent: "center", marginBottom: 12 },
   footerLogoText: { color: "#FFFFFF", fontWeight: "900", fontSize: 30, lineHeight: 34, fontFamily: "Arial" },
   footerLogoAccent: { width: 7, height: 7, right: 6, bottom: 5 },
   footerTitle: { color: "#FFFFFF", fontSize: 21, fontWeight: "900", textAlign: "right" , fontFamily: "Arial" },
