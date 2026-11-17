@@ -25,18 +25,28 @@ export default function RequestServiceScreen() {
   const [feedback, setFeedback] = useState("");
 
   const submit = async () => {
-    if (!name.trim() || !phone.trim() || !compoundName.trim() || !propertyNumber.trim() || !propertyName.trim() || !categoryId || !serviceName.trim()) {
-      setFeedback("من فضلك أكمل جميع البيانات المطلوبة.");
-      return;
-    }
+    const cleanName = name.trim();
+    const cleanPhone = phone.trim();
+    const normalizedPhone = cleanPhone.replace(/[٠-٩]/g, digit => String("٠١٢٣٤٥٦٧٨٩".indexOf(digit)));
+    if (!cleanName) { setFeedback("من فضلك اكتب الاسم الثلاثي."); return; }
+    if (cleanName.split(/\\s+/).length < 3) { setFeedback("من فضلك اكتب الاسم كاملًا (ثلاثة أسماء على الأقل)."); return; }
+    if (!cleanPhone) { setFeedback("من فضلك أدخل رقم التليفون."); return; }
+    if (!/^[0-9+()\\s-]+$/.test(normalizedPhone)) { setFeedback("رقم التليفون غير صحيح. من فضلك أدخل أرقامًا فقط."); return; }
+    const phoneDigits = normalizedPhone.replace(/\\D/g, "");
+    if (phoneDigits.length < 10 || phoneDigits.length > 15) { setFeedback("رقم التليفون غير مكتمل أو أطول من اللازم. من فضلك راجع الرقم."); return; }
+    if (!compoundName.trim()) { setFeedback("من فضلك اكتب اسم الكمباوند."); return; }
+    if (!propertyNumber.trim()) { setFeedback("من فضلك أدخل رقم العقار."); return; }
+    if (!propertyName.trim()) { setFeedback("من فضلك اكتب اسم العقار."); return; }
+    if (!categoryId) { setFeedback("من فضلك اختر القسم."); return; }
+    if (!serviceName.trim()) { setFeedback("من فضلك اختر الخدمة المطلوبة."); return; }
     setBusy(true);
     setFeedback("");
     try {
       await apiRequest("/api/requests", {
         method: "POST",
         body: JSON.stringify({
-          name: name.trim(),
-          phone: phone.trim(),
+          name: cleanName,
+          phone: cleanPhone,
           compoundName: compoundName.trim(),
           propertyNumber: propertyNumber.trim(),
           propertyName: propertyName.trim(),
@@ -46,8 +56,8 @@ export default function RequestServiceScreen() {
       });
       setFeedback("تم إرسال طلبك بنجاح، برجاء الانتظار وسيتم التواصل معك قريبًا عبر الهاتف.");
       setName(""); setPhone(""); setCompoundName(""); setPropertyNumber(""); setPropertyName("");
-    } catch (error) {
-      setFeedback(error instanceof Error ? error.message : "تعذر إرسال الطلب الآن، حاول مرة أخرى.");
+    } catch {
+      setFeedback("لم نتمكن من إرسال الطلب حاليًا بسبب مشكلة في الاتصال. بياناتك لم تُرسل، حاول مرة أخرى بعد قليل.");
     } finally {
       setBusy(false);
     }
