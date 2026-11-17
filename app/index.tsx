@@ -7,16 +7,16 @@ import { serviceCategories, type ServiceItem } from "../data/services";
 import { SiteFooter, SiteHeader } from "../components/SiteShell";
 
 const HERO_IMAGES = [
-  "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1800&q=90",
-  "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=1800&q=90",
-  "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=1800&q=90",
-  "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=1800&q=90",
-  "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1800&q=90",
-  "https://images.unsplash.com/photo-1530053969600-caed2596d242?w=1800&q=90",
-  "https://images.unsplash.com/photo-1584515933487-779824d29309?w=1800&q=90",
-  "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1800&q=90",
-  "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1800&q=90",
-  "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1800&q=90"
+  "/%D8%AA%D8%A3%D9%85%D9%8A%D9%86%20%D8%AD%D9%81%D9%84%D8%A7%D8%AA.jpg",
+  "/%D9%85%D8%AF%D8%B1%D8%A8%20%D9%8A%D9%88%D8%AC%D8%A7.jpg",
+  "/%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%8A%20%D9%88%D8%AF%D9%8A%20%D8%AC%D9%8A.jpg",
+  "/%D8%AD%D9%85%D8%A7%D9%85%D8%A7%D8%AA.jpg",
+  "/%D9%85%D8%AE%D8%A7%D8%B2%D9%86%20%D9%88%D9%85%D8%B3%D8%AA%D9%88%D8%AF%D8%B9%D8%A7%D8%AA.jpg",
+  "/%D8%AA%D8%AC%D8%AF%D9%8A%D8%AF%20%D9%88%D8%AA%D8%B1%D9%85%D9%8A%D9%85.jpg",
+  "/%D8%AA%D8%A3%D8%AC%D9%8A%D8%B1%20%D9%85%D8%B9%D8%AF%D8%A7%D8%AA%20%D8%B7%D8%A8%D9%8A%D8%B9.jpg",
+  "/%D8%AD%D9%81%D9%84%D8%A7%D8%AA%20%D9%88%D9%85%D9%86%D8%A7%D8%B3%D8%A8%D8%A7%D8%AA.jpg",
+  "/%D9%86%D9%82%D9%84%20%D9%85%D9%86%D8%A7%D8%B2%D9%84.jpg",
+  "/%D8%AC%D8%A7%D9%85%D8%B9%20%D8%A7%D9%84%D9%82%D9%85%D8%A7%D9%85%D8%A9.jpg"
 ];
 
 function ServiceCard({ item, width }: { item: ServiceItem; width: number }) {
@@ -56,13 +56,17 @@ function AutoServiceCarousel({ items, cardWidth }: { items: ServiceItem[]; cardW
     if (items.length < 2) return;
     const step = cardWidth + 14;
     const timer = setInterval(() => {
-      const maxOffset = Math.max(0, contentRef.current - viewportRef.current);
-      if (maxOffset <= 0) return;
-      const nextOffset = offsetRef.current + step;
-      const target = nextOffset >= maxOffset - 4 ? 0 : nextOffset;
-      offsetRef.current = target;
-      scrollRef.current?.scrollTo({ x: target, y: 0, animated: true });
-    }, 5000);
+      const cycleWidth = contentRef.current / 2;
+      if (cycleWidth <= 0) return;
+      let nextOffset = offsetRef.current + step;
+      if (nextOffset >= cycleWidth) {
+        nextOffset -= cycleWidth;
+        scrollRef.current?.scrollTo({ x: nextOffset, y: 0, animated: false });
+      } else {
+        scrollRef.current?.scrollTo({ x: nextOffset, y: 0, animated: true });
+      }
+      offsetRef.current = nextOffset;
+    }, 10000);
     return () => clearInterval(timer);
   }, [items.length, cardWidth]);
 
@@ -79,7 +83,7 @@ function AutoServiceCarousel({ items, cardWidth }: { items: ServiceItem[]; cardW
       onContentSizeChange={width => { contentRef.current = width; }}
       onScroll={event => { offsetRef.current = event.nativeEvent.contentOffset.x; }}
     >
-      {items.map(item => <ServiceCard key={item.id} item={item} width={cardWidth} />)}
+      {[...items, ...items].map((item, index) => <ServiceCard key={`${item.id}-${index}`} item={item} width={cardWidth} />)}
     </ScrollView>
   );
 }
