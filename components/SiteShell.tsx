@@ -86,7 +86,7 @@ export function SiteHeader({ active }: HeaderProps) {
       </View>
       {compact && (
         <View style={styles.mobileNav}>
-          {links.filter(link => link.key !== "about").map(link => (
+          {[links[0], links[2], links[1]].map(link => (
             <Pressable
               key={link.key}
               onPress={() => go(link.path)}
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
   mobileNavItem: { flex: 1, minHeight: 40, alignItems: "center", justifyContent: "center", gap: 4 },
   mobileNavText: { color: "#89918B", fontSize: 11, fontWeight: "700" , fontFamily: "Arial" },
   mobileNavActive: { color: "#0F766E", fontWeight: "900" , fontFamily: "Arial" },
-  mobileRequestItem: { flex: 1.35, minHeight: 44, marginHorizontal: 5, borderRadius: 14, backgroundColor: "#16A34A", shadowColor: "#16A34A", shadowOpacity: 0.28, shadowRadius: 9, shadowOffset: { width: 0, height: 3 }, elevation: 5 },
+  mobileRequestItem: { flex: 1, minHeight: 44, marginHorizontal: 5, borderRadius: 14, backgroundColor: "#16A34A", shadowColor: "#16A34A", shadowOpacity: 0.28, shadowRadius: 9, shadowOffset: { width: 0, height: 3 }, elevation: 5 },
   mobileRequestText: { color: "#FFFFFF", fontSize: 12, fontWeight: "900" , fontFamily: "Arial" },
   mobileNavIndicator: { width: 16, height: 3, borderRadius: 3, backgroundColor: "#0F766E" },
   footer: { backgroundColor: "#173B38", marginTop: 52 },
