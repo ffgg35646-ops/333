@@ -35,16 +35,20 @@ function ServiceCard({ item, width }: { item: ServiceItem; width: number }) {
 
 function AutoServiceCarousel({ items, cardWidth }: { items: ServiceItem[]; cardWidth: number }) {
   const scrollRef = useRef<ScrollView>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const offsetRef = useRef(0);
+  const viewportRef = useRef(0);
+  const contentRef = useRef(0);
 
   useEffect(() => {
     if (items.length < 2) return;
+    const step = cardWidth + 14;
     const timer = setInterval(() => {
-      setActiveIndex(current => {
-        const next = (current + 1) % items.length;
-        scrollRef.current?.scrollTo({ x: next * (cardWidth + 14), animated: true });
-        return next;
-      });
+      const maxOffset = Math.max(0, contentRef.current - viewportRef.current);
+      if (maxOffset <= 0) return;
+      const nextOffset = offsetRef.current + step;
+      const target = nextOffset >= maxOffset - 4 ? 0 : nextOffset;
+      offsetRef.current = target;
+      scrollRef.current?.scrollTo({ x: target, y: 0, animated: true });
     }, 5000);
     return () => clearInterval(timer);
   }, [items.length, cardWidth]);
@@ -53,10 +57,14 @@ function AutoServiceCarousel({ items, cardWidth }: { items: ServiceItem[]; cardW
     <ScrollView
       ref={scrollRef}
       horizontal
+      directionalLockEnabled
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={styles.horizontalCards}
       style={styles.horizontalScroller}
-      onScrollBeginDrag={() => setActiveIndex(0)}
+      scrollEventThrottle={16}
+      onLayout={event => { viewportRef.current = event.nativeEvent.layout.width; }}
+      onContentSizeChange={width => { contentRef.current = width; }}
+      onScroll={event => { offsetRef.current = event.nativeEvent.contentOffset.x; }}
     >
       {items.map(item => <ServiceCard key={item.id} item={item} width={cardWidth} />)}
     </ScrollView>
@@ -191,8 +199,8 @@ const styles = StyleSheet.create({
   sectionSubtitle: { color: "#8A918D", fontSize: 12, marginTop: 6, textAlign: "right" },
   textLink: { paddingVertical: 8, paddingHorizontal: 3 },
   textLinkText: { color: "#078BCB", fontWeight: "900", fontSize: 12 },
-  horizontalScroller: { flexGrow: 0, overflow: "visible" },
-  horizontalCards: { flexDirection: "row", gap: 14, paddingBottom: 12, paddingRight: 1 },
+  horizontalScroller: { width: "100%", flexGrow: 0, flexShrink: 1, overflow: "hidden", direction: "ltr" },
+  horizontalCards: { flexDirection: "row", gap: 14, paddingBottom: 12, paddingRight: 1, direction: "ltr" },
   card: { backgroundColor: "#FFFFFF", borderRadius: 15, overflow: "hidden", borderWidth: 1, borderColor: "#E9EBE6", shadowColor: "#303B36", shadowOpacity: 0.045, shadowRadius: 9, shadowOffset: { width: 0, height: 3 }, elevation: 1 },
   cardImage: { width: "100%", height: 148, backgroundColor: "#E7EAE5" },
   cardBody: { paddingHorizontal: 14, paddingTop: 13, paddingBottom: 8, alignItems: "flex-start" },
