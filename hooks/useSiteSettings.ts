@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { apiRequest } from "../lib/api";
+import { readPublicCache, writePublicCache } from "../lib/public-cache";
 
 export type SiteSettings = {
   siteName: string; siteDescription: string; heroTitle: string; heroSubtitle: string;
@@ -21,14 +22,36 @@ export const defaultSiteSettings: SiteSettings = {
   aboutText: "خدماتي منصة تساعدك في الوصول إلى الخدمات المنزلية والمهنية بسهولة."
 };
 
+const SETTINGS_CACHE_KEY = "site-settings.v1";
+
 export function useSiteSettings() {
   const [settings, setSettings] = useState<SiteSettings>(defaultSiteSettings);
+
   useEffect(() => {
     let active = true;
+    let networkFinished = false;
+
+    void readPublicCache<SiteSettings>(SETTINGS_CACHE_KEY).then(cached => {
+      if (active && !networkFinished && cached) {
+        setSettings({ ...defaultSiteSettings, ...cached });
+      }
+    });
+
+    // Keep cached settings on screen and refresh them quietly in the background.
     apiRequest<{ settings: SiteSettings }>("/api/settings")
-      .then(result => { if (active && result.settings) setSettings({ ...defaultSiteSettings, ...result.settings }); })
-      .catch(() => {})
+      .then(result => {
+        if (!result.settings) return;
+        networkFinished = true;
+        const next = { ...defaultSiteSettings, ...result.settings };
+        if (active) setSettings(next);
+        void writePublicCache(SETTINGS_CACHE_KEY, next);
+      })
+      .catch(() => {
+        // Defaults or the last cached settings remain available offline.
+      });
+
     return () => { active = false; };
   }, []);
+
   return settings;
 }
