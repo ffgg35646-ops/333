@@ -86,7 +86,7 @@ export function SiteHeader({ active }: HeaderProps) {
       </View>
       {compact && (
         <View style={styles.mobileNav}>
-          {links.map(link => (
+          {links.filter(link => link.key !== "about").map(link => (
             <Pressable
               key={link.key}
               onPress={() => go(link.path)}
