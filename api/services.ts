@@ -22,19 +22,32 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         if (operations.length) await services.bulkWrite(operations, { ordered: false });
         await services.updateMany({ categoryId: { $exists: false } }, { $set: { active: false, updatedAt: new Date() } });
       }
-      // Repair the legacy repeated service photos once: every active service gets a
-      // deterministic, distinct photographic URL, without changing service records or order.
-      const activeForImages = await services.find({ active: { $ne: false }, categoryId: { $exists: true } }, { projection: { id: 1, image: 1 } }).toArray();
-      const imageUrls = activeForImages.map(item => String(item.image || ""));
-      if (new Set(imageUrls).size !== activeForImages.length) {
-        const imageUpdates = activeForImages.filter(item => item.id).map(item => ({
-          updateOne: {
-            filter: { id: item.id },
-            update: { $set: { image: `https://picsum.photos/seed/khadamati-${encodeURIComponent(String(item.id))}/900/600`, imageUpdatedAt: new Date() } }
-          }
-        }));
-        if (imageUpdates.length) await services.bulkWrite(imageUpdates, { ordered: false });
-      }
+      // Replace legacy placeholder/duplicate service images with service-topic photo searches.
+      // The stable lock keeps each service on its own distinct image selection.
+      const activeForImages = await services.find(
+        { active: { $ne: false }, categoryId: { $exists: true } },
+        { projection: { id: 1, english: 1, title: 1, image: 1 } }
+      ).toArray();
+      const imageUpdates = activeForImages
+        .filter(item => item.id && !String(item.image || "").startsWith("https://loremflickr.com/"))
+        .map(item => {
+          const key = String(item.id);
+          let lock = 0;
+          for (let i = 0; i < key.length; i++) lock = (lock * 31 + key.charCodeAt(i)) >>> 0;
+          const topic = String(item.english || item.title || key).trim().replace(/\\s+/g, " ");
+          return {
+            updateOne: {
+              filter: { id: item.id },
+              update: {
+                $set: {
+                  image: `https://loremflickr.com/900/600/${encodeURIComponent(topic)}?lock=${lock}`,
+                  imageUpdatedAt: new Date()
+                }
+              }
+            }
+          };
+        });
+      if (imageUpdates.length) await services.bulkWrite(imageUpdates, { ordered: false });
       const filter = getSession(req) ? { categoryId: { $exists: true } } : { active: { $ne: false }, categoryId: { $exists: true } };
       const items = await services.find(filter).sort({ order: 1, title: 1 }).toArray();
       return res.status(200).json({ services: items.map(({ _id, ...item }) => item) });
