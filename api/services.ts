@@ -22,6 +22,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         if (operations.length) await services.bulkWrite(operations, { ordered: false });
         await services.updateMany({ categoryId: { $exists: false } }, { $set: { active: false, updatedAt: new Date() } });
       }
+      // Repair the legacy repeated service photos once: every active service gets a
+      // deterministic, distinct photographic URL, without changing service records or order.
+      const activeForImages = await services.find({ active: { $ne: false }, categoryId: { $exists: true } }, { projection: { id: 1, image: 1 } }).toArray();
+      const imageUrls = activeForImages.map(item => String(item.image || ""));
+      if (new Set(imageUrls).size !== activeForImages.length) {
+        const imageUpdates = activeForImages.filter(item => item.id).map(item => ({
+          updateOne: {
+            filter: { id: item.id },
+            update: { $set: { image: `https://picsum.photos/seed/khadamati-${encodeURIComponent(String(item.id))}/900/600`, imageUpdatedAt: new Date() } }
+          }
+        }));
+        if (imageUpdates.length) await services.bulkWrite(imageUpdates, { ordered: false });
+      }
       const filter = getSession(req) ? { categoryId: { $exists: true } } : { active: { $ne: false }, categoryId: { $exists: true } };
       const items = await services.find(filter).sort({ order: 1, title: 1 }).toArray();
       return res.status(200).json({ services: items.map(({ _id, ...item }) => item) });
