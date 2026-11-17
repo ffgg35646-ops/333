@@ -6,6 +6,19 @@ import { useSiteSettings } from "../hooks/useSiteSettings";
 import { serviceCategories, type ServiceItem } from "../data/services";
 import { SiteFooter, SiteHeader } from "../components/SiteShell";
 
+const HERO_IMAGES = [
+  "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1800&q=90",
+  "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=1800&q=90",
+  "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=1800&q=90",
+  "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=1800&q=90",
+  "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1800&q=90",
+  "https://images.unsplash.com/photo-1530053969600-caed2596d242?w=1800&q=90",
+  "https://images.unsplash.com/photo-1584515933487-779824d29309?w=1800&q=90",
+  "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1800&q=90",
+  "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1800&q=90",
+  "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1800&q=90"
+];
+
 function ServiceCard({ item, width }: { item: ServiceItem; width: number }) {
   return (
     <View style={[styles.card, { width }]}>
@@ -75,6 +88,11 @@ export default function HomeScreen() {
   const { width } = useWindowDimensions();
   const { mainServices } = useServices();
   const settings = useSiteSettings();
+  const [heroIndex, setHeroIndex] = useState(0);
+  useEffect(() => {
+    const timer = setInterval(() => setHeroIndex(current => (current + 1) % HERO_IMAGES.length), 10000);
+    return () => clearInterval(timer);
+  }, []);
   const compact = width < 700;
   const cardWidth = compact ? Math.min(width * 0.72, 292) : width < 1050 ? 276 : 286;
   const categoryOrder = ["maintenance", "cleaning", "personal-care", "healthcare", "professional-technical", "events", "moving-logistic", "safety-security"];
@@ -93,7 +111,7 @@ export default function HomeScreen() {
       <SiteHeader active="home" />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.heroOuter}>
-          <ImageBackground source={{ uri: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1800&q=90" }} resizeMode="cover" style={[styles.hero, compact && styles.heroCompact]}>
+          <ImageBackground source={{ uri: HERO_IMAGES[heroIndex] }} resizeMode="cover" style={[styles.hero, compact && styles.heroCompact]}>
             <View style={styles.heroShade} />
             <View style={[styles.heroContent, compact && styles.heroContentCompact]}>
               <View style={styles.eyebrow}><Text style={styles.eyebrowText}>خدماتي · KHADAMATI</Text></View>
