@@ -1,41 +1,21 @@
-import { ScrollViewStyleReset } from "expo-router/html";
+import { ScrollViewStyleReset, useServerDocumentContext } from "expo-router/html";
 import type { PropsWithChildren } from "react";
 
 export default function Root({ children }: PropsWithChildren) {
+  const { headNodes, bodyNodes, htmlAttributes, bodyAttributes } = useServerDocumentContext();
+
   return (
-    <html lang="ar" dir="rtl">
+    <html {...htmlAttributes} lang="ar" dir="rtl">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <ScrollViewStyleReset />
-        <style>{`
-          html,
-          body {
-            width: 100%;
-            min-width: 320px;
-            min-height: 100%;
-            margin: 0;
-            padding: 0;
-          }
-
-          body {
-            display: block;
-            min-height: 100vh;
-            overflow-x: hidden;
-          }
-
-          #root,
-          body > div {
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            width: 100%;
-            min-width: 0;
-            min-height: 100vh;
-          }
-        `}</style>
+        {headNodes}
       </head>
-      <body>{children}</body>
+      <body {...bodyAttributes}>
+        {children}
+        {bodyNodes}
+      </body>
     </html>
   );
 }
