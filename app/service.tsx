@@ -23,10 +23,15 @@ export default function ServiceDetailsScreen() {
               <Text style={styles.kicker}>{service.group === "main" ? "MAIN SERVICE" : "SPECIAL SERVICE"}</Text>
               <Text style={styles.title}>{service.icon}  {service.title}</Text>
               <Text style={styles.english}>{service.english}</Text>
-              <Text style={styles.summary}>{service.shortDescription}</Text>
+              <View style={styles.summaryPanel}>
+                <Text style={styles.summaryLabel}>نبذة عن الخدمة</Text>
+                <Text style={styles.summary}>{service.shortDescription}</Text>
+              </View>
               <View style={styles.rule} />
-              <Text style={styles.detailsHeading}>تفاصيل الخدمة</Text>
-              <Text style={styles.details}>{service.details}</Text>
+              <View style={styles.descriptionSection}>
+                <Text style={styles.detailsHeading}>تفاصيل الخدمة</Text>
+                <Text style={styles.details}>{service.details}</Text>
+              </View>
               <View style={styles.detailPanel}>
                 <Text style={styles.detailsHeading}>ماذا تشمل الخدمة؟</Text>
                 <Text style={styles.detailBullet}>• فهم احتياجك وتسجيل تفاصيل الخدمة المطلوبة.</Text>
@@ -60,10 +65,13 @@ const styles = StyleSheet.create({
   kicker: { color: "#0F766E", fontSize: 10, fontWeight: "900", letterSpacing: 2 , fontFamily: "Arial" },
   title: { color: "#173B38", fontSize: 28, fontWeight: "900", textAlign: "right", marginTop: 9 , fontFamily: "Arial" },
   english: { color: "#89958F", fontSize: 12, marginTop: 6 , fontFamily: "Arial" },
-  summary: { color: "#536A65", fontSize: 15, lineHeight: 27, marginTop: 18, textAlign: "right" , fontFamily: "Arial" },
+  summaryPanel: { width: "100%", marginTop: 20, paddingHorizontal: 18, paddingVertical: 16, borderRadius: 16, backgroundColor: "#F0F7F3", borderWidth: 1, borderColor: "#DCEBE2", alignItems: "flex-start" },
+  summaryLabel: { color: "#0F766E", fontSize: 13, fontWeight: "900", marginBottom: 8, textAlign: "right", fontFamily: "Arial" },
+  summary: { color: "#435B52", fontSize: 15, lineHeight: 29, textAlign: "right", width: "100%", fontFamily: "Arial" },
+  descriptionSection: { width: "100%", alignItems: "flex-start" },
   rule: { height: 1, backgroundColor: "#DCE7E3", width: "100%", marginVertical: 20 },
   detailsHeading: { color: "#173B38", fontSize: 18, fontWeight: "900", textAlign: "right" , fontFamily: "Arial" },
-  details: { color: "#536A65", fontSize: 14, lineHeight: 29, marginTop: 10, textAlign: "right" , fontFamily: "Arial" },
+  details: { color: "#536A65", fontSize: 14, lineHeight: 30, marginTop: 12, textAlign: "right", width: "100%", paddingHorizontal: 15, paddingVertical: 13, borderRadius: 13, backgroundColor: "#F7F9F8", fontFamily: "Arial" },
   detailPanel: { width: "100%", backgroundColor: "#F6F9F7", borderRadius: 14, padding: 18, marginTop: 16, borderWidth: 1, borderColor: "#DCE7E3", alignItems: "flex-start" },
   detailBullet: { color: "#536A65", fontSize: 13, lineHeight: 26, marginTop: 5, textAlign: "right" , fontFamily: "Arial" },
   detailStep: { color: "#536A65", fontSize: 13, lineHeight: 27, marginTop: 4, textAlign: "right" , fontFamily: "Arial" },
