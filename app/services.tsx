@@ -4,10 +4,12 @@ import { useServices } from "../hooks/useServices";
 import { serviceCategories, type ServiceItem } from "../data/services";
 import { SiteFooter, SiteHeader } from "../components/SiteShell";
 
+const FastImage = Image as any;
+
 function ServiceTile({ item, width }: { item: ServiceItem; width: number }) {
   return (
     <Pressable onPress={() => router.push(("/service?id=" + item.id) as never)} style={[styles.tile, { width }]}>
-      <Image source={{ uri: item.image }} style={styles.image} />
+      <FastImage source={{ uri: item.image }} style={styles.image} loading="lazy" decoding="async" />
       <View style={styles.tileBody}>
         <Text style={styles.title}>{item.icon}  {item.title}</Text>
         <Text style={styles.english}>{item.english}</Text>
