@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Image, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View, useWindowDimensions } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { apiRequest, clearAdminToken } from "../lib/api";
 import { defaultSiteSettings, type SiteSettings } from "../hooks/useSiteSettings";
@@ -16,11 +17,14 @@ export default function AdminScreen() {
   const [loading, setLoading] = useState(true);
   const [apiError, setApiError] = useState("");
   const [requests, setRequests] = useState<AdminRequest[]>([]);
+  const [lastSeenAt, setLastSeenAt] = useState(0);
+  const unreadRequests = requests.filter(item => item.status === "new" && new Date(item.createdAt || 0).getTime() > lastSeenAt).length;
   const [settingsDraft, setSettingsDraft] = useState<SiteSettings>(defaultSiteSettings);
   const [settingsSaving, setSettingsSaving] = useState(false);
 
   useEffect(() => {
     let alive = true;
+    AsyncStorage.getItem("khadamati-admin-requests-seen-at").then(value => { if (alive && value) setLastSeenAt(Number(value) || 0); }).catch(() => {});
     (async () => {
       try {
         await apiRequest("/api/admin/me", {}, true);
@@ -39,7 +43,21 @@ export default function AdminScreen() {
     })();
     return () => { alive = false; };
   }, []);
+  useEffect(() => {
+    let alive = true;
+    const refreshRequests = async () => {
+      try { const result = await apiRequest<{ requests: AdminRequest[] }>("/api/requests", {}, true); if (alive) setRequests(result.requests || []); } catch {}
+    };
+    const timer = setInterval(refreshRequests, 10000);
+    return () => { alive = false; clearInterval(timer); };
+  }, []);
   const [tab, setTab] = useState<Tab>("services");
+  const openRequests = async () => {
+    setTab("requests");
+    const seen = Date.now();
+    setLastSeenAt(seen);
+    try { await AsyncStorage.setItem("khadamati-admin-requests-seen-at", String(seen)); } catch {}
+  };
   const [filter, setFilter] = useState<"all" | ServiceGroup>("all");
   const [draft, setDraft] = useState<ServiceItem | null>(null);
   const [search, setSearch] = useState("");
@@ -119,7 +137,7 @@ export default function AdminScreen() {
           {!compact && <Text style={styles.menuCaption}>القائمة الرئيسية</Text>}
           <View style={[styles.menu, compact && styles.menuCompact]}>
             <MenuButton value="services" label="إدارة الخدمات" icon="▦" />
-            <MenuButton value="requests" label="طلبات الخدمة" icon="▤" />
+            <Pressable onPress={openRequests} style={[styles.menuButton, tab === "requests" && styles.menuButtonActive]}><Text style={[styles.menuIcon, tab === "requests" && styles.menuTextActive]}>▤</Text><Text style={[styles.menuText, tab === "requests" && styles.menuTextActive]}>طلبات الخدمة</Text>{unreadRequests > 0 && <View style={styles.unreadBadge}><Text style={styles.unreadBadgeText}>{unreadRequests > 99 ? "99+" : unreadRequests}</Text></View>}{tab === "requests" && <View style={styles.menuIndicator} />}</Pressable>
             <MenuButton value="settings" label="الإعدادات" icon="⚙" />
           </View>
           <View style={styles.sidebarBottom}>
@@ -133,6 +151,7 @@ export default function AdminScreen() {
           <View style={styles.topbar}>
             <View><Text style={styles.pageKicker}>KHADAMATI / ADMIN</Text><Text style={styles.pageTitle}>{tab === "services" ? "إدارة الخدمات" : tab === "requests" ? "طلبات الخدمة" : "إعدادات المنصة"}</Text></View>
             <View style={styles.topActions}>
+              <Pressable onPress={openRequests} accessibilityRole="button" accessibilityLabel={`إشعارات الطلبات الجديدة: ${unreadRequests}`} style={styles.bellButton}><Text style={styles.bellIcon}>♧</Text>{unreadRequests > 0 && <View style={styles.bellBadge}><Text style={styles.bellBadgeText}>{unreadRequests > 99 ? "99+" : unreadRequests}</Text></View>}</Pressable>
               <View style={styles.previewBadge}><View style={styles.previewDot} /><Text style={styles.previewBadgeText}>متصل بقاعدة البيانات</Text></View>
               <Pressable onPress={() => router.push("/" as never)} style={styles.siteButton}><Text style={styles.siteButtonText}>عرض الموقع ↗</Text></Pressable>
             </View>
@@ -287,6 +306,12 @@ const styles = StyleSheet.create({
   menuCompact: { flexDirection: "row", justifyContent: "space-between", marginTop: 10, marginBottom: 4 },
   menuButton: { minHeight: 47, borderRadius: 11, paddingHorizontal: 12, flexDirection: "row", alignItems: "center", gap: 12, position: "relative" },
   menuButtonActive: { backgroundColor: "rgba(255,255,255,0.14)" },
+  unreadBadge: { marginLeft: "auto", minWidth: 21, height: 21, borderRadius: 11, backgroundColor: "#D94B4B", alignItems: "center", justifyContent: "center", paddingHorizontal: 5 },
+  unreadBadgeText: { color: "#FFFFFF", fontSize: 10, fontWeight: "900" },
+  bellButton: { width: 42, height: 42, borderRadius: 13, backgroundColor: "#F0F6F8", alignItems: "center", justifyContent: "center", position: "relative" },
+  bellIcon: { color: "#173B50", fontSize: 22, fontWeight: "900" },
+  bellBadge: { position: "absolute", top: -5, right: -5, minWidth: 19, height: 19, borderRadius: 10, backgroundColor: "#D94B4B", alignItems: "center", justifyContent: "center", paddingHorizontal: 4, borderWidth: 2, borderColor: "#FFFFFF" },
+  bellBadgeText: { color: "#FFFFFF", fontSize: 9, fontWeight: "900" },
   menuIcon: { color: "#89A4A8", fontSize: 17, width: 20, textAlign: "center" },
   menuText: { color: "#B7C7C9", fontSize: 12, fontWeight: "700" },
   menuTextActive: { color: "#FFFFFF" },
