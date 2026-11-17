@@ -24,14 +24,15 @@ const HERO_IMAGES = [
 ];
 
 function ServiceCard({ item, width }: { item: ServiceItem; width: number }) {
+  const compactCard = width < 200;
   return (
     <View style={[styles.card, { width }]}>
       <Pressable onPress={() => router.push(("/service?id=" + item.id) as never)} accessibilityRole="button">
-        <FastImage source={{ uri: item.image }} style={styles.cardImage} resizeMode="cover" loading="lazy" decoding="async" />
-        <View style={styles.cardBody}>
+        <FastImage source={{ uri: item.image }} style={[styles.cardImage, compactCard && styles.cardImageCompact]} resizeMode="cover" loading="lazy" decoding="async" />
+        <View style={[styles.cardBody, compactCard && styles.cardBodyCompact]}>
           <View style={styles.cardTitleRow}>
-            <Text style={styles.cardIcon}>{item.icon}</Text>
-            <Text style={styles.cardTitle} numberOfLines={1}>{item.title}</Text>
+            <Text style={[styles.cardIcon, compactCard && styles.cardIconCompact]}>{item.icon}</Text>
+            <Text style={[styles.cardTitle, compactCard && styles.cardTitleCompact]} numberOfLines={1}>{item.title}</Text>
           </View>
         </View>
       </Pressable>
@@ -233,10 +234,14 @@ const styles = StyleSheet.create({
   horizontalCards: { flexDirection: "row", gap: 14, paddingBottom: 12, paddingRight: 1, direction: "ltr" },
   card: { backgroundColor: "#FFFFFF", borderRadius: 20, overflow: "hidden", borderWidth: 1, borderColor: "#E2E9E4", shadowColor: "#173B38", shadowOpacity: 0.07, shadowRadius: 16, shadowOffset: { width: 0, height: 7 }, elevation: 3 },
   cardImage: { width: "100%", height: 132, backgroundColor: "#E8EEEA" },
+  cardImageCompact: { height: 168 },
   cardBody: { paddingHorizontal: 12, paddingTop: 15, paddingBottom: 15, alignItems: "flex-start", minHeight: 88 },
+  cardBodyCompact: { minHeight: 57, paddingHorizontal: 10, paddingTop: 11, paddingBottom: 8, justifyContent: "center", backgroundColor: "rgba(238, 247, 243, 0.82)", borderTopWidth: 1, borderTopColor: "rgba(255,255,255,0.9)" },
   cardTitleRow: { width: "100%", flexDirection: "row", alignItems: "center", gap: 8 },
   cardIcon: { fontSize: 16 },
+  cardIconCompact: { fontSize: 18 },
   cardTitle: { color: "#38423E", fontSize: 12, fontWeight: "900", textAlign: "right", flex: 1 , fontFamily: "Arial" },
+  cardTitleCompact: { color: "#244A43", fontSize: 15, fontWeight: "900" , fontFamily: "Arial" },
   cardEnglish: { color: "#9AA69F", fontSize: 9, marginTop: 4, textAlign: "right" , fontFamily: "Arial" },
   cardDescription: { color: "#52645D", fontSize: 11, lineHeight: 19, marginTop: 9, textAlign: "right", minHeight: 38, width: "100%", paddingHorizontal: 9, paddingVertical: 7, borderRadius: 9, backgroundColor: "#F5F8F6", overflow: "hidden", fontFamily: "Arial" },
   orderButton: { marginHorizontal: 13, marginBottom: 13, minHeight: 39, borderRadius: 11, backgroundColor: "#E6F2EF", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 7 },
