@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
   heroOuter: { backgroundColor: "#F2FAFE", paddingHorizontal: 24, paddingTop: 26, paddingBottom: 18 },
   hero: { width: "100%", maxWidth: 1240, minHeight: 430, alignSelf: "center", justifyContent: "center", overflow: "hidden", borderRadius: 26, backgroundColor: "#087FC1" },
   heroCompact: { minHeight: 470, borderRadius: 18 },
-  heroShade: { ...StyleSheet.absoluteFill, backgroundColor: "rgba(5, 38, 170, 0.91)" },
+  heroShade: { ...StyleSheet.absoluteFill, backgroundColor: "rgba(52, 137, 180, 0.68)" },
   heroContent: { width: "100%", maxWidth: 760, paddingHorizontal: 54, paddingVertical: 48, alignItems: "flex-start" },
   heroContentCompact: { paddingHorizontal: 23, paddingVertical: 34 },
   eyebrow: { borderWidth: 1, borderColor: "rgba(255,255,255,0.42)", borderRadius: 30, paddingHorizontal: 13, paddingVertical: 7, marginBottom: 18 },
