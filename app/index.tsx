@@ -30,9 +30,11 @@ function ServiceCard({ item, width }: { item: ServiceItem; width: number }) {
       <Pressable onPress={() => router.push(("/service?id=" + item.id) as never)} accessibilityRole="button">
         <FastImage source={{ uri: item.image }} style={[styles.cardImage, compactCard && styles.cardImageCompact]} resizeMode="cover" loading="lazy" decoding="async" />
         <View style={[styles.cardBody, compactCard && styles.cardBodyCompact]}>
-          <View style={styles.cardTitleRow}>
-            <Text style={[styles.cardIcon, compactCard && styles.cardIconCompact]}>{item.icon}</Text>
-            <Text style={[styles.cardTitle, compactCard && styles.cardTitleCompact]} numberOfLines={1}>{item.title}</Text>
+          <View style={[styles.cardTitleGlass, compactCard && styles.cardTitleGlassCompact]}>
+            <View style={styles.cardTitleRow}>
+              <Text style={[styles.cardIcon, compactCard && styles.cardIconCompact]}>{item.icon}</Text>
+              <Text style={[styles.cardTitle, compactCard && styles.cardTitleCompact]} numberOfLines={1}>{item.title}</Text>
+            </View>
           </View>
         </View>
       </Pressable>
@@ -235,7 +237,9 @@ const styles = StyleSheet.create({
   cardImage: { width: "100%", height: 132, backgroundColor: "#E8EEEA" },
   cardImageCompact: { height: 168 },
   cardBody: { paddingHorizontal: 12, paddingTop: 15, paddingBottom: 15, alignItems: "flex-start", minHeight: 88 },
-  cardBodyCompact: { minHeight: 57, paddingHorizontal: 10, paddingTop: 11, paddingBottom: 8, justifyContent: "center", backgroundColor: "rgba(238, 247, 243, 0.82)", borderTopWidth: 1, borderTopColor: "rgba(255,255,255,0.9)" },
+  cardBodyCompact: { minHeight: 57, paddingHorizontal: 10, paddingTop: 9, paddingBottom: 9, justifyContent: "center", backgroundColor: "transparent" },
+  cardTitleGlass: { width: "100%" },
+  cardTitleGlassCompact: { paddingHorizontal: 10, paddingVertical: 8, borderRadius: 12, backgroundColor: "rgba(255,255,255,0.72)", borderWidth: 1, borderColor: "rgba(255,255,255,0.88)", shadowColor: "#173B38", shadowOpacity: 0.10, shadowRadius: 8, shadowOffset: { width: 0, height: 3 }, elevation: 2 },
   cardTitleRow: { width: "100%", flexDirection: "row", alignItems: "center", gap: 8 },
   cardIcon: { fontSize: 16 },
   cardIconCompact: { fontSize: 18 },
