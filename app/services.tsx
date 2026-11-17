@@ -23,10 +23,11 @@ export default function ServicesScreen() {
   const { services } = useServices();
   const params = useLocalSearchParams<{ category?: string }>();
   const compact = width <= 700;
-  const contentWidth = width - (compact ? 40 : 48);
+  const contentWidth = compact ? width - 40 : Math.min(width - 48, 1200);
   const gap = compact ? 12 : 16;
-  const columns = width > 1050 ? 4 : width > 700 ? 3 : 2;
-  const tileWidth = (contentWidth - gap * (columns - 1)) / columns + (compact ? 5 : 0);
+  const columns = compact ? 2 : 3;
+  const tileWidth = (contentWidth - gap * (columns - 1)) / columns;
+  const groupWidth = tileWidth * columns + gap * (columns - 1);
   return (
     <View style={styles.page}>
       <SiteHeader active="services" />
@@ -49,11 +50,13 @@ export default function ServicesScreen() {
           const items = services.filter(item => item.active !== false && item.categoryId === category.id);
           if (!items.length) return null;
           return <View key={category.id} style={[styles.section, compact && styles.sectionCompact]}>
-            <View style={[styles.categoryHeading, compact && styles.categoryHeadingCompact]}>
-              <Text style={styles.sectionTitle}>{category.icon}  {items[0]?.categoryTitle || category.title}</Text>
-              <Text style={styles.categoryEnglish}>{items[0]?.categoryEnglish || category.english}</Text>
+            <View style={[styles.categoryGroup, { width: compact ? "100%" : groupWidth }]}>
+              <View style={[styles.categoryHeading, compact && styles.categoryHeadingCompact]}>
+                <Text style={styles.sectionTitle}>{category.icon}  {items[0]?.categoryTitle || category.title}</Text>
+                <Text style={styles.categoryEnglish}>{items[0]?.categoryEnglish || category.english}</Text>
+              </View>
+              <View style={styles.grid}>{items.map(item => <ServiceTile key={item.id} item={item} width={tileWidth} />)}</View>
             </View>
-            <View style={styles.grid}>{items.map(item => <ServiceTile key={item.id} item={item} width={tileWidth} />)}</View>
           </View>;
         })}
         <SiteFooter />
@@ -79,7 +82,8 @@ const styles = StyleSheet.create({
   introText: { color: "#D1E2E2", fontSize: 14, marginTop: 10, textAlign: "center", fontFamily: "Arial" },
   section: { width: "100%", maxWidth: 1240, alignSelf: "center", padding: 20, paddingTop: 28, paddingBottom: 32 },
   sectionCompact: { paddingHorizontal: 15 },
-  categoryHeading: { marginBottom: 22, alignItems: "flex-end", backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: "#DCE9E3", borderRadius: 17, paddingHorizontal: 20, paddingVertical: 16, shadowColor: "#173B38", shadowOpacity: 0.06, shadowRadius: 10, shadowOffset: { width: 0, height: 4 }, elevation: 2 },
+  categoryGroup: { alignSelf: "center", maxWidth: "100%" },
+  categoryHeading: { width: "100%", marginBottom: 22, alignItems: "flex-end", backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: "#DCE9E3", borderRadius: 17, paddingHorizontal: 20, paddingVertical: 16, shadowColor: "#173B38", shadowOpacity: 0.06, shadowRadius: 10, shadowOffset: { width: 0, height: 4 }, elevation: 2 },
   categoryHeadingCompact: { paddingHorizontal: 15, paddingVertical: 13, marginBottom: 16 },
   sectionTitle: { color: "#173B38", fontSize: 27, fontWeight: "900", textAlign: "right" , fontFamily: "Arial" },
   categoryEnglish: { color: "#89958F", fontSize: 12, marginTop: 5 , fontFamily: "Arial" },
