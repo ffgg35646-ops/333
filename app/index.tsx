@@ -33,8 +33,6 @@ function ServiceCard({ item, width }: { item: ServiceItem; width: number }) {
             <Text style={styles.cardIcon}>{item.icon}</Text>
             <Text style={styles.cardTitle} numberOfLines={1}>{item.title}</Text>
           </View>
-          <Text style={styles.cardEnglish} numberOfLines={1}>{item.english}</Text>
-          <Text style={styles.cardDescription} numberOfLines={2}>{item.shortDescription}</Text>
         </View>
       </Pressable>
       <Pressable
@@ -108,7 +106,7 @@ export default function HomeScreen() {
     return () => clearInterval(timer);
   }, []);
   const compact = width < 700;
-  const cardWidth = compact ? Math.max(148, (width - 70) / 2) : width < 1050 ? 276 : 286;
+  const cardWidth = compact ? Math.max(153, (width - 60) / 2) : width < 1050 ? 276 : 286;
   const categoryOrder = ["maintenance", "cleaning", "personal-care", "healthcare", "professional-technical", "events", "moving-logistic", "safety-security"];
   const categorySections = [...serviceCategories]
     .sort((a, b) => categoryOrder.indexOf(a.id) - categoryOrder.indexOf(b.id))
@@ -234,8 +232,8 @@ const styles = StyleSheet.create({
   horizontalScroller: { width: "100%", flexGrow: 0, flexShrink: 1, overflow: "hidden", direction: "ltr" },
   horizontalCards: { flexDirection: "row", gap: 14, paddingBottom: 12, paddingRight: 1, direction: "ltr" },
   card: { backgroundColor: "#FFFFFF", borderRadius: 20, overflow: "hidden", borderWidth: 1, borderColor: "#E2E9E4", shadowColor: "#173B38", shadowOpacity: 0.07, shadowRadius: 16, shadowOffset: { width: 0, height: 7 }, elevation: 3 },
-  cardImage: { width: "100%", height: 124, backgroundColor: "#E8EEEA" },
-  cardBody: { paddingHorizontal: 12, paddingTop: 12, paddingBottom: 10, alignItems: "flex-start", minHeight: 116 },
+  cardImage: { width: "100%", height: 132, backgroundColor: "#E8EEEA" },
+  cardBody: { paddingHorizontal: 12, paddingTop: 15, paddingBottom: 15, alignItems: "flex-start", minHeight: 88 },
   cardTitleRow: { width: "100%", flexDirection: "row", alignItems: "center", gap: 8 },
   cardIcon: { fontSize: 16 },
   cardTitle: { color: "#38423E", fontSize: 12, fontWeight: "900", textAlign: "right", flex: 1 , fontFamily: "Arial" },
