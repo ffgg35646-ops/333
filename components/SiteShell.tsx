@@ -158,8 +158,8 @@ export function SiteFooter({ children }: FooterProps) {
 
 const styles = StyleSheet.create({
   headerWrap: { backgroundColor: "rgba(23,59,56,0.70)", borderBottomWidth: 1, borderBottomColor: "rgba(255,255,255,0.14)", zIndex: 10, shadowColor: "#102E2B", shadowOpacity: 0.16, shadowRadius: 16, shadowOffset: { width: 0, height: 5 }, elevation: 3, ...( { backdropFilter: "blur(18px) saturate(120%)", WebkitBackdropFilter: "blur(18px) saturate(120%)" } as any) },
-  headerWrapDesktop: { backgroundColor: "rgba(23,59,56,0.24)", borderBottomColor: "rgba(255,255,255,0.20)", borderBottomWidth: 1, shadowColor: "#102E2B", shadowOpacity: 0.08, shadowRadius: 18, shadowOffset: { width: 0, height: 5 }, ...( { backdropFilter: "blur(22px) saturate(145%)", WebkitBackdropFilter: "blur(22px) saturate(145%)" } as any) },
-  header: { width: "100%", maxWidth: 1600, alignSelf: "center", minHeight: 88, paddingHorizontal: 30, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 22 },
+  headerWrapDesktop: { backgroundColor: "rgba(48,56,59,0.76)", borderBottomColor: "rgba(255,255,255,0.14)", borderBottomWidth: 1, shadowColor: "#101719", shadowOpacity: 0.12, shadowRadius: 18, shadowOffset: { width: 0, height: 5 }, ...( { backdropFilter: "blur(22px) saturate(145%)", WebkitBackdropFilter: "blur(22px) saturate(145%)" } as any) },
+  header: { width: "100%", maxWidth: 1600, alignSelf: "center", minHeight: 72, paddingHorizontal: 30, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 18 },
   headerCompact: { minHeight: 68, paddingVertical: 9, paddingHorizontal: 12, gap: 8 },
   brand: { flexDirection: "row", alignItems: "center", gap: 10 },
   brandDesktop: { position: "absolute", right: 30, zIndex: 3 },
@@ -173,8 +173,8 @@ const styles = StyleSheet.create({
   brandMarkAccent: { position: "absolute", width: 8, height: 8, borderRadius: 4, right: 8, bottom: 7, backgroundColor: "#2DD4BF", borderWidth: 1, borderColor: "#173B38" },
   brandName: { color: "#FFFFFF", fontSize: 19, fontWeight: "900", textAlign: "right" , fontFamily: "Arial" },
   brandTag: { color: "#C3D3D7", fontSize: 10, marginTop: 2, textAlign: "right" , fontFamily: "Arial" },
-  nav: { position: "absolute", left: 0, right: 0, zIndex: 2, flexDirection: "row", alignItems: "center", gap: 7, flexWrap: "wrap", justifyContent: "center", backgroundColor: "transparent", padding: 6, borderRadius: 16, borderWidth: 0, borderColor: "transparent" },
-  navItem: { paddingVertical: 12, paddingHorizontal: 16, borderRadius: 12 },
+  nav: { position: "absolute", left: 0, right: 0, zIndex: 2, flexDirection: "row", alignItems: "center", gap: 5, flexWrap: "wrap", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.055)", paddingVertical: 3, paddingHorizontal: 5, borderRadius: 14, borderWidth: 1, borderColor: "rgba(255,255,255,0.14)", shadowColor: "#101719", shadowOpacity: 0.10, shadowRadius: 14, shadowOffset: { width: 0, height: 3 }, ...( { backdropFilter: "blur(18px) saturate(120%)", WebkitBackdropFilter: "blur(18px) saturate(120%)" } as any) },
+  navItem: { paddingVertical: 8, paddingHorizontal: 12, borderRadius: 10 },
   navItemActive: { backgroundColor: "#E6F2EF" },
   navText: { color: "#FFFFFF", fontSize: 13, fontWeight: "700" , fontFamily: "Arial" },
   navActive: { color: "#16D2CF", fontWeight: "900" , fontFamily: "Arial" },
