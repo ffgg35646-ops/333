@@ -7,22 +7,22 @@ import { serviceCategories, type ServiceItem } from "../data/services";
 import { SiteFooter, SiteHeader } from "../components/SiteShell";
 
 const HERO_IMAGES = [
-  "/%D8%AA%D8%A3%D9%85%D9%8A%D9%86%20%D8%AD%D9%81%D9%84%D8%A7%D8%AA.jpg",
-  "/%D9%85%D8%AF%D8%B1%D8%A8%20%D9%8A%D9%88%D8%AC%D8%A7.jpg",
-  "/%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%8A%20%D9%88%D8%AF%D9%8A%20%D8%AC%D9%8A.jpg",
-  "/%D8%AD%D9%85%D8%A7%D9%85%D8%A7%D8%AA.jpg",
-  "/%D9%85%D8%AE%D8%A7%D8%B2%D9%86%20%D9%88%D9%85%D8%B3%D8%AA%D9%88%D8%AF%D8%B9%D8%A7%D8%AA.jpg",
-  "/%D8%AA%D8%AC%D8%AF%D9%8A%D8%AF%20%D9%88%D8%AA%D8%B1%D9%85%D9%8A%D9%85.jpg",
-  "/%D8%AA%D8%A3%D8%AC%D9%8A%D8%B1%20%D9%85%D8%B9%D8%AF%D8%A7%D8%AA%20%D8%B7%D8%A8%D9%8A%D8%B9.jpg",
-  "/%D8%AD%D9%81%D9%84%D8%A7%D8%AA%20%D9%88%D9%85%D9%86%D8%A7%D8%B3%D8%A8%D8%A7%D8%AA.jpg",
-  "/%D9%86%D9%82%D9%84%20%D9%85%D9%86%D8%A7%D8%B2%D9%84.jpg",
-  "/%D8%AC%D8%A7%D9%85%D8%B9%20%D8%A7%D9%84%D9%82%D9%85%D8%A7%D9%85%D8%A9.jpg"
+  "https://raw.githubusercontent.com/ffgg35646-ops/333/main/%D8%AA%D8%A3%D9%85%D9%8A%D9%86%20%D8%AD%D9%81%D9%84%D8%A7%D8%AA.jpg",
+  "https://raw.githubusercontent.com/ffgg35646-ops/333/main/%D9%85%D8%AF%D8%B1%D8%A8%20%D9%8A%D9%88%D8%AC%D8%A7.jpg",
+  "https://raw.githubusercontent.com/ffgg35646-ops/333/main/%D9%85%D9%88%D8%B3%D9%8A%D9%82%D9%8A%20%D9%88%D8%AF%D9%8A%20%D8%AC%D9%8A.jpg",
+  "https://raw.githubusercontent.com/ffgg35646-ops/333/main/%D8%AD%D9%85%D8%A7%D9%85%D8%A7%D8%AA.jpg",
+  "https://raw.githubusercontent.com/ffgg35646-ops/333/main/%D9%85%D8%AE%D8%A7%D8%B2%D9%86%20%D9%88%D9%85%D8%B3%D8%AA%D9%88%D8%AF%D8%B9%D8%A7%D8%AA.jpg",
+  "https://raw.githubusercontent.com/ffgg35646-ops/333/main/%D8%AA%D8%AC%D8%AF%D9%8A%D8%AF%20%D9%88%D8%AA%D8%B1%D9%85%D9%8A%D9%85.jpg",
+  "https://raw.githubusercontent.com/ffgg35646-ops/333/main/%D8%AA%D8%A3%D8%AC%D9%8A%D8%B1%20%D9%85%D8%B9%D8%AF%D8%A7%D8%AA%20%D8%B7%D8%A8%D9%8A%D8%B9.jpg",
+  "https://raw.githubusercontent.com/ffgg35646-ops/333/main/%D8%AD%D9%81%D9%84%D8%A7%D8%AA%20%D9%88%D9%85%D9%86%D8%A7%D8%B3%D8%A8%D8%A7%D8%AA.jpg",
+  "https://raw.githubusercontent.com/ffgg35646-ops/333/main/%D9%86%D9%82%D9%84%20%D9%85%D9%86%D8%A7%D8%B2%D9%84.jpg",
+  "https://raw.githubusercontent.com/ffgg35646-ops/333/main/%D8%AC%D8%A7%D9%85%D8%B9%20%D8%A7%D9%84%D9%82%D9%85%D8%A7%D9%85%D8%A9.jpg"
 ];
 
 function ServiceCard({ item, width }: { item: ServiceItem; width: number }) {
   return (
     <View style={[styles.card, { width }]}>
-      <Pressable onPress={() => router.push(("/service?id=" + item.id) as never)} accessibilityRole="button">
+      <Pressable onPress={() => router.push(("https://raw.githubusercontent.com/ffgg35646-ops/333/main/service?id=" + item.id) as never)} accessibilityRole="button">
         <Image source={{ uri: item.image }} style={styles.cardImage} resizeMode="cover" />
         <View style={styles.cardBody}>
           <View style={styles.cardTitleRow}>
@@ -34,7 +34,7 @@ function ServiceCard({ item, width }: { item: ServiceItem; width: number }) {
         </View>
       </Pressable>
       <Pressable
-        onPress={() => router.push(("/request-service?service=" + item.id) as never)}
+        onPress={() => router.push(("https://raw.githubusercontent.com/ffgg35646-ops/333/main/request-service?service=" + item.id) as never)}
         style={styles.orderButton}
         accessibilityRole="button"
         accessibilityLabel={"اطلب خدمة " + item.title}
@@ -122,8 +122,8 @@ export default function HomeScreen() {
               <Text style={[styles.heroTitle, compact && styles.heroTitleCompact]}>{settings.heroTitle}</Text>
               <Text style={[styles.heroText, compact && styles.heroTextCompact]}>{settings.heroSubtitle}</Text>
               <View style={styles.heroActions}>
-                <Pressable onPress={() => router.push("/services" as never)} style={styles.primaryButton}><Text style={styles.primaryButtonText}>اكتشف الخدمات ←</Text></Pressable>
-                <Pressable onPress={() => router.push("/request-service" as never)} style={styles.secondaryButton}><Text style={styles.secondaryButtonText}>اطلب خدمة الآن</Text></Pressable>
+                <Pressable onPress={() => router.push("https://raw.githubusercontent.com/ffgg35646-ops/333/main/services" as never)} style={styles.primaryButton}><Text style={styles.primaryButtonText}>اكتشف الخدمات ←</Text></Pressable>
+                <Pressable onPress={() => router.push("https://raw.githubusercontent.com/ffgg35646-ops/333/main/request-service" as never)} style={styles.secondaryButton}><Text style={styles.secondaryButtonText}>اطلب خدمة الآن</Text></Pressable>
               </View>
               <View style={styles.heroStats}>
                 <View><Text style={styles.statNumber}>{serviceCategories.length}</Text><Text style={styles.statLabel}>أقسام رئيسية</Text></View>
@@ -142,7 +142,7 @@ export default function HomeScreen() {
             <Text style={styles.introTitle}>اختار الخدمة المناسبة ليك واحنا نتولى الباقي</Text>
             <Text style={styles.introText}>تصفح الأقسام، شوف تفاصيل كل خدمة، واطلبها بسهولة.</Text>
           </View>
-          <Pressable onPress={() => router.push("/services" as never)} style={styles.introLink}><Text style={styles.introLinkText}>كل الخدمات ←</Text></Pressable>
+          <Pressable onPress={() => router.push("https://raw.githubusercontent.com/ffgg35646-ops/333/main/services" as never)} style={styles.introLink}><Text style={styles.introLinkText}>كل الخدمات ←</Text></Pressable>
         </View>
 
         <View style={styles.trustStrip}>
@@ -159,7 +159,7 @@ export default function HomeScreen() {
                 <Text style={styles.sectionTitle}>{category.title}</Text>
                 <Text style={styles.sectionSubtitle}>اكتشف خدمات القسم · {category.items.length} خدمة</Text>
               </View>
-              <Pressable onPress={() => router.push("/services" as never)} style={styles.textLink}>
+              <Pressable onPress={() => router.push("https://raw.githubusercontent.com/ffgg35646-ops/333/main/services" as never)} style={styles.textLink}>
                 <Text style={styles.textLinkText}>عرض الكل ←</Text>
               </Pressable>
             </View>
@@ -170,7 +170,7 @@ export default function HomeScreen() {
         <View style={styles.ctaWrap}>
           <View style={[styles.cta, compact && styles.ctaCompact]}>
             <View style={styles.ctaCopy}><Text style={styles.ctaKicker}>KHADAMATI</Text><Text style={styles.ctaTitle}>خدمتك تبدأ من هنا</Text><Text style={styles.ctaText}>اختار الخدمة اللي محتاجها، وسجّل بياناتك، وفريقنا هيتواصل معاك قريبًا.</Text></View>
-            <Pressable onPress={() => router.push("/request-service" as never)} style={styles.ctaButton}><Text style={styles.ctaButtonText}>اطلب خدمتك الآن ←</Text></Pressable>
+            <Pressable onPress={() => router.push("https://raw.githubusercontent.com/ffgg35646-ops/333/main/request-service" as never)} style={styles.ctaButton}><Text style={styles.ctaButtonText}>اطلب خدمتك الآن ←</Text></Pressable>
           </View>
         </View>
         <SiteFooter />
