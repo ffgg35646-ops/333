@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { useServices } from "../hooks/useServices";
 import { serviceCategories } from "../data/services";
@@ -44,7 +44,7 @@ export default function RequestServiceScreen() {
           service: serviceName.trim()
         })
       });
-      Alert.alert("تم إرسال طلبك بنجاح", "برجاء الانتظار، سيتم التواصل قريبًا معك عبر الهاتف.");
+      setFeedback("تم إرسال طلبك بنجاح، برجاء الانتظار وسيتم التواصل معك قريبًا عبر الهاتف.");
       setName(""); setPhone(""); setCompoundName(""); setPropertyNumber(""); setPropertyName("");
     } catch (error) {
       setFeedback(error instanceof Error ? error.message : "تعذر إرسال الطلب الآن، حاول مرة أخرى.");
@@ -125,7 +125,7 @@ export default function RequestServiceScreen() {
             <Pressable onPress={submit} disabled={busy} style={[styles.submit, busy && { opacity: 0.6 }]}>
               <Text style={styles.submitText}>{busy ? "جارٍ إرسال الطلب..." : "إرسال الطلب"}</Text>
             </Pressable>
-            {!!feedback && <Text style={styles.error}>{feedback}</Text>}
+            {!!feedback && <Text style={[styles.feedback, feedback.startsWith("تم إرسال") ? styles.success : styles.error]}>{feedback}</Text>}
           </View>
           <Text style={styles.welcome}>أهلاً بك في خدماتي، نسعد بخدمتك {name.trim() ? `يا ${name.trim()}` : ""}</Text>
           <Pressable onPress={() => router.push("/services" as never)} style={styles.browse}><Text style={styles.browseText}>تصفح الخدمات ←</Text></Pressable>
@@ -169,7 +169,9 @@ const styles = StyleSheet.create({
   dropdownEmpty: { color: "#7B8D89", padding: 14, textAlign: "center", fontSize: 12 , fontFamily: "Arial" },
   submit: { backgroundColor: "#0F766E", borderRadius: 11, minHeight: 50, alignItems: "center", justifyContent: "center", marginTop: 24 },
   submitText: { color: "#FFFFFF", fontWeight: "900", fontSize: 14 , fontFamily: "Arial" },
-  error: { color: "#B5473B", textAlign: "center", marginTop: 12, fontSize: 12, fontWeight: "700" , fontFamily: "Arial" },
+  feedback: { textAlign: "center", marginTop: 12, paddingHorizontal: 12, fontSize: 13, fontWeight: "700", lineHeight: 21, fontFamily: "Arial" },
+  error: { color: "#B5473B" },
+  success: { color: "#0F766E" },
   welcome: { color: "#36596B", fontSize: 14, fontWeight: "800", textAlign: "center", marginTop: 20 , fontFamily: "Arial" },
   browse: { alignSelf: "center", padding: 16 },
   browseText: { color: "#0F766E", fontSize: 12, fontWeight: "900" , fontFamily: "Arial" },
