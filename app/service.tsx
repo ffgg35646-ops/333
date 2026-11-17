@@ -3,6 +3,8 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useServices } from "../hooks/useServices";
 import { SiteFooter, SiteHeader } from "../components/SiteShell";
 
+const FastImage = Image as any;
+
 export default function ServiceDetailsScreen() {
   const params = useLocalSearchParams<{ id?: string }>();
   const { services } = useServices();
@@ -16,7 +18,7 @@ export default function ServiceDetailsScreen() {
         ) : (
           <View style={styles.content}>
             <Pressable onPress={() => router.push("/services" as never)}><Text style={styles.back}>← العودة إلى الخدمات</Text></Pressable>
-            <Image source={{ uri: service.image }} style={styles.image} />
+            <FastImage source={{ uri: service.image }} style={styles.image} loading="eager" decoding="async" />
             <View style={styles.info}>
               <Text style={styles.kicker}>{service.group === "main" ? "MAIN SERVICE" : "SPECIAL SERVICE"}</Text>
               <Text style={styles.title}>{service.icon}  {service.title}</Text>
