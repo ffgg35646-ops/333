@@ -29,13 +29,6 @@ export default function ServiceDetailsScreen() {
                 <Text style={styles.summary}>{service.shortDescription}</Text>
               </View>
 
-              {!!service.details && (
-                <View style={styles.descriptionSection}>
-                  <View style={styles.rule} />
-                  <Text style={styles.details}>{service.details}</Text>
-                </View>
-              )}
-
               <View style={styles.stepsSection}>
                 <View style={styles.rule} />
                 <Text style={styles.stepsHeading}>⌁  خطوات طلب الخدمة</Text>
