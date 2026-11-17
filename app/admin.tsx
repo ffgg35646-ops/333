@@ -137,7 +137,7 @@ export default function AdminScreen() {
           {!compact && <Text style={styles.menuCaption}>القائمة الرئيسية</Text>}
           <View style={[styles.menu, compact && styles.menuCompact]}>
             <MenuButton value="services" label="إدارة الخدمات" icon="▦" />
-            <Pressable onPress={openRequests} style={[styles.menuButton, tab === "requests" && styles.menuButtonActive]}><Text style={[styles.menuIcon, tab === "requests" && styles.menuTextActive]}>▤</Text><Text style={[styles.menuText, tab === "requests" && styles.menuTextActive]}>طلبات الخدمة</Text>{unreadRequests > 0 && <View style={styles.unreadBadge}><Text style={styles.unreadBadgeText}>{unreadRequests > 99 ? "99+" : unreadRequests}</Text></View>}{tab === "requests" && <View style={styles.menuIndicator} />}</Pressable>
+            <Pressable onPress={openRequests} style={[styles.menuButton, tab === "requests" && styles.menuButtonActive]}><Text style={[styles.menuIcon, tab === "requests" && styles.menuTextActive]}>▤</Text><Text style={[styles.menuText, tab === "requests" && styles.menuTextActive]}>طلبات العملاء</Text>{unreadRequests > 0 && <View style={styles.unreadBadge}><Text style={styles.unreadBadgeText}>{unreadRequests > 99 ? "99+" : unreadRequests}</Text></View>}{tab === "requests" && <View style={styles.menuIndicator} />}</Pressable>
             <MenuButton value="settings" label="الإعدادات" icon="⚙" />
           </View>
           <View style={styles.sidebarBottom}>
@@ -151,7 +151,7 @@ export default function AdminScreen() {
           <View style={styles.topbar}>
             <View><Text style={styles.pageKicker}>KHADAMATI / ADMIN</Text><Text style={styles.pageTitle}>{tab === "services" ? "إدارة الخدمات" : tab === "requests" ? "طلبات الخدمة" : "إعدادات المنصة"}</Text></View>
             <View style={styles.topActions}>
-              <Pressable onPress={openRequests} accessibilityRole="button" accessibilityLabel={`إشعارات الطلبات الجديدة: ${unreadRequests}`} style={styles.bellButton}><Text style={styles.bellIcon}>♧</Text>{unreadRequests > 0 && <View style={styles.bellBadge}><Text style={styles.bellBadgeText}>{unreadRequests > 99 ? "99+" : unreadRequests}</Text></View>}</Pressable>
+              <Pressable onPress={openRequests} accessibilityRole="button" accessibilityLabel={`إشعارات الطلبات الجديدة: ${unreadRequests}`} style={styles.bellButton}><Text style={styles.bellIcon}>🔔</Text>{unreadRequests > 0 && <View style={styles.bellBadge}><Text style={styles.bellBadgeText}>{unreadRequests > 99 ? "99+" : unreadRequests}</Text></View>}</Pressable>
               <View style={styles.previewBadge}><View style={styles.previewDot} /><Text style={styles.previewBadgeText}>متصل بقاعدة البيانات</Text></View>
               <Pressable onPress={() => router.push("/" as never)} style={styles.siteButton}><Text style={styles.siteButtonText}>عرض الموقع ↗</Text></Pressable>
             </View>
