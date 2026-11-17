@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import type { ReactNode } from "react";
 import { Pressable, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import * as Linking from "expo-linking";
@@ -76,6 +77,13 @@ export function SiteHeader({ active }: HeaderProps) {
     { key: "request", label: "اطلب خدمة", path: "/request-service" },
     { key: "about", label: "من نحن", path: "/about" }
   ];
+
+  useEffect(() => {
+    links.forEach(link => {
+      try { void router.prefetch(link.path as never); } catch { /* Optional optimization. */ }
+    });
+  }, []);
+
   return (
     <>
       <View style={[styles.headerWrap, !compact && styles.headerWrapDesktop]}>
