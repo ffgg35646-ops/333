@@ -77,7 +77,8 @@ export function SiteHeader({ active }: HeaderProps) {
     { key: "about", label: "من نحن", path: "/about" }
   ];
   return (
-    <View style={[styles.headerWrap, !compact && styles.headerWrapDesktop]}>
+    <>
+      <View style={[styles.headerWrap, !compact && styles.headerWrapDesktop]}>
       <View style={[styles.header, compact && styles.headerCompact]}>
         <Pressable onPress={() => go("/")} style={[styles.brand, !compact && styles.brandDesktop]}>
           <BrandMark />
@@ -99,6 +100,7 @@ export function SiteHeader({ active }: HeaderProps) {
           <AppDownloadLinks compact />
         )}
       </View>
+      </View>
       {compact && (
         <View style={styles.mobileNav}>
           {[links[0], links[2], links[1]].map(link => (
@@ -115,7 +117,7 @@ export function SiteHeader({ active }: HeaderProps) {
           ))}
         </View>
       )}
-    </View>
+    </>
   );
 }
 
@@ -155,8 +157,8 @@ export function SiteFooter({ children }: FooterProps) {
 }
 
 const styles = StyleSheet.create({
-  headerWrap: { backgroundColor: "transparent", borderBottomWidth: 1, borderBottomColor: "rgba(255,255,255,0.12)", zIndex: 10, shadowColor: "#173B38", shadowOpacity: 0.04, shadowRadius: 10, shadowOffset: { width: 0, height: 3 }, elevation: 2 },
-  headerWrapDesktop: { backgroundColor: "rgba(15,38,43,0.76)", borderBottomColor: "rgba(255,255,255,0.16)", borderBottomWidth: 1, shadowColor: "#07191B", shadowOpacity: 0.18, shadowRadius: 16, shadowOffset: { width: 0, height: 5 }, ...( { backdropFilter: "blur(18px)", WebkitBackdropFilter: "blur(18px)" } as any) },
+  headerWrap: { backgroundColor: "rgba(23,59,56,0.70)", borderBottomWidth: 1, borderBottomColor: "rgba(255,255,255,0.14)", zIndex: 10, shadowColor: "#102E2B", shadowOpacity: 0.16, shadowRadius: 16, shadowOffset: { width: 0, height: 5 }, elevation: 3, ...( { backdropFilter: "blur(18px) saturate(120%)", WebkitBackdropFilter: "blur(18px) saturate(120%)" } as any) },
+  headerWrapDesktop: { backgroundColor: "rgba(23,59,56,0.70)", borderBottomColor: "rgba(255,255,255,0.14)", borderBottomWidth: 1, shadowColor: "#102E2B", shadowOpacity: 0.16, shadowRadius: 16, shadowOffset: { width: 0, height: 5 }, ...( { backdropFilter: "blur(18px) saturate(120%)", WebkitBackdropFilter: "blur(18px) saturate(120%)" } as any) },
   header: { width: "100%", maxWidth: 1600, alignSelf: "center", minHeight: 88, paddingHorizontal: 30, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 22 },
   headerCompact: { minHeight: 68, paddingVertical: 9, paddingHorizontal: 12, gap: 8 },
   brand: { flexDirection: "row", alignItems: "center", gap: 10 },
