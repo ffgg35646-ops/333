@@ -73,7 +73,7 @@ export function SiteHeader({ active }: HeaderProps) {
   return (
     <View style={styles.headerWrap}>
       <View style={[styles.header, compact && styles.headerCompact]}>
-        <Pressable onPress={() => go("/")} style={styles.brand}>
+        <Pressable onPress={() => go("/")} style={[styles.brand, !compact && styles.brandDesktop]}>
           <BrandMark />
           <View>
             <Text style={styles.brandName}>{settings.siteName}</Text>
@@ -153,12 +153,13 @@ const styles = StyleSheet.create({
   header: { width: "100%", maxWidth: 1320, alignSelf: "center", minHeight: 88, paddingHorizontal: 30, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 22 },
   headerCompact: { minHeight: 68, paddingVertical: 9, paddingHorizontal: 12, gap: 8 },
   brand: { flexDirection: "row", alignItems: "center", gap: 10 },
+  brandDesktop: { position: "absolute", right: 30, zIndex: 3 },
   brandMark: { width: 48, height: 48, borderRadius: 16, backgroundColor: "#173B38", alignItems: "center", justifyContent: "center", borderWidth: 2, borderColor: "#A7D8CC", shadowColor: "#0F766E", shadowOpacity: 0.22, shadowRadius: 9, shadowOffset: { width: 0, height: 3 }, elevation: 4 },
   brandMarkText: { color: "#A7D8CC", fontSize: 37, lineHeight: 42, fontWeight: "900", fontFamily: "Arial" },
   brandMarkAccent: { position: "absolute", width: 8, height: 8, borderRadius: 4, right: 8, bottom: 7, backgroundColor: "#2DD4BF", borderWidth: 1, borderColor: "#173B38" },
   brandName: { color: "#173B38", fontSize: 19, fontWeight: "900", textAlign: "right" , fontFamily: "Arial" },
   brandTag: { color: "#89958F", fontSize: 10, marginTop: 2, textAlign: "right" , fontFamily: "Arial" },
-  nav: { position: "absolute", left: "50%", transform: [{ translateX: -0.5 }], zIndex: 2, flexDirection: "row", alignItems: "center", gap: 7, flexWrap: "wrap", justifyContent: "center", backgroundColor: "#F5F7F5", padding: 6, borderRadius: 16, borderWidth: 1, borderColor: "#E4EEF3" },
+  nav: { position: "absolute", left: 0, right: 0, zIndex: 2, flexDirection: "row", alignItems: "center", gap: 7, flexWrap: "wrap", justifyContent: "center", backgroundColor: "#F5F7F5", padding: 6, borderRadius: 16, borderWidth: 1, borderColor: "#E4EEF3" },
   navItem: { paddingVertical: 12, paddingHorizontal: 16, borderRadius: 12 },
   navItemActive: { backgroundColor: "#E6F2EF" },
   navText: { color: "#65736D", fontSize: 13, fontWeight: "700" , fontFamily: "Arial" },
