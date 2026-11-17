@@ -40,6 +40,41 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           }
         }));
       if (imageUpdates.length) await services.bulkWrite(imageUpdates, { ordered: false });
+
+      // Keep MongoDB descriptions aligned with the canonical service catalogue.
+      // Without this repair, the app briefly shows local descriptions, then GET replaces
+      // them with stale descriptions stored in MongoDB.
+      const activeForDescriptions = await services.find(
+        { active: { $ne: false }, categoryId: { $exists: true } },
+        { projection: { id: 1, shortDescription: 1, details: 1 } }
+      ).toArray();
+      const canonicalDescriptions = new Map(allServices.map(item => [item.id, {
+        shortDescription: item.shortDescription,
+        details: item.details
+      }]));
+      const descriptionUpdates = activeForDescriptions
+        .filter(item => {
+          const canonical = canonicalDescriptions.get(String(item.id));
+          return Boolean(canonical && (
+            String(item.shortDescription || "") !== canonical.shortDescription ||
+            String(item.details || "") !== canonical.details
+          ));
+        })
+        .map(item => {
+          const canonical = canonicalDescriptions.get(String(item.id))!;
+          return {
+            updateOne: {
+              filter: { id: item.id },
+              update: { $set: {
+                shortDescription: canonical.shortDescription,
+                details: canonical.details,
+                descriptionUpdatedAt: new Date()
+              } }
+            }
+          };
+        });
+      if (descriptionUpdates.length) await services.bulkWrite(descriptionUpdates, { ordered: false });
+
       const filter = getSession(req) ? { categoryId: { $exists: true } } : { active: { $ne: false }, categoryId: { $exists: true } };
       const items = await services.find(filter).sort({ order: 1, title: 1 }).toArray();
       return res.status(200).json({ services: items.map(({ _id, ...item }) => item) });
