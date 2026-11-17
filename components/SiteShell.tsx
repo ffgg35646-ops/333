@@ -77,7 +77,7 @@ export function SiteHeader({ active }: HeaderProps) {
     { key: "about", label: "من نحن", path: "/about" }
   ];
   return (
-    <View style={styles.headerWrap}>
+    <View style={[styles.headerWrap, !compact && styles.headerWrapDesktop]}>
       <View style={[styles.header, compact && styles.headerCompact]}>
         <Pressable onPress={() => go("/")} style={[styles.brand, !compact && styles.brandDesktop]}>
           <BrandMark />
@@ -156,6 +156,7 @@ export function SiteFooter({ children }: FooterProps) {
 
 const styles = StyleSheet.create({
   headerWrap: { backgroundColor: "#10212C", borderBottomWidth: 1, borderBottomColor: "rgba(210,240,245,0.24)", zIndex: 10, shadowColor: "#061923", shadowOpacity: 0.18, shadowRadius: 16, shadowOffset: { width: 0, height: 5 }, elevation: 5 },
+  headerWrapDesktop: { backgroundColor: "rgba(13, 32, 43, 0.58)", borderBottomColor: "rgba(220,248,250,0.32)", borderBottomWidth: 1, ...( { backdropFilter: "blur(18px)", WebkitBackdropFilter: "blur(18px)" } as any) },
   header: { width: "100%", maxWidth: 1600, alignSelf: "center", minHeight: 88, paddingHorizontal: 30, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 22 },
   headerCompact: { minHeight: 68, paddingVertical: 9, paddingHorizontal: 12, gap: 8 },
   brand: { flexDirection: "row", alignItems: "center", gap: 10 },
@@ -190,13 +191,13 @@ const styles = StyleSheet.create({
   accountButtonCompact: { paddingVertical: 9, paddingHorizontal: 9, gap: 4 },
   accountIcon: { color: "#173B38", fontSize: 13 , fontFamily: "Arial" },
   accountButtonText: { color: "#173B38", fontSize: 12, fontWeight: "800" , fontFamily: "Arial" },
-  mobileNav: { position: "fixed" as any, left: 0, right: 0, bottom: 0, zIndex: 1000, width: "100%", backgroundColor: "rgba(255,255,255,0.98)", borderTopWidth: 1, borderTopColor: "#DCE7E3", flexDirection: "row", justifyContent: "space-around", alignItems: "center", paddingHorizontal: 10, paddingTop: 9, paddingBottom: 12, shadowColor: "#173B38", shadowOpacity: 0.12, shadowRadius: 16, shadowOffset: { width: 0, height: -5 }, elevation: 12 },
+  mobileNav: { position: "fixed" as any, left: 0, right: 0, bottom: 0, zIndex: 1000, width: "100%", backgroundColor: "#08BDB8", borderTopWidth: 1, borderTopColor: "rgba(255,255,255,0.32)", flexDirection: "row", justifyContent: "space-around", alignItems: "center", paddingHorizontal: 10, paddingTop: 9, paddingBottom: 12, shadowColor: "#087D7A", shadowOpacity: 0.24, shadowRadius: 16, shadowOffset: { width: 0, height: -5 }, elevation: 12 },
   mobileNavItem: { flex: 1, minHeight: 40, alignItems: "center", justifyContent: "center", gap: 4 },
-  mobileNavText: { color: "#89918B", fontSize: 11, fontWeight: "700" , fontFamily: "Arial" },
-  mobileNavActive: { color: "#0F766E", fontWeight: "900" , fontFamily: "Arial" },
-  mobileRequestItem: { flex: 1, minHeight: 44, marginHorizontal: 5, borderRadius: 14, backgroundColor: "#16A34A", shadowColor: "#16A34A", shadowOpacity: 0.28, shadowRadius: 9, shadowOffset: { width: 0, height: 3 }, elevation: 5 },
+  mobileNavText: { color: "#FFFFFF", fontSize: 11, fontWeight: "700" , fontFamily: "Arial" },
+  mobileNavActive: { color: "#FFFFFF", fontWeight: "900" , fontFamily: "Arial" },
+  mobileRequestItem: { flex: 1, minHeight: 44, marginHorizontal: 5, borderRadius: 14, backgroundColor: "rgba(0,91,91,0.22)", borderWidth: 1, borderColor: "rgba(255,255,255,0.34)" },
   mobileRequestText: { color: "#FFFFFF", fontSize: 12, fontWeight: "900" , fontFamily: "Arial" },
-  mobileNavIndicator: { width: 16, height: 3, borderRadius: 3, backgroundColor: "#0F766E" },
+  mobileNavIndicator: { width: 16, height: 3, borderRadius: 3, backgroundColor: "#FFFFFF" },
   footer: { backgroundColor: "#173B38", marginTop: 52 },
   footerInner: { width: "100%", maxWidth: 1240, alignSelf: "center", paddingHorizontal: 24, paddingVertical: 42, flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", gap: 34 },
   footerBrand: { width: 300, maxWidth: "100%" },
